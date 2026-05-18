@@ -916,8 +916,8 @@ class HTMLGenerator:
 
         cpu_percent = int(sum(cpu_percent_list) / len(cpu_percent_list)) if cpu_percent_list else 0
 
-        memory_total_gb = f"{memory_info.get('total', 0) / 1024 / 1024 / 1024:.2f}"
-        memory_used_gb = f"{memory_info.get('used', 0) / 1024 / 1024 / 1024:.2f}"
+        memory_total_gb = f"{memory_info.get('total', 0):.2f}"
+        memory_used_gb = f"{memory_info.get('used', 0):.2f}"
         memory_percent = memory_info.get('percent', 0)
 
         def format_bytes(bytes_val):
