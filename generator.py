@@ -379,6 +379,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 </div>
             </div>
         </div>
+        {% elif screenshot_message %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <i class="bi bi-exclamation-triangle"></i> Screenshot Unavailable
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning d-flex align-items-center" role="alert">
+                            <i class="bi bi-shield-check mr-2"></i>
+                            <div>
+                                <strong>隐私保护提示:</strong><br>
+                                {{ screenshot_message }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endif %}
 
         {% set browser_windows = [] %}
@@ -411,15 +430,42 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                         <i class="bi bi-aspect-ratio"></i> {{ win.width }}x{{ win.height }}
                                     </div>
                                     {% if win.bilibili %}
-                                    <div class="mt-2">
-                                        <span class="badge bg-pink" style="background-color: #f06595;">
-                                            <i class="bi bi-play-circle"></i> {{ win.bilibili.bv_id }}
-                                        </span>
-                                        <a href="{{ win.bilibili.url }}" target="_blank" class="btn-bilibili btn-sm ms-2">
-                                            <i class="bi bi-box-arrow-up-right"></i> Watch
-                                        </a>
-                                    </div>
-                                    {% endif %}
+                            <div class="mt-2">
+                                <span class="badge bg-pink" style="background-color: #f06595;">
+                                    <i class="bi bi-play-circle"></i> {{ win.bilibili.bv_id }}
+                                </span>
+                                {% if win.bilibili.title %}
+                                <span class="badge bg-info ms-2">{{ win.bilibili.title }}</span>
+                                {% endif %}
+                                <a href="{{ win.bilibili.url }}" target="_blank" class="btn-bilibili btn-sm ms-2">
+                                    <i class="bi bi-box-arrow-up-right"></i> Watch
+                                </a>
+                                {% if win.bilibili.cover %}
+                                <div class="mt-2">
+                                    <a href="{{ win.bilibili.url }}" target="_blank">
+                                        <img src="{{ win.bilibili.cover }}" alt="Video Cover" 
+                                             class="img-fluid rounded" style="max-width: 200px; max-height: 150px;">
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            {% if win.music %}
+                            <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
+                                <div class="text-white font-bold">
+                                    <i class="bi bi-music-note"></i> {{ win.music.song }}
+                                </div>
+                                {% if win.music.artist %}
+                                <div class="text-white-80 text-sm">{{ win.music.artist }}</div>
+                                {% endif %}
+                                {% if win.music.lyrics %}
+                                <div class="text-white-70 text-sm mt-2 font-italic" style="max-height: 100px; overflow-y: auto;">
+                                    {{ win.music.lyrics }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
                                 </div>
                                 {% if win.is_active %}
                                 <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> Active Window</span>
@@ -461,6 +507,44 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     {% if win.is_active %}
                                     <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> Active Window</span>
                                     {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        {% if history_windows %}
+                        <div class="mt-4 pt-4 border-top">
+                            <h5><i class="bi bi-history text-secondary"></i> History ({{ history_windows|length }})</h5>
+                            {% for win in history_windows %}
+                            <div class="window-item window-normal history-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        {% if win.website and win.website.url %}
+                                        <a href="{{ win.website.url }}" target="_blank" class="window-title-link">
+                                            <strong>{{ win.title }}</strong>
+                                        </a>
+                                        {% else %}
+                                        <strong>{{ win.title }}</strong>
+                                        {% endif %}
+                                        <div class="text-muted-custom small">
+                                            <i class="bi bi-app"></i> {{ win.process }}
+                                        </div>
+                                        {% if win.website %}
+                                        <div class="mt-1">
+                                            {% if win.website.url %}
+                                            <a href="{{ win.website.url }}" target="_blank" class="website-link">
+                                                <i class="bi bi-link-45deg"></i> {{ win.website.url }}
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                        {% if win.last_seen %}
+                                        <div class="text-muted-custom small mt-1">
+                                            <i class="bi bi-clock"></i> Last seen: {{ win.last_seen }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -634,6 +718,7 @@ class HTMLGenerator:
         windows = data.get('windows', [])
         system_info = data.get('system_info', {})
         screenshot = data.get('screenshot', '')
+        screenshot_message = data.get('screenshot_message', '')
 
         active_window_title = data.get('active_window')
         timestamp = data.get('timestamp', '')
@@ -648,6 +733,7 @@ class HTMLGenerator:
             windows=windows,
             system_info=system_info,
             screenshot=screenshot,
+            screenshot_message=screenshot_message,
             active_window_title=active_window_title,
             timestamp=timestamp,
             last_update_iso=last_update,

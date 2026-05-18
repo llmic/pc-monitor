@@ -50,9 +50,27 @@ def fetch_bilibili_title(bv_id):
         pass
     return None
 
+def fetch_bilibili_cover(bv_id):
+    """Fetch video cover image URL."""
+    try:
+        url = f'https://api.bilibili.com/x/web-interface/view?bvid={bv_id}'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'https://www.bilibili.com'
+        }
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            if data['code'] == 0:
+                return data['data'].get('pic', '')
+    except Exception:
+        pass
+    return None
+
 def get_bilibili_info(title):
     bv_info = extract_bv_info(title)
     if bv_info:
         bv_info['title'] = fetch_bilibili_title(bv_info['bv_id'])
+        bv_info['cover'] = fetch_bilibili_cover(bv_info['bv_id'])
         return bv_info
     return None

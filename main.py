@@ -152,6 +152,9 @@ def run_git_push():
 
 def git_push_thread():
     """Thread function to handle Git pushes at intervals."""
+    # Wait for first cycle to complete (first push is done by main thread)
+    time.sleep(COLLECTION_INTERVAL)
+    
     while True:
         if GIT_PUSH_ENABLED:
             run_git_push()
@@ -231,6 +234,11 @@ def main():
     try:
         # Run first cycle
         run_monitor_cycle(collector, history_manager, generator)
+        
+        # Push to git after first cycle
+        if GIT_PUSH_ENABLED:
+            print(f"\n[{get_timestamp()}] Pushing to GitHub...")
+            run_git_push()
         
         # Enter monitoring loop
         print(f"\n[{get_timestamp()}] Entering monitoring mode (Press Ctrl+C to exit)")

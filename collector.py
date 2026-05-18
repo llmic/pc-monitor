@@ -8,7 +8,8 @@ import re
 import os
 from datetime import datetime
 from PIL import Image, ImageGrab
-from bilibili import extract_bv_info
+from bilibili import extract_bv_info, get_bilibili_info
+from music import get_music_info
 from ctypes import windll, c_int, byref, sizeof
 from ctypes.wintypes import RECT, HWND, DWORD
 
@@ -26,8 +27,64 @@ BROWSER_NAMES = {
     'sogouexplorer.exe': '搜狗浏览器'
 }
 
+# Privacy protection - windows that should not be captured in screenshots
+PRIVACY_PROCESSES = {
+    'qq.exe',
+    'wechat.exe',
+    'wxwork.exe',
+    'wemeetapp.exe',
+    'tencentmeeting.exe',
+    'teams.exe',
+    'zoom.exe',
+    'skype.exe'
+}
+
 SCREENSHOT_DIR = 'screenshots'
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
+
+def is_microphone_active():
+    """Check if microphone is currently in use."""
+    try:
+        import pyaudio
+        p = pyaudio.PyAudio()
+        for i in range(p.get_device_count()):
+            dev_info = p.get_device_info_by_index(i)
+            if dev_info.get('maxInputChannels', 0) > 0:
+                # Check if this input device is active
+                try:
+                    stream = p.open(
+                        format=pyaudio.paInt16,
+                        channels=1,
+                        rate=44100,
+                        input=True,
+                        input_device_index=i,
+                        frames_per_buffer=1024
+                    )
+                    stream.stop_stream()
+                    stream.close()
+                except Exception:
+                    # Device is likely in use by another application
+                    p.terminate()
+                    return True
+        p.terminate()
+    except Exception:
+        pass
+    return False
+
+def is_camera_active():
+    """Check if camera is currently in use."""
+    try:
+        import cv2
+        for i in range(5):
+            cap = cv2.VideoCapture(i)
+            if cap.isOpened():
+                cap.release()
+            else:
+                # Camera might be in use
+                return True
+    except Exception:
+        pass
+    return False
 
 def get_browser_url_from_title(title, proc_name):
     proc_lower = proc_name.lower()
@@ -192,11 +249,35 @@ def bring_window_to_front(hwnd):
 def capture_active_window():
     """捕获活动窗口的完整截图，仅保存至screenshots文件夹"""
     try:
+        # 检查麦克风是否正在使用
+        if is_microphone_active():
+            print("⚠️ 麦克风正在使用中，跳过截图以保护隐私")
+            return {'path': None, 'reason': 'microphone_active', 'message': '麦克风正在使用中，为保护隐私跳过截图'}
+        
+        # 检查摄像头是否正在使用
+        if is_camera_active():
+            print("⚠️ 摄像头正在使用中，跳过截图以保护隐私")
+            return {'path': None, 'reason': 'camera_active', 'message': '摄像头正在使用中，为保护隐私跳过截图'}
+            
         # 改用原生win32API获取前台窗口，比pygetwindow更稳定
         hwnd = win32gui.GetForegroundWindow()
         if not hwnd:
             print("No active window found")
-            return None
+            return {'path': None, 'reason': 'no_window', 'message': '未找到活动窗口'}
+            
+        # 获取窗口进程信息
+        try:
+            _, pid = win32process.GetWindowThreadProcessId(hwnd)
+            proc = psutil.Process(pid) if pid else None
+            proc_name = proc.name().lower() if proc else 'unknown'
+        except Exception:
+            proc_name = 'unknown'
+        
+        # 检查是否为隐私保护进程
+        for privacy_proc in PRIVACY_PROCESSES:
+            if privacy_proc.lower() in proc_name:
+                print(f"⚠️ 检测到隐私保护窗口 ({proc_name})，跳过截图")
+                return {'path': None, 'reason': 'privacy_protection', 'message': f'{proc_name} 窗口已设置隐私保护，跳过截图'}
             
         # 前置并恢复窗口
         bring_window_to_front(hwnd)
@@ -205,14 +286,14 @@ def capture_active_window():
         rect = get_window_rect_with_buffer(hwnd, buffer_pixels=15)
         if not rect:
             print("Could not get window rectangle")
-            return None
+            return {'path': None, 'reason': 'no_rect', 'message': '无法获取窗口区域'}
             
         left, top, right, bottom = rect
         
         # 过滤过小窗口
         if right - left < 50 or bottom - top < 50:
             print("Window too small to capture")
-            return None
+            return {'path': None, 'reason': 'too_small', 'message': '窗口太小，跳过截图'}
         
         print(f"Capturing full window (with shadow/border): {left},{top} - {right},{bottom}")
         
@@ -225,13 +306,15 @@ def capture_active_window():
         screenshot.save(screenshot_path, 'PNG', optimize=True)
         print(f"Saved full screenshot to: {screenshot_path}")
         
-        return screenshot_path
+        return {'path': screenshot_path, 'reason': None, 'message': None}
         
     except Exception as e:
         print(f"Screenshot error: {e}")
         import traceback
         traceback.print_exc()
-    return None
+        return {'path': None, 'reason': 'error', 'message': f'截图错误: {e}'}
+    return {'path': None, 'reason': 'unknown', 'message': '未知原因'}
+
 
 class DataCollector:
     def __init__(self):
@@ -256,6 +339,7 @@ class DataCollector:
 
     def collect_windows(self):
         windows = []
+        seen_windows = set()
         active = self.get_active_window()
         self.active_window_title = active['title'] if active else None
 
@@ -276,6 +360,11 @@ class DataCollector:
             if win.isMinimized and not is_browser:
                 continue
 
+            window_key = (win.title, proc_name, win.left, win.top)
+            if window_key in seen_windows:
+                continue
+            seen_windows.add(window_key)
+
             is_active = active and win.title == active['title']
             window_info = {
                 'title': win.title,
@@ -290,7 +379,17 @@ class DataCollector:
 
             bv_info = extract_bv_info(win.title)
             if bv_info:
-                window_info['bilibili'] = bv_info
+                full_bv_info = get_bilibili_info(win.title)
+                if full_bv_info:
+                    window_info['bilibili'] = full_bv_info
+                else:
+                    window_info['bilibili'] = bv_info
+
+            # Check for NetEase Cloud Music
+            if '网易云音乐' in win.title or 'Netease' in proc_name.lower() or 'cloudmusic' in proc_name.lower():
+                music_info = get_music_info(win.title)
+                if music_info:
+                    window_info['music'] = music_info
 
             browser_url = get_browser_url_from_title(win.title, proc_name)
             if browser_url:
@@ -319,12 +418,14 @@ class DataCollector:
 
     def collect_all(self):
         self.collect_windows()
-        screenshot_path = capture_active_window()
+        screenshot_result = capture_active_window()
         
         return {
             'windows': self.windows_data,
             'active_window': self.active_window_title,
             'system_info': self.collect_system_info(),
-            'screenshot': screenshot_path,
+            'screenshot': screenshot_result['path'],
+            'screenshot_reason': screenshot_result['reason'],
+            'screenshot_message': screenshot_result['message'],
             'timestamp': datetime.now().isoformat()
         }
