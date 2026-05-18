@@ -10,9 +10,7 @@ OUTPUT_FILE = 'index.html'
 
 # Configuration
 HISTORY_FILE = 'data/history_windows.json'
-MOUSE_FILE = 'data/mouse_actions.json'
 MAX_HISTORY = 30
-MAX_MOUSE_ACTIONS = 50
 SHUTDOWN_TIMEOUT_SECONDS = 600
 
 # Customization

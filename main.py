@@ -38,9 +38,7 @@ SCREENSHOT_DIR = 'screenshots'     # Directory for screenshot files
 
 # History Settings
 HISTORY_FILE = 'data/history_windows.json'  # History data file
-MOUSE_FILE = 'data/mouse_actions.json'      # Mouse actions file
 MAX_HISTORY = 30                          # Maximum number of history windows to keep
-MAX_MOUSE_ACTIONS = 50                    # Maximum number of mouse actions to keep
 
 # Alert Settings
 SHUTDOWN_TIMEOUT_SECONDS = 600             # Timeout before showing shutdown alert (10 minutes)
@@ -221,9 +219,7 @@ def main():
     collector = DataCollector()
     history_manager = HistoryManager(
         history_file=HISTORY_FILE,
-        mouse_file=MOUSE_FILE,
-        max_history=MAX_HISTORY,
-        max_mouse_actions=MAX_MOUSE_ACTIONS
+        max_history=MAX_HISTORY
     )
     generator = HTMLGenerator()
     
