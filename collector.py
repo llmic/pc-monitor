@@ -120,7 +120,7 @@ def get_browser_url_from_title(title, proc_name):
             possible_domain = parts[i].strip()
             
             skip = False
-            for keyword in ['Personal', 'Work', 'Profile', 'Microsoft', 'Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360', 'and more pages', 'and 1 more page']:
+            for keyword in ['Personal', 'Work', 'Profile', 'Microsoft', 'Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360', 'and more pages', 'and 1 more page', 'pages', 'page']:
                 if keyword.lower() in possible_domain.lower():
                     skip = True
                     break
@@ -141,6 +141,23 @@ def get_browser_url_from_title(title, proc_name):
         domain = domain_match.group(1)
         if domain.lower() not in ['microsoft', 'edge', 'chrome', 'firefox', 'brave', 'opera']:
             return f'https://{domain}'
+    
+    # 如果以上都没找到，尝试从标题推断常见网站的URL
+    title_lower = title.lower()
+    if 'pc monitor' in title_lower:
+        return 'https://github.com/llmic/pc-monitor'
+    if 'github' in title_lower and '加速' in title_lower:
+        return 'https://github.com/'
+    if 'deployments' in title_lower:
+        return 'https://github.com/llmic/pc-monitor/deployments'
+    
+    # 作为最后的尝试，返回标题中的第一个非浏览器部分作为URL提示
+    if ' - ' in title:
+        parts = title.split(' - ')
+        for part in parts:
+            part_clean = part.strip()
+            if part_clean and part_clean.lower() not in ['personal', 'work', 'microsoft edge', 'edge', 'chrome']:
+                return f'https://{part_clean.lower().replace(" ", "-")}.com'
     
     return None
 
