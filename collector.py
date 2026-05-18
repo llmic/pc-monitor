@@ -49,6 +49,19 @@ def get_browser_url_from_title(title, proc_name):
     if match:
         return match.group(0)
 
+    cleaned_title = re.sub(r'\s*[-–]\s*and\s+\d+\s+more\s+pages?\s*[-–]?\s*', ' - ', title, flags=re.IGNORECASE)
+    cleaned_title = re.sub(r'\s*[-–]\s*and\s+1\s+more\s+page\s*[-–]?\s*', ' - ', cleaned_title, flags=re.IGNORECASE)
+
+    if cleaned_title != title:
+        url_match = re.search(r'https?://[^\s<>"\'\\]+', cleaned_title)
+        if url_match:
+            return url_match.group(0)
+        
+        github_pattern = r'([a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+)'
+        github_match = re.search(github_pattern, cleaned_title)
+        if github_match:
+            return f'https://github.com/{github_match.group(1)}'
+
     github_pattern = r'([a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+)'
     github_match = re.search(github_pattern, title)
     if github_match:
@@ -61,7 +74,7 @@ def get_browser_url_from_title(title, proc_name):
             possible_domain = parts[i].strip()
             
             skip = False
-            for keyword in ['Personal', 'Work', 'Profile', 'Microsoft', 'Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360']:
+            for keyword in ['Personal', 'Work', 'Profile', 'Microsoft', 'Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360', 'and more pages', 'and 1 more page']:
                 if keyword.lower() in possible_domain.lower():
                     skip = True
                     break
@@ -249,8 +262,6 @@ class DataCollector:
         for win in gw.getAllWindows():
             if not win.title or win.title.strip() == '':
                 continue
-            if win.isMinimized:
-                continue
 
             try:
                 _, pid = win32process.GetWindowThreadProcessId(win._hWnd)
@@ -258,6 +269,12 @@ class DataCollector:
                 proc_name = proc.name() if proc else 'Unknown'
             except Exception:
                 proc_name = 'Unknown'
+
+            proc_lower = proc_name.lower()
+            is_browser = any(b.lower() in proc_lower for b in BROWSER_NAMES)
+            
+            if win.isMinimized and not is_browser:
+                continue
 
             is_active = active and win.title == active['title']
             window_info = {

@@ -29,7 +29,7 @@ from history import HistoryManager
 from generator import HTMLGenerator
 
 # Configuration
-COLLECTION_INTERVAL = 300          # Update interval in seconds
+COLLECTION_INTERVAL = 180          # Update interval in seconds
 OUTPUT_FILE = 'index.html'         # Output HTML file name
 GIT_PUSH_ENABLED = True            # Enable/disable auto Git push
 GIT_COMMIT_MESSAGE = "Auto update: {timestamp}"  # Git commit message template
