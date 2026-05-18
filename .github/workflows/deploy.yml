@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'index.html'
+      - 'screenshots/**'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -13,39 +17,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    runs-on: windows-latest
+  deploy:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run Monitor
-        env:
-          PYTHONUTF8: 1
-        run: |
-          python generate_once.py
-          echo "✅ Generated index.html successfully"
-
-      - name: Configure Git
+      - name: Deploy to gh-pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Deploy to gh-pages (Fast Mode)
-        run: |
           git checkout -b gh-pages --force 2>NUL || git checkout gh-pages
           git add -f index.html screenshots/*.png 2>NUL || git add -f index.html
-          git commit -m "Auto deploy: $(date -u)" --allow-empty
+          git diff --quiet || git commit -m "Auto deploy: $(date -u)"
           git push origin gh-pages --force
           echo "✅ Deployed to https://llmic.github.io/pc-monitor/"
