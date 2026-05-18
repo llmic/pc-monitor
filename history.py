@@ -24,6 +24,12 @@ class HistoryManager:
         self.history_file = history_file
         self.max_history = max_history
         self.history = load_history(history_file)
+        
+        # 确保历史记录数量不超过 max_history
+        if len(self.history['windows']) > self.max_history:
+            self.history['windows'] = self.history['windows'][:self.max_history]
+            save_history(self.history, self.history_file)
+        
         self.seen_titles = set(w['title'] for w in self.history['windows'])
 
     def add_window(self, window_info):

@@ -6,6 +6,7 @@ A unified Python script that combines monitoring and Git deployment.
 Features:
 - Real-time window and browser monitoring
 - CPU, memory, disk, network metrics
+- Cache avatar image
 - Automatic screenshot capture
 - Auto-deployment to GitHub Pages
 - Clean white theme interface
@@ -211,6 +212,7 @@ def run_monitor_cycle(collector, history_manager, generator, metrics_history):
         data['history_windows'] = history_windows
         data['computer_name'] = COMPUTER_NAME
         data['avatar'] = AVATAR_PATH
+        data['cached_avatar'] = data.get('cached_avatar')
         data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
         data['max_history'] = MAX_HISTORY
         data['max_metrics_history'] = MAX_METRICS_HISTORY

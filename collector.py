@@ -49,6 +49,37 @@ def get_latest_avatar():
     avatar_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
     return avatar_files[0]
 
+def cache_avatar(avatar_source_path, target_dir='screenshots'):
+    """缓存头像到指定目录，返回缓存后的路径"""
+    if not avatar_source_path or not os.path.exists(avatar_source_path):
+        return None
+    
+    try:
+        os.makedirs(target_dir, exist_ok=True)
+        
+        # 使用固定的文件名，避免每次都生成新文件
+        target_filename = 'user_avatar' + os.path.splitext(avatar_source_path)[1]
+        target_path = os.path.join(target_dir, target_filename)
+        
+        # 检查是否已经有缓存且未过期
+        if os.path.exists(target_path):
+            source_mtime = os.path.getmtime(avatar_source_path)
+            target_mtime = os.path.getmtime(target_path)
+            if target_mtime >= source_mtime:
+                # 缓存有效，直接返回
+                return target_path
+        
+        # 复制并缓存头像
+        with Image.open(avatar_source_path) as img:
+            # 调整大小为合适的尺寸
+            img.thumbnail((80, 80), Image.Resampling.LANCZOS)
+            img.save(target_path)
+        
+        return target_path
+    except Exception as e:
+        print(f"缓存头像失败: {e}")
+        return None
+
 BROWSER_NAMES = {
     'chrome.exe': 'Google Chrome',
     'msedge.exe': 'Microsoft Edge',
@@ -327,6 +358,8 @@ class DataCollector:
             self.avatar_path = avatar_path
         else:
             self.avatar_path = get_latest_avatar()
+        # 缓存头像
+        self.cached_avatar_path = cache_avatar(self.avatar_path)
 
     def get_active_window(self):
         try:
@@ -462,5 +495,6 @@ class DataCollector:
             'screenshot_reason': screenshot_result['reason'],
             'screenshot_message': screenshot_result['message'],
             'timestamp': datetime.now().isoformat(),
-            'avatar': self.avatar_path
+            'avatar': self.avatar_path,
+            'cached_avatar': self.cached_avatar_path
         }

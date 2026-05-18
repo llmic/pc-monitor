@@ -6,7 +6,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PC Monitor - Real-time Computer Monitoring System</title>
+    <title>{{ computer_name }} 视奸</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -33,6 +33,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-bottom: 1px solid #e0e0e0;
             font-weight: 600;
             padding: 15px 20px;
+        }
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        }
+        .user-avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
         }
         .card-body {
             padding: 15px 20px;
@@ -303,7 +322,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="col-12">
                 <div class="card" id="statusCard">
                     <div class="card-header d-flex align-items-center gap-3">
-                        <i class="bi bi-computer" style="font-size: 24px; color: #007bff;"></i>
+                        {% if avatar %}
+                        <img src="{{ avatar }}" alt="User Avatar" class="user-avatar">
+                        {% else %}
+                        <div class="user-avatar-placeholder">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        {% endif %}
                         <div>
                             <strong>{{ computer_name }}</strong>
                             <small class="text-muted d-block">Real-time Computer Monitoring System</small>
@@ -364,10 +389,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             </div>
                         </div>
 
-                        {% if metrics_history and metrics_history|length > 0 %}
+                        {% if max_metrics_history and metrics_history and metrics_history|length > 0 %}
                         <div class="row mt-4">
                             <div class="col-12">
-                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ metrics_history|length }} updates)</h6>
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ max_metrics_history }} updates)</h6>
                                 <canvas id="metricsChart" height="80"></canvas>
                             </div>
                         </div>
@@ -483,13 +508,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> Currently Open Windows
-                        {% if active_window_title and active_window_title != 'None' %}
-                        <span class="badge bg-danger float-end">Active: {{ active_window_title|truncate(40) }}</span>
+                        {% if is_normal_window_active and active_normal_window_title %}
+                        <span class="badge bg-danger float-end">Active: {{ active_normal_window_title|truncate(40) }}</span>
                         {% endif %}
                     </div>
                     <div class="card-body scroll-container">
                         {% for window in windows %}
-                        {% if not window.browser %}
                         <div class="window-item {% if window.is_active %}window-active{% else %}window-normal{% endif %}">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
@@ -517,7 +541,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                 {% endif %}
                             </div>
                         </div>
-                        {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -531,16 +554,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-globe"></i> Currently Open Browser ({{ browser_windows|length }})
-                        {% if active_window_title and active_window_title != 'None' %}
-                        {% set is_browser_active = false %}
-                        {% for win in browser_windows %}
-                        {% if win.is_active %}
-                        {% set is_browser_active = true %}
-                        {% endif %}
-                        {% endfor %}
-                        {% if is_browser_active %}
-                        <span class="badge bg-danger float-end">Active: {{ active_window_title|truncate(40) }}</span>
-                        {% endif %}
+                        {% if is_browser_active and active_browser_title %}
+                        <span class="badge bg-danger float-end">Active: {{ active_browser_title|truncate(40) }}</span>
                         {% endif %}
                     </div>
                     <div class="card-body scroll-container">
@@ -953,6 +968,38 @@ class HTMLGenerator:
         elif isinstance(active_window, str):
             active_window_title = active_window
 
+        # 分离普通窗口和浏览器窗口
+        normal_windows = [win for win in windows if not win.get('browser')]
+        browser_windows = [win for win in windows if win.get('browser')]
+
+        # 检查是否有浏览器窗口是激活的
+        is_browser_active = False
+        active_browser_title = ''
+        for win in browser_windows:
+            if win.get('is_active'):
+                is_browser_active = True
+                active_browser_title = win.get('title', '')
+                break
+
+        # 检查是否有普通窗口是激活的
+        is_normal_window_active = False
+        active_normal_window_title = ''
+        for win in normal_windows:
+            if win.get('is_active'):
+                is_normal_window_active = True
+                active_normal_window_title = win.get('title', '')
+                break
+
+        # 准备 metrics history 用于模板
+        metrics_history = data.get('metrics_history', {})
+        chart_data = []
+        if metrics_history and 'cpu' in metrics_history and 'memory' in metrics_history:
+            for i, (cpu, mem) in enumerate(zip(metrics_history['cpu'], metrics_history['memory'])):
+                chart_data.append({'cpu': cpu, 'memory': mem})
+
+        # 获取头像路径（使用缓存的，如果没有则使用原始的）
+        avatar_path = data.get('cached_avatar') or data.get('avatar')
+        
         context = {
             'computer_name': data.get('computer_name', 'PC Monitor'),
             'timestamp': data.get('timestamp', datetime.now().isoformat()),
@@ -973,12 +1020,18 @@ class HTMLGenerator:
             'current_music': current_music,
             'history_windows': data.get('history_windows', []),
             'browser_windows': browser_windows,
-            'windows': windows,
+            'is_browser_active': is_browser_active,
+            'active_browser_title': active_browser_title,
+            'is_normal_window_active': is_normal_window_active,
+            'active_normal_window_title': active_normal_window_title,
+            'windows': normal_windows,
             'screenshot': data.get('screenshot'),
             'screenshot_message': data.get('screenshot_message'),
-            'metrics_history': data.get('metrics_history', []),
+            'metrics_history': chart_data,
             'metrics_labels': data.get('metrics_labels', []),
             'max_history': data.get('max_history', 10),
+            'max_metrics_history': data.get('max_metrics_history', 5),
+            'avatar': avatar_path
         }
 
         return self.template.render(context)
