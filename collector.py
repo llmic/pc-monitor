@@ -357,7 +357,23 @@ class DataCollector:
             proc_lower = proc_name.lower()
             is_browser = any(b.lower() in proc_lower for b in BROWSER_NAMES)
             
-            if win.isMinimized and not is_browser:
+            # Check if it's a media app (should capture even when minimized)
+            is_media_app = (
+                'cloudmusic' in proc_lower or 
+                'netease' in proc_lower or
+                'music' in proc_lower or
+                '网易云音乐' in win.title
+            )
+            
+            # Bilibili client or related processes
+            is_bilibili_app = (
+                'bilibili' in proc_lower or
+                '哔哩哔哩' in win.title or
+                'livechat' in proc_lower
+            )
+            
+            # Skip minimized windows EXCEPT for browsers and media apps
+            if win.isMinimized and not is_browser and not is_media_app and not is_bilibili_app:
                 continue
 
             window_key = (win.title, proc_name, win.left, win.top)
@@ -385,8 +401,11 @@ class DataCollector:
                 else:
                     window_info['bilibili'] = bv_info
 
-            # Check for NetEase Cloud Music
-            if '网易云音乐' in win.title or 'Netease' in proc_name.lower() or 'cloudmusic' in proc_name.lower():
+            # Check for NetEase Cloud Music (even when minimized)
+            if ('网易云音乐' in win.title or 
+                'Netease' in proc_name.lower() or 
+                'cloudmusic' in proc_lower or
+                'music' in proc_lower):
                 music_info = get_music_info(win.title)
                 if music_info:
                     window_info['music'] = music_info
