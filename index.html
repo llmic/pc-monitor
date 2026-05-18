@@ -45,233 +45,1105 @@
         .status-warning { background-color: #dc3545; animation: blink 1s infinite; }
         @keyframes blink {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.3; }
         }
-        .metric-bar {
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
+        .window-active {
+            background-color: rgba(220, 53, 69, 0.08);
+            border-left: 4px solid #dc3545;
         }
-        .metric-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
+        .window-normal {
+            background-color: #fafafa;
+            border-left: 4px solid transparent;
         }
-        .cpu-bar { background: linear-gradient(90deg, #007bff, #28a745); }
-        .memory-bar { background: linear-gradient(90deg, #ffc107, #dc3545); }
-        .disk-bar { background: linear-gradient(90deg, #17a2b8, #6610f2); }
+        .bilibili-card {
+            border: 2px solid #f06595;
+            background: linear-gradient(135deg, rgba(240, 101, 149, 0.05), rgba(181, 78, 136, 0.05));
+        }
+        .browser-card {
+            border-left: 4px solid #007bff;
+            background: linear-gradient(90deg, rgba(0, 123, 255, 0.08), transparent);
+        }
         .window-item {
-            padding: 10px 15px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
             border-radius: 8px;
-            margin-bottom: 8px;
-            background-color: #f8f9fa;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
         .window-item:hover {
-            background-color: #e9ecef;
+            transform: translateX(4px);
         }
-        .window-item.active {
-            background-color: #e3f2fd;
-            border-left: 3px solid #007bff;
-        }
-        .music-cover {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 0 auto;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-        .music-cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .lyrics-display {
-            font-style: italic;
-            min-height: 60px;
-            display: flex;
+        .website-link {
+            display: inline-flex;
             align-items: center;
+            gap: 5px;
+            background: rgba(0, 123, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .website-link:hover {
+            background: rgba(0, 123, 255, 0.2);
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .window-title-link {
+            color: #007bff;
+            text-decoration: underline;
+            word-break: break-all;
+            transition: all 0.2s;
+        }
+        .window-title-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .btn-bilibili {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-bilibili:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 101, 149, 0.4);
+            color: white;
+        }
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
         }
-        .website-url {
-            font-size: 0.85em;
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
             color: #007bff;
-            word-break: break-all;
         }
-        .browser-tab {
-            padding: 8px 12px;
-            border-radius: 6px;
-            background-color: #f8f9fa;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .stats-label {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
-        .browser-tab:hover {
+        .progress-bar-custom {
+            height: 8px;
+            border-radius: 4px;
             background-color: #e9ecef;
+            overflow: hidden;
         }
-        .favicon {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
         }
-        .timestamp {
-            font-size: 0.85em;
-            color: #6c757d;
-        }
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .shutdown-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 40px;
-            border-radius: 16px;
-        }
-        .shutdown-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .shutdown-subtitle {
-            opacity: 0.8;
-        }
-        .btn-refresh {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+        .progress-cpu { background-color: #28a745; }
+        .progress-memory { background-color: #17a2b8; }
+        .progress-disk { background-color: #ffc107; }
         .screenshot-container {
-            max-height: 400px;
+            max-width: 100%;
             overflow: hidden;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .screenshot-container img {
             width: 100%;
+            height: auto;
+        }
+        .alert-danger-custom {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 15px;
             border-radius: 8px;
+        }
+        .alert-warning-custom {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .scroll-container {
+            max-height: none;
+            overflow-y: visible;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #333333;
+        }
+        .text-muted-custom {
+            color: #666666;
+        }
+        .timestamp {
+            color: #888888;
+            font-size: 0.85rem;
+        }
+        footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+        .h-100 {
+            height: 100% !important;
+        }
+        .row-eq-height {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .row-eq-height > [class*="col-"] {
+            display: flex;
+            flex-direction: column;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+        }
+        .lyrics-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lyrics-box::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .lyrics-box::-webkit-scrollbar-thumb {
+            background: #ff4757;
+            border-radius: 4px;
+        }
+        .shutdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+        .shutdown-overlay.show {
+            display: flex;
+        }
+        .shutdown-icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .shutdown-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .shutdown-subtitle {
+            font-size: 18px;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+        }
+        .shutdown-time {
+            font-size: 16px;
+            color: #888888;
         }
     </style>
 </head>
 <body>
-    
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h1 class="display-4">
-                    <i class="bi bi-display"></i> Liuli 的电脑
-                </h1>
-                <p class="text-muted">PC Monitor - Real-time Computer Monitoring System</p>
-            </div>
-            <div class="col-md-4 text-right">
-                
-                <div class="avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px;">
-                    <i class="bi bi-person-circle"></i>
+    <div class="shutdown-overlay" id="shutdownOverlay">
+        <div class="shutdown-icon">
+            <i class="bi bi-power"></i>
+        </div>
+        <div class="shutdown-title">已关机</div>
+        <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
+        <div class="shutdown-time" id="shutdownTime"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card" id="statusCard">
+                    <div class="card-header d-flex align-items-center gap-3">
+                        
+                        <i class="bi bi-computer" style="font-size: 24px; color: #007bff;"></i>
+                        
+                        <div>
+                            <strong>Liuli 的电脑</strong>
+                            <small class="text-muted d-block">Real-time Computer Monitoring System</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="status-indicator" id="statusLight"></span>
+                            <span id="statusText" class="fs-5"></span>
+                        </div>
+                        <div class="text-muted-custom mb-2">
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay"></span>
+                        </div>
+                        <div class="text-muted-custom">
+                            <strong>Current Time:</strong> <span id="currentTimeDisplay"></span>
+                        </div>
+                        <div id="alertContainer" class="mt-3"></div>
+                    </div>
                 </div>
-                
+            </div>
+        </div>
+
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-graph-up"></i> System Performance Overview
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col">
+                                <div class="stats-card h-100">
+                                    <div class="stats-number">6%</div>
+                                    <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
+                                    <div class="progress-bar-custom mt-2">
+                                        <div class="progress-fill progress-cpu" style="width: 6%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="stats-card h-100">
+                                    <div class="stats-number">59.1%</div>
+                                    <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
+                                    <div class="progress-bar-custom mt-2">
+                                        <div class="progress-fill progress-memory" style="width: 59.1%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="stats-card h-100">
+                                    <div class="stats-number">18.59 / 31.47 GB</div>
+                                    <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
+                                    <div class="text-muted-custom small mt-2">
+                                        Sent: 625.27 MB<br>
+                                        Received: 4372.49 MB
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last 5 updates)</h6>
+                                <canvas id="metricsChart" height="80"></canvas>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Usage
+                        <i class="bi bi-cpu"></i> CPU Core Details (18 cores)
                     </div>
                     <div class="card-body">
-                        <div class="text-center">
-                            <span class="text-3xl font-bold">-1%</span>
-                        </div>
-                        <div class="metric-bar mt-2">
-                            <div class="metric-fill cpu-bar" style="width: -1%"></div>
+                        <div class="row">
+                            
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 0</div>
+                                    <div class="text-primary font-size-lg">36.4%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 36.4%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 13</div>
+                                    <div class="text-primary font-size-lg">30.3%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 30.3%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 14</div>
+                                    <div class="text-primary font-size-lg">36.4%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 36.4%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+        </div>
+        
+
+        
+
+        
+        <div class="row">
+            <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-memory-stick"></i> Memory Usage
+                    <div class="card-header" style="background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;">
+                        <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
+                        
+                        <span class="badge bg-warning text-dark ms-2">
+                            <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
+                        </span>
+                        
                     </div>
-                    <div class="card-body">
-                        <div class="text-center">
-                            <span class="text-3xl font-bold">-1%</span>
+                    <div class="card-body" style="background-color: #ff9a9e; color: #212529;">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h4 class="mb-2">
+                                    <i class="bi bi-disc"></i> Coooookies/netease
+                                </h4>
+                                
+                                <p class="mb-2" style="opacity: 0.85;">
+                                    <i class="bi bi-person"></i> cloudmusic-detector: 使用NodeJS监听网易云音乐客户端正在播放中的音乐，支持获取SongId、暂停状态,、歌曲进度，歌曲进度跟随进度条同步，仅支持3.0以上客户端。 and 2 more pages - Personal - Microsoft​ Edge
+                                </p>
+                                
+                                
+
+                                
+                            </div>
+                            <div class="col-md-4 text-center">
+                                
+                                <div class="music-cover" style="width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%); display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                                    <i class="bi bi-disc" style="font-size: 60px; color: #212529;"></i>
+                                </div>
+                                
+                            </div>
                         </div>
-                        <div class="metric-bar mt-2">
-                            <div class="metric-fill memory-bar" style="width: -1%"></div>
-                        </div>
-                        <p class="text-sm text-muted mt-2 text-center">
-                            -0.0 / -0.0 GB
-                        </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+        </div>
+        
+
+        
+        <div class="row">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-hard-drive"></i> Disk Usage
+                        <i class="bi bi-camera"></i> Current Active Window Screenshot
+                        <span class="badge bg-primary float-end">screenshots\screenshot_20260519_012400.png</span>
                     </div>
                     <div class="card-body">
-                        <div class="text-center">
-                            <span class="text-3xl font-bold">-1%</span>
+                        <div class="screenshot-container">
+                            <img src="screenshots\screenshot_20260519_012400.png" alt="Active Window Screenshot" class="img-fluid">
                         </div>
-                        <div class="metric-bar mt-2">
-                            <div class="metric-fill disk-bar" style="width: -1%"></div>
-                        </div>
-                        <p class="text-sm text-muted mt-2 text-center">
-                            -0.0 / -0.0 GB
-                        </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+        </div>
+        
+
+        
+        
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+
+        <div class="row">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-window-stack"></i> Open Windows
+                        <i class="bi bi-window-stack"></i> Currently Open Windows
+                        
+                        <span class="badge bg-danger float-end">Active: PC Monitor - Real-time Compute...</span>
+                        
                     </div>
-                    <div class="card-body">
-                        <div class="text-center">
-                            <span class="text-3xl font-bold">0</span>
+                    <div class="card-body scroll-container">
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>桌面歌词</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> cloudmusic.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 971x252
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
                         </div>
-                        <p class="text-sm text-muted mt-2 text-center">
-                            None
-                        </p>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>generator.py (3aecffa) (generator.py) - pc-monitor - Trae CN</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Mercy (feat. Jacob Lusk) - The Blessed Madonna/Jacob Lusk</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> cloudmusic.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                            
+                            
+                            <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
+                                <div class="text-white font-bold">
+                                    <i class="bi bi-music-note"></i> Mercy (feat. Jacob Lusk)
+                                </div>
+                                
+                                <div class="text-white-80 text-sm">The Blessed Madonna/Jacob Lusk</div>
+                                
+                                
+                            </div>
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Settings</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> SystemSettings.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1519x1026
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Settings</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1541x1038
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Sticky Notes</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 570x1098
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Xbox</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> XboxPcApp.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1800x1398
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Windows Input Experience</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> TextInputHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Sticky Notes</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Microsoft.Notes.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 548x1086
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Xbox</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1822x1458
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal ">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Program Manager</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> explorer.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
+                                    </div>
+                                    
+                            
+                            
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+
+                        
+                        <div class="mt-4 pt-4 border-top">
+                            <h5><i class="bi bi-browser-chrome text-primary"></i> Browser Windows (3)</h5>
+                            
+                            <div class="window-item window-active browser-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <strong>PC Monitor - Real-time Computer Monitoring System and 2 more pages - Personal - Microsoft​ Edge</strong>
+                                        <div class="text-muted-custom small">
+                                            <i class="bi bi-app"></i> msedge.exe |
+                                            <i class="bi bi-aspect-ratio"></i> 1654x1650
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="window-item window-normal browser-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <strong>Coooookies/netease-cloudmusic-detector: 使用NodeJS监听网易云音乐客户端正在播放中的音乐，支持获取SongId、暂停状态,、歌曲进度，歌曲进度跟随进度条同步，仅支持3.0以上客户端。 and 2 more pages - Personal - Microsoft​ Edge</strong>
+                                        <div class="text-muted-custom small">
+                                            <i class="bi bi-app"></i> msedge.exe |
+                                            <i class="bi bi-aspect-ratio"></i> 2054x1650
+                                        </div>
+                                        
+                                        <div class="mt-2">
+                                            
+                                            <img src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;">
+                                            
+                                            <a href="https://github.com/Coooookies/netease-cloudmusic-detector" target="_blank" rel="noopener noreferrer" 
+                                               style="color: var(--primary-color); text-decoration: none; word-break: break-all;">
+                                                <i class="bi bi-box-arrow-up-right"></i> https://github.com/Coooookies/netease-cloudmusic-detector
+                                            </a>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="window-item window-normal browser-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <strong>Deployments · llmic/pc-monitor and 1 more page - Personal - Microsoft​ Edge</strong>
+                                        <div class="text-muted-custom small">
+                                            <i class="bi bi-app"></i> msedge.exe |
+                                            <i class="bi bi-aspect-ratio"></i> 237x39
+                                        </div>
+                                        
+                                        <div class="mt-2">
+                                            
+                                            <img src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;">
+                                            
+                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" rel="noopener noreferrer" 
+                                               style="color: var(--primary-color); text-decoration: none; word-break: break-all;">
+                                                <i class="bi bi-box-arrow-up-right"></i> https://github.com/llmic/pc-monitor
+                                            </a>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
 
         
-
-        
-
-        
-
-        <button class="btn btn-primary btn-refresh" onclick="window.location.reload();">
-            <i class="bi bi-arrow-clockwise"></i>
-        </button>
-
-        <div class="text-center text-muted mt-4 timestamp">
-            Last updated: 2026-05-19T01:21:42.187258
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-clock-history"></i> Historical Window Open Records (10/10)
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Window Title</th>
+                                        <th>Process</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Mercy (feat. Jacob Lusk) - The Blessed Madonna/Jacob Lusk</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>generator.py (3aecffa) (generator.py) - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>セーラー服と - doriko/初音ミク</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>芭蕉夜雨 - ChiliChill乐团</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>QQ</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">QQ.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>桌面歌词</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>プレイシック - ヨルシカ</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Deployments · llmic/pc-monitor and 1 more page - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>.gitignore - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>臙脂 ft. 重音テト - bk/重音テト</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        
+
+        <footer class="text-center text-muted py-4">
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T01:24:01.120561</p>
+            <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
+        </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const LAST_UPDATE_ISO = '2026-05-19T01:24:01.143514';
+        let lastUpdateTime;
+
+        try {
+            lastUpdateTime = new Date(LAST_UPDATE_ISO);
+            if (isNaN(lastUpdateTime.getTime())) {
+                lastUpdateTime = new Date();
+                console.warn('Could not parse timestamp, using current time');
+            }
+        } catch(e) {
+            lastUpdateTime = new Date();
+            console.error('Error parsing timestamp:', e);
+        }
+
+        function getTimezoneOffset() {
+            const offset = -lastUpdateTime.getTimezoneOffset();
+            const sign = offset >= 0 ? '+' : '-';
+            const hours = Math.floor(Math.abs(offset) / 60);
+            const minutes = Math.abs(offset) % 60;
+            return sign + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+        }
+
+        function formatDate(date) {
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZoneName: 'short'
+            });
+        }
+
+        function formatDateUTC(date) {
+            return date.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+        }
+
+        function formatDuration(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            let result = '';
+            if (hours > 0) result += hours + '小时 ';
+            if (minutes > 0) result += minutes + '分钟 ';
+            if (secs > 0) result += secs + '秒';
+            return result || '0秒';
+        }
+
+        function updateStatus() {
+            const now = new Date();
+            const diffSeconds = Math.floor((now - lastUpdateTime) / 1000);
+
+            const statusLight = document.getElementById('statusLight');
+            const statusText = document.getElementById('statusText');
+            const statusCard = document.getElementById('statusCard');
+            const alertContainer = document.getElementById('alertContainer');
+            const shutdownOverlay = document.getElementById('shutdownOverlay');
+            const shutdownTime = document.getElementById('shutdownTime');
+            
+            const timezone = getTimezoneOffset();
+            document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime) + ' (UTC' + timezone + ')';
+            document.getElementById('currentTimeDisplay').textContent = formatDate(now) + ' (UTC' + timezone + ')';
+            
+            if (diffSeconds > 600) {
+                shutdownOverlay.classList.add('show');
+                shutdownTime.textContent = '最后更新：' + formatDate(lastUpdateTime) + '（已过去 ' + formatDuration(diffSeconds) + '）';
+                return;
+            } else {
+                shutdownOverlay.classList.remove('show');
+            }
+            
+            let statusHTML = '';
+            let alertHTML = '';
+            
+            if (diffSeconds > 180) {
+                statusLight.className = 'status-indicator status-warning';
+                statusHTML = '<i class="bi bi-exclamation-circle"></i> Long Time No Update! (' + diffSeconds + ' sec)';
+                statusCard.style.borderLeft = '4px solid #dc3545';
+                
+                alertHTML = '<div class="alert-danger-custom">' +
+                    '<h6><i class="bi bi-exclamation-triangle"></i> Possible Issues:</h6>' +
+                    '<ul class="mb-0 mt-2">' +
+                    '<li>Computer has been turned off or is in sleep mode</li>' +
+                    '<li>Monitor program has been stopped</li>' +
+                    '<li>Long-term network connection issues</li>' +
+                    '</ul>' +
+                    '</div>';
+                    
+            } else if (diffSeconds > 120) {
+                statusLight.className = 'status-indicator status-warning';
+                statusHTML = '<i class="bi bi-exclamation-triangle"></i> Over 2 minutes without update! (' + diffSeconds + ' sec)';
+                statusCard.style.borderLeft = '4px solid #ffc107';
+                
+                alertHTML = '<div class="alert-warning-custom">' +
+                    '<h6><i class="bi bi-exclamation-triangle"></i> Possible Issues:</h6>' +
+                    '<ul class="mb-0 mt-2">' +
+                    '<li>Monitor program may have stopped</li>' +
+                    '<li>Network connection issues</li>' +
+                    '<li>Permission problems with Python script</li>' +
+                    '</ul>' +
+                    '</div>';
+                    
+            } else {
+                statusLight.className = 'status-indicator status-normal';
+                statusHTML = '<i class="bi bi-check-circle"></i> Normal - Updating';
+                statusCard.style.borderLeft = '4px solid #28a745';
+                alertHTML = '';
+            }
+            
+            statusText.innerHTML = statusHTML;
+            alertContainer.innerHTML = alertHTML;
+        }
+
+        setTimeout(function() {
+            location.reload();
+        }, 90000);
+
+        setInterval(updateStatus, 1000);
+
+        // Initialize metrics chart
+        const metricsCtx = document.getElementById('metricsChart');
+        if (metricsCtx) {
+            const metricsLabels = ["01:11:27", "01:14:34", "01:17:47", "01:20:54", "01:24:01"];
+            const cpuData = [6.344444444444444, 13.522222222222224, 13.866666666666667, 12.988888888888889, 5.727777777777778];
+            const memoryData = [59.5, 59.7, 59.6, 58.3, 59.1];
+            
+            new Chart(metricsCtx, {
+                type: 'line',
+                data: {
+                    labels: metricsLabels,
+                    datasets: [
+                        {
+                            label: 'CPU %',
+                            data: cpuData,
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Memory %',
+                            data: memoryData,
+                            borderColor: '#17a2b8',
+                            backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Usage %'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        updateStatus();
+
+        console.log('PC Monitor initialized');
+        console.log('Last update:', LAST_UPDATE_ISO);
+        console.log('Current time:', new Date().toISOString());
+
         const parsedLyrics = [];
         let currentLyricIndex = 0;
         let playbackStartTime = null;
         let playbackOffset = 0;
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
+        }
 
         function updateLyricDisplay() {
             if (!parsedLyrics || parsedLyrics.length === 0) return;
@@ -301,17 +1173,16 @@
                     break;
                 }
             }
+
+            if (currentLyricIndex === 0 && elapsedSeconds < parsedLyrics[0].time) {
+                currentLine.textContent = parsedLyrics[0].text;
+            }
         }
 
         if (parsedLyrics && parsedLyrics.length > 0) {
             updateLyricDisplay();
             setInterval(updateLyricDisplay, 500);
         }
-
-        setTimeout(() => {
-            window.location.reload();
-        }, 30000);
     </script>
-    
 </body>
 </html>
