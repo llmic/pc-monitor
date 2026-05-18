@@ -6,7 +6,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PC Monitor - 实时电脑监控系统</title>
+    <title>PC Monitor - Real-time Computer Monitoring System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -92,6 +92,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             color: #0056b3;
             text-decoration: none;
         }
+        .window-title-link {
+            color: #007bff;
+            text-decoration: underline;
+            word-break: break-all;
+            transition: all 0.2s;
+        }
+        .window-title-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
         .btn-bilibili {
             background: linear-gradient(135deg, #ff6b9d, #c44569);
             border: none;
@@ -112,6 +122,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 20px;
             background-color: #f8f9fa;
             border-radius: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .stats-number {
             font-size: 2.5rem;
@@ -162,8 +176,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-radius: 8px;
         }
         .scroll-container {
-            max-height: 400px;
-            overflow-y: auto;
+            max-height: none;
+            overflow-y: visible;
         }
         h1, h2, h3, h4, h5, h6 {
             color: #333333;
@@ -180,77 +194,85 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding-top: 20px;
             margin-top: 30px;
         }
+        .h-100 {
+            height: 100% !important;
+        }
+        .row-eq-height {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .row-eq-height > [class*="col-"] {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <h1 class="text-center mb-4">
             <i class="bi bi-display"></i> PC Monitor
-            <small class="text-muted ms-2">实时电脑监控系统</small>
+            <small class="text-muted ms-2">Real-time Computer Monitoring System</small>
         </h1>
 
         <div class="row">
             <div class="col-12">
                 <div class="card" id="statusCard">
                     <div class="card-header">
-                        <i class="bi bi-info-circle"></i> 系统状态
+                        <i class="bi bi-info-circle"></i> System Status
                     </div>
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
-                            <span class="status-indicator {{ 'status-normal' if is_normal else 'status-warning' }}" id="statusLight"></span>
-                            <span id="statusText" class="fs-5">{{ status_message }}</span>
+                            <span class="status-indicator" id="statusLight"></span>
+                            <span id="statusText" class="fs-5"></span>
                         </div>
-                        {% if alert_info %}
-                        <div class="{{ 'alert-danger-custom' if alert_info.level == 'critical' else 'alert-warning-custom' }}">
-                            <h6><i class="bi bi-exclamation-triangle"></i> {{ alert_info.title }}</h6>
-                            <ul class="mb-0 mt-2">
-                                {% for reason in alert_info.reasons %}
-                                <li>{{ reason }}</li>
-                                {% endfor %}
-                            </ul>
+                        <div class="text-muted-custom mb-2">
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay"></span>
                         </div>
-                        {% endif %}
+                        <div class="text-muted-custom">
+                            <strong>Current Time:</strong> <span id="currentTimeDisplay"></span>
+                        </div>
+                        <div id="alertContainer" class="mt-3"></div>
                     </div>
                 </div>
             </div>
         </div>
 
         {% if system_info %}
-        <div class="row">
+        <div class="row row-eq-height">
             <div class="col-lg-3 col-md-6">
-                <div class="stats-card">
+                <div class="stats-card h-100">
                     <div class="stats-number">{{ system_info.cpu|avg_cpu }}%</div>
-                    <div class="stats-label"><i class="bi bi-cpu"></i> CPU 使用率</div>
+                    <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                     <div class="progress-bar-custom mt-2">
                         <div class="progress-fill progress-cpu" style="width: {{ system_info.cpu|avg_cpu }}%"></div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="stats-card">
+                <div class="stats-card h-100">
                     <div class="stats-number">{{ system_info.memory.percent }}%</div>
-                    <div class="stats-label"><i class="bi bi-memory-stick"></i> 内存使用率</div>
+                    <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                     <div class="progress-bar-custom mt-2">
                         <div class="progress-fill progress-memory" style="width: {{ system_info.memory.percent }}%"></div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="stats-card">
+                <div class="stats-card h-100">
                     <div class="stats-number">{{ system_info.disk.percent }}%</div>
-                    <div class="stats-label"><i class="bi bi-hard-drive"></i> 磁盘使用率</div>
+                    <div class="stats-label"><i class="bi bi-hard-drive"></i> Disk Usage</div>
                     <div class="progress-bar-custom mt-2">
                         <div class="progress-fill progress-disk" style="width: {{ system_info.disk.percent }}%"></div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="stats-card">
+                <div class="stats-card h-100">
                     <div class="stats-number">{{ system_info.memory.used }} / {{ system_info.memory.total }} GB</div>
-                    <div class="stats-label"><i class="bi bi-database"></i> 内存使用</div>
+                    <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                     <div class="text-muted-custom small mt-2">
-                        已发送: {{ system_info.network.bytes_sent }} MB<br>
-                        已接收: {{ system_info.network.bytes_recv }} MB
+                        Sent: {{ system_info.network.bytes_sent }} MB<br>
+                        Received: {{ system_info.network.bytes_recv }} MB
                     </div>
                 </div>
             </div>
@@ -260,7 +282,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU 核心使用详情
+                        <i class="bi bi-cpu"></i> CPU Core Details
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -287,12 +309,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-camera"></i> 当前活动窗口截图
+                        <i class="bi bi-camera"></i> Current Active Window Screenshot
                         <span class="badge bg-primary float-end">{{ screenshot|filename }}</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="{{ screenshot }}" alt="活动窗口截图" class="img-fluid">
+                            <img src="{{ screenshot }}" alt="Active Window Screenshot" class="img-fluid">
                         </div>
                     </div>
                 </div>
@@ -300,58 +322,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
         {% endif %}
 
-        {% set active_windows = [] %}
-        {% for win in windows if win.website %}
-            {% set _ = active_windows.append(win) %}
+        {% set browser_windows = [] %}
+        {% set other_windows = [] %}
+        {% for win in windows %}
+            {% if win.website %}
+                {% set _ = browser_windows.append(win) %}
+            {% else %}
+                {% set _ = other_windows.append(win) %}
+            {% endif %}
         {% endfor %}
-        {% if active_windows %}
-        <div class="row">
-            <div class="col-12">
-                <div class="card browser-card" style="border-left-color: #007bff;">
-                    <div class="card-header" style="background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05));">
-                        <i class="bi bi-browser-chrome" style="color: #007bff;"></i> 浏览器窗口
-                        <span class="badge float-end" style="background-color: #007bff;">{{ active_windows|length }} 个标签页</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            {% for win in active_windows %}
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }}">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div class="flex-grow-1">
-                                            <h6 class="font-weight-bold mb-1">{{ win.title[:50] }}{% if win.title|length > 50 %}...{% endif %}</h6>
-                                            <div class="text-muted-custom small mb-2">{{ win.process }}</div>
-                                            {% if win.website %}
-                                            <a href="{{ win.website.url }}" target="_blank" class="website-link">
-                                                <i class="bi bi-globe"></i> {{ win.website.url }}
-                                            </a>
-                                            {% endif %}
-                                        </div>
-                                        {% if win.is_active %}
-                                        <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> 活动</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
 
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-window-stack"></i> 当前运行窗口
+                        <i class="bi bi-window-stack"></i> Currently Open Windows
                         {% if active_window_title %}
-                        <span class="badge bg-danger float-end">活动: {{ active_window_title[:30] }}...</span>
+                        <span class="badge bg-danger float-end">Active: {{ active_window_title[:30] }}...</span>
                         {% endif %}
                     </div>
                     <div class="card-body scroll-container">
-                        {% for win in windows %}
+                        {% for win in other_windows %}
                         <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }} {{ 'bilibili-card' if win.bilibili else '' }}">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
@@ -360,74 +351,161 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                         <i class="bi bi-app"></i> {{ win.process }} |
                                         <i class="bi bi-aspect-ratio"></i> {{ win.width }}x{{ win.height }}
                                     </div>
-                                    {% if win.website %}
-                                    <div class="mt-2">
-                                        <a href="{{ win.website.url }}" target="_blank" class="website-link">
-                                            <i class="bi bi-link-45deg"></i> {{ win.website.url }}
-                                        </a>
-                                    </div>
-                                    {% endif %}
                                     {% if win.bilibili %}
                                     <div class="mt-2">
                                         <span class="badge bg-pink" style="background-color: #f06595;">
                                             <i class="bi bi-play-circle"></i> {{ win.bilibili.bv_id }}
                                         </span>
                                         <a href="{{ win.bilibili.url }}" target="_blank" class="btn-bilibili btn-sm ms-2">
-                                            <i class="bi bi-box-arrow-up-right"></i> 跳转观看
+                                            <i class="bi bi-box-arrow-up-right"></i> Watch
                                         </a>
                                     </div>
                                     {% endif %}
                                 </div>
                                 {% if win.is_active %}
-                                <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> 活动窗口</span>
+                                <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> Active Window</span>
                                 {% endif %}
                             </div>
                         </div>
                         {% endfor %}
+
+                        {% if browser_windows %}
+                        <div class="mt-4 pt-4 border-top">
+                            <h5><i class="bi bi-browser-chrome text-primary"></i> Browser Windows ({{ browser_windows|length }})</h5>
+                            {% for win in browser_windows %}
+                            <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }} browser-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        {% if win.website %}
+                                        <a href="{{ win.website.url }}" target="_blank" class="window-title-link">
+                                            <strong>{{ win.title }}</strong>
+                                        </a>
+                                        {% else %}
+                                        <strong>{{ win.title }}</strong>
+                                        {% endif %}
+                                        <div class="text-muted-custom small">
+                                            <i class="bi bi-app"></i> {{ win.process }} |
+                                            <i class="bi bi-aspect-ratio"></i> {{ win.width }}x{{ win.height }}
+                                        </div>
+                                        {% if win.website %}
+                                        <div class="mt-2">
+                                            <a href="{{ win.website.url }}" target="_blank" class="website-link">
+                                                <i class="bi bi-link-45deg"></i> {{ win.website.url }}
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    {% if win.is_active %}
+                                    <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - 实时电脑监控系统 | 数据更新时间: {{ timestamp }}</p>
-            <p class="small">页面每 90 秒自动刷新 | 由 Python + Bootstrap5 驱动</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: {{ timestamp }}</p>
+            <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const LAST_UPDATE = new Date('{{ last_update_iso }}');
+        const LAST_UPDATE_ISO = '{{ last_update_iso }}';
+        let lastUpdateTime;
+        
+        try {
+            lastUpdateTime = new Date(LAST_UPDATE_ISO);
+            if (isNaN(lastUpdateTime.getTime())) {
+                lastUpdateTime = new Date();
+                console.warn('Could not parse timestamp, using current time');
+            }
+        } catch(e) {
+            lastUpdateTime = new Date();
+            console.error('Error parsing timestamp:', e);
+        }
 
-        function checkTimeout() {
+        function formatDate(date) {
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function updateStatus() {
             const now = new Date();
-            const diffSeconds = Math.floor((now - LAST_UPDATE) / 1000);
+            const diffSeconds = Math.floor((now - lastUpdateTime) / 1000);
 
             const statusLight = document.getElementById('statusLight');
             const statusText = document.getElementById('statusText');
             const statusCard = document.getElementById('statusCard');
-
+            const alertContainer = document.getElementById('alertContainer');
+            
+            document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime);
+            document.getElementById('currentTimeDisplay').textContent = formatDate(now);
+            
+            let statusHTML = '';
+            let alertHTML = '';
+            
             if (diffSeconds > 180) {
                 statusLight.className = 'status-indicator status-warning';
-                statusText.innerHTML = '<i class="bi bi-exclamation-circle"></i> 长时间无更新! (' + diffSeconds + '秒)';
+                statusHTML = '<i class="bi bi-exclamation-circle"></i> Long Time No Update! (' + diffSeconds + ' sec)';
                 statusCard.style.borderLeft = '4px solid #dc3545';
+                
+                alertHTML = '<div class="alert-danger-custom">' +
+                    '<h6><i class="bi bi-exclamation-triangle"></i> Possible Issues:</h6>' +
+                    '<ul class="mb-0 mt-2">' +
+                    '<li>Computer has been turned off or is in sleep mode</li>' +
+                    '<li>Monitor program has been stopped</li>' +
+                    '<li>Long-term network connection issues</li>' +
+                    '</ul>' +
+                    '</div>';
+                    
             } else if (diffSeconds > 120) {
                 statusLight.className = 'status-indicator status-warning';
-                statusText.innerHTML = '<i class="bi bi-exclamation-triangle"></i> 超过90秒未更新! (' + diffSeconds + '秒)';
+                statusHTML = '<i class="bi bi-exclamation-triangle"></i> Over 2 minutes without update! (' + diffSeconds + ' sec)';
                 statusCard.style.borderLeft = '4px solid #ffc107';
+                
+                alertHTML = '<div class="alert-warning-custom">' +
+                    '<h6><i class="bi bi-exclamation-triangle"></i> Possible Issues:</h6>' +
+                    '<ul class="mb-0 mt-2">' +
+                    '<li>Monitor program may have stopped</li>' +
+                    '<li>Network connection issues</li>' +
+                    '<li>Permission problems with Python script</li>' +
+                    '</ul>' +
+                    '</div>';
+                    
             } else {
                 statusLight.className = 'status-indicator status-normal';
-                statusText.innerHTML = '<i class="bi bi-check-circle"></i> 正常更新中';
+                statusHTML = '<i class="bi bi-check-circle"></i> Normal - Updating';
                 statusCard.style.borderLeft = '4px solid #28a745';
+                alertHTML = '';
             }
+            
+            statusText.innerHTML = statusHTML;
+            alertContainer.innerHTML = alertHTML;
         }
 
-        setInterval(checkTimeout, 1000);
         setTimeout(function() {
             location.reload();
         }, 90000);
 
-        checkTimeout();
+        setInterval(updateStatus, 1000);
+
+        updateStatus();
+        
+        console.log('PC Monitor initialized');
+        console.log('Last update:', LAST_UPDATE_ISO);
+        console.log('Current time:', new Date().toISOString());
     </script>
 </body>
 </html>"""
@@ -460,56 +538,16 @@ class HTMLGenerator:
 
         active_window_title = data.get('active_window')
         timestamp = data.get('timestamp', '')
-        last_update = data.get('last_update', '')
-
-        now = datetime.now()
-        diff_seconds = 0
-        if last_update:
-            try:
-                last_dt = datetime.fromisoformat(last_update)
-                diff_seconds = int((now - last_dt).total_seconds())
-            except Exception:
-                pass
-
-        is_normal = diff_seconds <= 120
-        alert_info = None
-
-        if diff_seconds > 180:
-            alert_info = {
-                'level': 'critical',
-                'title': '长期超时异常 (>3分钟)',
-                'reasons': [
-                    '电脑关机/休眠/睡眠',
-                    '长时间断网无法同步',
-                    '程序被强制结束',
-                    '电脑蓝屏或崩溃'
-                ]
-            }
-        elif diff_seconds > 120:
-            alert_info = {
-                'level': 'warning',
-                'title': '短期超时异常 (90秒-3分钟)',
-                'reasons': [
-                    '监控程序停止运行',
-                    '本地网络异常无法推送GitHub',
-                    '系统权限拦截Python进程'
-                ]
-            }
-
-        status_message = '正常更新中' if is_normal else f'超过{diff_seconds}秒未更新!'
-
+        
+        last_update = datetime.now().isoformat()
+        
         html = self.template.render(
             windows=windows,
             system_info=system_info,
             screenshot=screenshot,
             active_window_title=active_window_title,
             timestamp=timestamp,
-            last_update=last_update,
-            last_update_iso=last_update,
-            status_message=status_message,
-            is_normal=is_normal,
-            alert_info=alert_info,
-            diff_seconds=diff_seconds
+            last_update_iso=last_update
         )
 
         return html

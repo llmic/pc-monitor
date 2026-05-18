@@ -6,6 +6,7 @@ import win32con
 import time
 import re
 import os
+import shutil
 from datetime import datetime
 from PIL import Image, ImageGrab
 from bilibili import extract_bv_info
@@ -86,18 +87,110 @@ def get_network_usage():
         'bytes_recv': round(net.bytes_recv / (1024 ** 2), 2)
     }
 
+def get_extended_window_rect(hwnd):
+    """获取窗口的扩展矩形区域（包含阴影等）"""
+    try:
+        # 尝试使用 DWM 获取带阴影的窗口区域
+        from ctypes import windll, c_int, byref
+        from ctypes.wintypes import RECT
+        
+        DWMWA_EXTENDED_FRAME_BOUNDS = 9
+        rect = RECT()
+        
+        # Windows 8+ 支持这个
+        if windll.dwmapi.DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, byref(rect), c_int(8)) == 0:
+            return rect.left, rect.top, rect.right, rect.bottom
+    except Exception:
+        pass
+        
+    # 回退到普通窗口矩形
+    try:
+        rect = win32gui.GetWindowRect(hwnd)
+        return rect[0], rect[1], rect[2], rect[3]
+    except Exception:
+        return None
+
+def get_window_rect_with_buffer(hwnd, buffer_pixels=10):
+    """获取窗口矩形并添加边界缓冲"""
+    rect = get_extended_window_rect(hwnd)
+    if not rect:
+        return None
+        
+    left, top, right, bottom = rect
+    
+    # 添加边界缓冲，确保完整包含窗口
+    left = max(0, left - buffer_pixels)
+    top = max(0, top - buffer_pixels)
+    right = right + buffer_pixels
+    bottom = bottom + buffer_pixels
+    
+    return left, top, right, bottom
+
+def bring_window_to_front(hwnd):
+    """尝试将窗口前置"""
+    try:
+        win32gui.SetForegroundWindow(hwnd)
+        # 有时需要多试几次，配合一些Windows消息
+        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        time.sleep(0.3)
+    except Exception:
+        pass
+
 def capture_active_window():
+    """捕获活动窗口的截图"""
     try:
         window = gw.getActiveWindow()
-        if window:
-            left, top, right, bottom = window.left, window.top, window.left + window.width, window.top + window.height
-            screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            filename = f'{SCREENSHOT_DIR}/screenshot_{timestamp}.png'
-            screenshot.save(filename, 'PNG')
-            return filename
+        if not window:
+            print("No active window found")
+            return None
+            
+        hwnd = window._hWnd
+        
+        # 先尝试将窗口前置
+        bring_window_to_front(hwnd)
+        
+        # 获取窗口矩形（带缓冲）
+        rect = get_window_rect_with_buffer(hwnd, buffer_pixels=15)
+        if not rect:
+            print("Could not get window rectangle")
+            return None
+            
+        left, top, right, bottom = rect
+        
+        # 确保窗口有合理的大小
+        if right - left < 50 or bottom - top < 50:
+            print("Window too small to capture")
+            return None
+        
+        print(f"Capturing window: {left},{top} - {right},{bottom}")
+        
+        # 捕获截图
+        screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
+        
+        # 生成文件名
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        base_filename = f'screenshot_{timestamp}.png'
+        
+        # 保存在screenshots目录
+        screenshot_path_in_dir = os.path.join(SCREENSHOT_DIR, base_filename)
+        screenshot.save(screenshot_path_in_dir, 'PNG', optimize=True)
+        print(f"Saved to: {screenshot_path_in_dir}")
+        
+        # 同时复制一份到项目根目录，便于HTML直接访问
+        try:
+            screenshot_path_in_root = base_filename
+            shutil.copy2(screenshot_path_in_dir, screenshot_path_in_root)
+            print(f"Copied to root: {screenshot_path_in_root}")
+        except Exception as e:
+            print(f"Copy to root failed: {e}")
+            screenshot_path_in_root = screenshot_path_in_dir
+            
+        return screenshot_path_in_root
+        
     except Exception as e:
         print(f"Screenshot error: {e}")
+        import traceback
+        traceback.print_exc()
     return None
 
 class DataCollector:
