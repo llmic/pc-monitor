@@ -52,7 +52,29 @@ def run_once():
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 采集错误: {e}")
         import traceback
         traceback.print_exc()
-        return False
+        
+        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 尝试使用模拟数据生成页面...")
+        try:
+            data = {
+                'windows': [],
+                'active_window': None,
+                'system_info': {
+                    'cpu': [-1, -1, -1, -1],
+                    'memory': {'total': -1, 'available': -1, 'used': -1, 'percent': -1},
+                    'disk': {'total': -1, 'used': -1, 'free': -1, 'percent': -1},
+                    'network': {'bytes_sent': -1, 'bytes_recv': -1}
+                },
+                'screenshot': None,
+                'timestamp': datetime.now().isoformat()
+            }
+            
+            html = generator.generate(data)
+            generator.save(html, OUTPUT_FILE)
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 使用模拟数据生成HTML页面成功: {OUTPUT_FILE}")
+            return True
+        except Exception as e2:
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 模拟数据生成也失败: {e2}")
+            return False
 
 if __name__ == '__main__':
     success = run_once()

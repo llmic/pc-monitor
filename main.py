@@ -59,19 +59,37 @@ def get_timestamp():
 def run_git_push():
     """Perform Git add, commit, and push operations."""
     try:
-        print(f"\n[{get_timestamp()}] Starting Git push...")
+        print(f"\n[{get_timestamp()}] ==================== Git Push 流程开始 ====================")
         
-        # Git add
+        # 检查是否有未提交的更改
+        status_result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+        
+        if status_result.returncode != 0:
+            print(f"[{get_timestamp()}] ⚠️ 警告: 无法获取 Git 状态 - {status_result.stderr.strip()}")
+        elif not status_result.stdout.strip():
+            print(f"[{get_timestamp()}] ℹ️ 提示: 没有需要提交的更改")
+            print(f"[{get_timestamp()}] ==================== Git Push 流程结束 ====================")
+            return
+        
+        print(f"[{get_timestamp()}] 1️⃣ 执行 Git Add...")
         add_result = subprocess.run(
             ['git', 'add', OUTPUT_FILE],
             capture_output=True,
             text=True
         )
         
-        if add_result.returncode != 0:
-            print(f"[{get_timestamp()}] Git add warning: {add_result.stderr}")
+        if add_result.returncode == 0:
+            print(f"[{get_timestamp()}]    ✅ Git Add 成功")
+        else:
+            print(f"[{get_timestamp()}]    ⚠️ 警告: Git Add 失败 - {add_result.stderr.strip()}")
+            print(f"[{get_timestamp()}] ==================== Git Push 流程结束 ====================")
+            return
         
-        # Git commit
+        print(f"[{get_timestamp()}] 2️⃣ 执行 Git Commit...")
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         commit_msg = GIT_COMMIT_MESSAGE.format(timestamp=timestamp)
         commit_result = subprocess.run(
@@ -80,10 +98,15 @@ def run_git_push():
             text=True
         )
         
-        if commit_result.returncode != 0:
-            print(f"[{get_timestamp()}] Git commit info: {commit_result.stdout}")
+        if commit_result.returncode == 0:
+            print(f"[{get_timestamp()}]    ✅ Git Commit 成功: {commit_result.stdout.strip()}")
+        else:
+            print(f"[{get_timestamp()}]    ⚠️ 警告: Git Commit 失败 - {commit_result.stderr.strip()}")
+            print(f"[{get_timestamp()}]    ℹ️ 可能原因: 没有需要提交的更改或配置问题")
+            print(f"[{get_timestamp()}] ==================== Git Push 流程结束 ====================")
+            return
         
-        # Git push
+        print(f"[{get_timestamp()}] 3️⃣ 执行 Git Push...")
         push_result = subprocess.run(
             ['git', 'push', 'origin', 'master'],
             capture_output=True,
@@ -91,14 +114,26 @@ def run_git_push():
         )
         
         if push_result.returncode == 0:
-            print(f"[{get_timestamp()}] ✅ Git push successful!")
+            print(f"[{get_timestamp()}]    ✅ Git Push 成功!")
             if push_result.stdout:
-                print(f"[{get_timestamp()}] Output: {push_result.stdout}")
+                print(f"[{get_timestamp()}]    输出: {push_result.stdout.strip()}")
+            print(f"[{get_timestamp()}]    🎉 网页已成功推送到 GitHub!")
         else:
-            print(f"[{get_timestamp()}] ⚠️ Git push failed: {push_result.stderr}")
+            print(f"[{get_timestamp()}]    ❌ Git Push 失败!")
+            print(f"[{get_timestamp()}]    错误信息: {push_result.stderr.strip()}")
+            print(f"[{get_timestamp()}]    ⚠️ 可能原因:")
+            print(f"[{get_timestamp()}]       - 网络连接问题")
+            print(f"[{get_timestamp()}]       - Git 凭证未配置")
+            print(f"[{get_timestamp()}]       - 没有推送权限")
+            print(f"[{get_timestamp()}]       - 分支名称不正确")
+            
+        print(f"[{get_timestamp()}] ==================== Git Push 流程结束 ====================")
             
     except Exception as e:
-        print(f"[{get_timestamp()}] ❌ Git push error: {e}")
+        print(f"[{get_timestamp()}] ❌ Git Push 异常错误: {str(e)}")
+        import traceback
+        print(f"[{get_timestamp()}]    详细错误: {traceback.format_exc()}")
+        print(f"[{get_timestamp()}] ==================== Git Push 流程结束 ====================")
 
 
 def git_push_thread():

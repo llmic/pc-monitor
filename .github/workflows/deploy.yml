@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -31,8 +33,17 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Monitor
+        env:
+          PYTHONUTF8: 1
         run: |
           python generate_once.py
+          echo "Generated index.html successfully"
+
+      - name: List files
+        run: |
+          dir
+          echo "=== Contents of index.html ==="
+          type index.html | head -20
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -49,3 +60,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          verbose: true
