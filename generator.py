@@ -454,26 +454,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     <i class="bi bi-vinyl"></i> {{ current_music.album }}
                                 </p>
                                 {% endif %}
-                                {% if current_music.current_time_str and current_music.total_time_str %}
-                                <div class="mb-3">
-                                    <div class="progress" style="height: 8px;">
-                                        <div class="progress-bar" role="progressbar" 
-                                             style="width: {% if current_music.total_duration %}{{ (current_music.playback_position / current_music.total_duration * 100)|round(1) }}{% else %}0{% endif %}%;"
-                                             aria-valuenow="{{ current_music.playback_position|round(1) if current_music.playback_position else 0 }}"
-                                             aria-valuemin="0"
-                                             aria-valuemax="{{ current_music.total_duration|round(1) if current_music.total_duration else 0 }}">
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between mt-1" style="font-size: 0.85em; opacity: 0.85;">
-                                        <span>{{ current_music.current_time_str }}</span>
-                                        <span class="me-2">
-                                            <i class="bi bi-{{ 'play-fill' if current_music.playback_status == 'Playing' else 'pause-fill' }}"></i>
-                                            {{ current_music.playback_status }}
-                                        </span>
-                                        <span>{{ current_music.total_time_str }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
+
                                 {% if current_music.parsed_lyrics %}
                                 <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
                                     <span id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></span>
@@ -486,11 +467,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             </div>
                             <div class="col-md-4 text-center">
                                 {% if current_music.cover_url %}
-                                <div class="album-cover" style="width: 140px; height: 140px; border-radius: 50%; overflow: hidden; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: pulse 2s ease-in-out infinite;">
-                                    <img src="{{ current_music.cover_url }}" alt="Album Cover" style="width: 100%; height: 100%; object-fit: cover;">
+                                <div class="music-cover" style="width: 140px; height: 140px; border-radius: 50%; overflow: hidden; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: pulse 2s ease-in-out infinite;">
+                                    <img src="{{ current_music.cover_url }}" alt="Music Cover" style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                                 {% else %}
-                                <div class="album-cover" style="width: 140px; height: 140px; border-radius: 50%; background: {% if current_music.colors %}linear-gradient(135deg, {{ current_music.colors.secondary }} 0%, {{ current_music.colors.primary }} 100%){% else %}linear-gradient(135deg, #764ba2 0%, #667eea 100%){% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: pulse 2s ease-in-out infinite;">
+                                <div class="music-cover" style="width: 140px; height: 140px; border-radius: 50%; background: {% if current_music.colors %}linear-gradient(135deg, {{ current_music.colors.secondary }} 0%, {{ current_music.colors.primary }} 100%){% else %}linear-gradient(135deg, #764ba2 0%, #667eea 100%){% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: pulse 2s ease-in-out infinite;">
                                     <i class="bi bi-disc" style="font-size: 60px; color: {% if current_music.colors %}{{ current_music.colors.primary|contrasting_color }}{% else %}#ffffff{% endif %};"></i>
                                 </div>
                                 {% endif %}
