@@ -61,7 +61,7 @@ def get_browser_url_from_title(title, proc_name):
             possible_domain = parts[i].strip()
             
             skip = False
-            for keyword in ['Personal', 'Work', 'Profile', 'Microsoft', 'Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360', 'and 1 more page', 'and 2 more pages', 'and multiple pages']:
+            for keyword in ['Personal', 'Work', 'Profile', 'Microsoft', 'Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360']:
                 if keyword.lower() in possible_domain.lower():
                     skip = True
                     break
@@ -76,7 +76,7 @@ def get_browser_url_from_title(title, proc_name):
             if '/' in possible_domain and len(possible_domain.split('/')) == 2:
                 return f'https://github.com/{possible_domain}'
     
-    return 'https://www.bing.com'
+    return None
 
 def get_website_info(url):
     if not url:
@@ -280,6 +280,12 @@ class DataCollector:
                 website_info = get_website_info(browser_url)
                 if website_info:
                     window_info['website'] = website_info
+            else:
+                proc_lower = proc_name.lower() if proc_name else ''
+                for b in BROWSER_NAMES:
+                    if b.lower() in proc_lower or b.lower() in win.title.lower():
+                        window_info['website'] = {'url': None, 'title': win.title}
+                        break
 
             windows.append(window_info)
 

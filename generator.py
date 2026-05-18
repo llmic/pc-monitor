@@ -330,11 +330,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details
+                        <i class="bi bi-cpu"></i> CPU Core Details ({{ system_info.cpu|length }} cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
                             {% for (index, usage) in system_info.cpu|enumerate %}
+                            {% if usage > 0 %}
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core {{ index }}</div>
@@ -344,6 +345,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
@@ -424,7 +426,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }} browser-card">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
-                                        {% if win.website %}
+                                        {% if win.website and win.website.url %}
                                         <a href="{{ win.website.url }}" target="_blank" class="window-title-link">
                                             <strong>{{ win.title }}</strong>
                                         </a>
@@ -437,9 +439,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                         </div>
                                         {% if win.website %}
                                         <div class="mt-2">
+                                            {% if win.website.url %}
                                             <a href="{{ win.website.url }}" target="_blank" class="website-link">
                                                 <i class="bi bi-link-45deg"></i> {{ win.website.url }}
                                             </a>
+                                            {% else %}
+                                            <span class="text-muted-custom small"><i class="bi bi-info-circle"></i> 网页标题: {{ win.title }}</span>
+                                            {% endif %}
                                         </div>
                                         {% endif %}
                                     </div>
@@ -529,7 +535,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime) + ' (UTC' + timezone + ')';
             document.getElementById('currentTimeDisplay').textContent = formatDate(now) + ' (UTC' + timezone + ')';
             
-            if (diffSeconds > 300) {
+            if (diffSeconds > 600) {
                 shutdownOverlay.classList.add('show');
                 shutdownTime.textContent = '最后更新：' + formatDate(lastUpdateTime) + '（已过去 ' + formatDuration(diffSeconds) + '）';
                 return;
