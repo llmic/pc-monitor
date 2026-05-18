@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install psutil pygetwindow pywin32 pynput jinja2 requests
+          pip install -r requirements.txt
 
       - name: Run Monitor
         run: |
