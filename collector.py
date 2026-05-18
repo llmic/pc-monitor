@@ -134,6 +134,13 @@ def get_browser_url_from_title(title, proc_name):
             
             if '/' in possible_domain and len(possible_domain.split('/')) == 2:
                 return f'https://github.com/{possible_domain}'
+
+    domain_pattern = r'(?:www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(?::\d+)?(?:/[^\s]*)?'
+    domain_match = re.search(domain_pattern, title)
+    if domain_match:
+        domain = domain_match.group(1)
+        if domain.lower() not in ['microsoft', 'edge', 'chrome', 'firefox', 'brave', 'opera']:
+            return f'https://{domain}'
     
     return None
 
@@ -340,12 +347,11 @@ class DataCollector:
             proc_lower = proc_name.lower()
             is_browser = any(b.lower() in proc_lower for b in BROWSER_NAMES)
             
-            # Check if it's a media app (should capture even when minimized)
+            # Check if it's a media app (should capture even when minimized) - only match cloudmusic.exe
             is_media_app = (
-                'cloudmusic' in proc_lower or 
-                'netease' in proc_lower or
-                'music' in proc_lower or
-                '网易云音乐' in win.title
+                'cloudmusic' in proc_lower or
+                ('netease' in proc_lower and 'cloudmusic' not in proc_lower) or
+                ('网易云音乐' in win.title and 'cloudmusic' in proc_lower)
             )
             
             # Bilibili client or related processes
@@ -394,11 +400,8 @@ class DataCollector:
                         'cover': None
                     }
 
-            # Check for NetEase Cloud Music (even when minimized)
-            if ('网易云音乐' in win.title or 
-                'Netease' in proc_name.lower() or 
-                'cloudmusic' in proc_lower or
-                'music' in proc_lower):
+            # Check for NetEase Cloud Music (even when minimized) - only match cloudmusic.exe process
+            if proc_name and 'cloudmusic' in proc_name.lower():
                 music_info = get_music_info(win.title)
                 if music_info:
                     window_info['music'] = music_info

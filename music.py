@@ -297,13 +297,18 @@ def parse_netease_music_title(title):
     """Parse NetEase Cloud Music window title to extract song info."""
     if not title:
         return None
+    
+    # 排除浏览器窗口标题
+    browser_keywords = ['microsoft edge', 'chrome', 'firefox', 'safari', 'opera', 'edge', 'browser']
+    for keyword in browser_keywords:
+        if keyword in title.lower():
+            return None
 
     patterns = [
         r'^(.+?)\s*[-–—]\s*([^-–—]+?)\s*[-–—]\s*网易云音乐',
         r'^(.+?)\s*-\s*([^-]+?)\s*-\s*网易云音乐',
         r'^(.+?)\s*[-–—]\s*网易云音乐',
-        r'^No title\s*[-–—]\s*(.+)',
-        r'^(.+?)\s*[-–—]\s*(.+)$'
+        r'^(.+?)\s*[-–—]\s*[^\s]+?$'
     ]
 
     for pattern in patterns:
