@@ -31,9 +31,13 @@ os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 def get_browser_url_from_title(title, proc_name):
     proc_lower = proc_name.lower()
+    
+    if '.exe' not in proc_lower:
+        proc_lower += '.exe'
+    
     is_browser = False
     for b in BROWSER_NAMES:
-        if b in proc_lower:
+        if b.lower() in proc_lower:
             is_browser = True
             break
     
@@ -45,20 +49,34 @@ def get_browser_url_from_title(title, proc_name):
     if match:
         return match.group(0)
 
-    if ' - ' in title:
-        parts = title.rsplit(' - ', 1)
-        possible_domain = parts[-1].strip()
-        
-        for browser in ['Microsoft Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360', 'Liebao', 'Sogou']:
-            if possible_domain.lower().endswith(browser.lower()):
-                if len(parts) >= 2:
-                    possible_domain = parts[-2].strip()
-                break
-        
-        if '.' in possible_domain and '://' not in title and not any(x in possible_domain.lower() for x in ['personal', 'work', 'profile', 'microsoft']):
-            return f'https://{possible_domain}'
+    github_pattern = r'([a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+)'
+    github_match = re.search(github_pattern, title)
+    if github_match:
+        return f'https://github.com/{github_match.group(1)}'
 
-    return 'https://www.bing.com' if is_browser else None
+    if ' - ' in title:
+        parts = title.split(' - ')
+        
+        for i in range(len(parts)-1, -1, -1):
+            possible_domain = parts[i].strip()
+            
+            skip = False
+            for keyword in ['Personal', 'Work', 'Profile', 'Microsoft', 'Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360', 'and 1 more page', 'and 2 more pages', 'and multiple pages']:
+                if keyword.lower() in possible_domain.lower():
+                    skip = True
+                    break
+            if skip:
+                continue
+            
+            if '.' in possible_domain and '://' not in possible_domain:
+                if not possible_domain.startswith('http'):
+                    return f'https://{possible_domain}'
+                return possible_domain
+            
+            if '/' in possible_domain and len(possible_domain.split('/')) == 2:
+                return f'https://github.com/{possible_domain}'
+    
+    return 'https://www.bing.com'
 
 def get_website_info(url):
     if not url:
