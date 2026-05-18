@@ -400,6 +400,16 @@ class DataCollector:
                     window_info['bilibili'] = full_bv_info
                 else:
                     window_info['bilibili'] = bv_info
+            else:
+                # Also check if URL contains bilibili
+                temp_url = get_browser_url_from_title(win.title, proc_name)
+                if temp_url and 'bilibili.com' in temp_url.lower():
+                    window_info['bilibili'] = {
+                        'bv_id': 'bilibili',
+                        'url': temp_url,
+                        'title': 'B站内容',
+                        'cover': None
+                    }
 
             # Check for NetEase Cloud Music (even when minimized)
             if ('网易云音乐' in win.title or 

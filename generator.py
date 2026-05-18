@@ -205,6 +205,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: flex;
             flex-direction: column;
         }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .lyrics-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lyrics-box::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .lyrics-box::-webkit-scrollbar-thumb {
+            background: #ff4757;
+            border-radius: 4px;
+        }
         .shutdown-overlay {
             position: fixed;
             top: 0;
@@ -356,6 +371,42 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             </div>
                             {% endif %}
                             {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if current_music %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header" style="background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;">
+                        <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
+                    </div>
+                    <div class="card-body" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="mb-3">
+                                    <i class="bi bi-disc"></i> {{ current_music.song }}
+                                </h4>
+                                {% if current_music.artist %}
+                                <p class="mb-2">
+                                    <i class="bi bi-person"></i> {{ current_music.artist }}
+                                </p>
+                                {% endif %}
+                                {% if current_music.lyrics %}
+                                <div class="lyrics-box mt-3 p-3" style="background: rgba(0,0,0,0.3); border-radius: 10px; max-height: 200px; overflow-y: auto;">
+                                    <pre class="mb-0" style="color: #ecf0f1; white-space: pre-wrap; font-family: inherit;">{{ current_music.lyrics }}</pre>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="music-visualizer">
+                                    <i class="bi bi-vinyl" style="font-size: 80px; animation: spin 4s linear infinite;"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -716,6 +767,7 @@ class HTMLGenerator:
 
     def generate(self, data):
         windows = data.get('windows', [])
+        history_windows = data.get('history_windows', [])
         system_info = data.get('system_info', {})
         screenshot = data.get('screenshot', '')
         screenshot_message = data.get('screenshot_message', '')
@@ -729,11 +781,20 @@ class HTMLGenerator:
         avatar = data.get('avatar', '')
         shutdown_timeout = data.get('shutdown_timeout', 600)
         
+        # Get currently playing music
+        current_music = None
+        for win in windows:
+            if win.get('music'):
+                current_music = win['music']
+                break
+        
         html = self.template.render(
             windows=windows,
+            history_windows=history_windows,
             system_info=system_info,
             screenshot=screenshot,
             screenshot_message=screenshot_message,
+            current_music=current_music,
             active_window_title=active_window_title,
             timestamp=timestamp,
             last_update_iso=last_update,
