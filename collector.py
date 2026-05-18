@@ -6,6 +6,7 @@ import win32con
 import time
 import re
 import os
+import glob
 from datetime import datetime
 from PIL import Image, ImageGrab
 from bilibili import extract_bv_info, get_bilibili_info
@@ -15,6 +16,38 @@ from ctypes.wintypes import RECT, HWND, DWORD
 
 # 开启高DPI感知，解决高分辨率屏幕坐标偏移问题
 windll.user32.SetProcessDPIAware()
+
+def get_user_avatar_paths():
+    """获取当前用户所有头像文件路径"""
+    appdata_roaming = os.getenv('APPDATA')
+    if not appdata_roaming:
+        return []
+
+    avatar_folder = os.path.join(
+        appdata_roaming,
+        'Microsoft',
+        'Windows',
+        'AccountPictures'
+    )
+
+    if not os.path.exists(avatar_folder):
+        return []
+
+    avatar_extensions = ['*.png', '*.jpg', '*.jpeg', '*.bmp']
+    avatar_files = []
+    for ext in avatar_extensions:
+        avatar_files.extend(glob.glob(os.path.join(avatar_folder, ext)))
+
+    return sorted(avatar_files)
+
+def get_latest_avatar():
+    """获取最新的头像文件"""
+    avatar_files = get_user_avatar_paths()
+    if not avatar_files:
+        return None
+
+    avatar_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+    return avatar_files[0]
 
 BROWSER_NAMES = {
     'chrome.exe': 'Google Chrome',
@@ -41,50 +74,6 @@ PRIVACY_PROCESSES = {
 
 SCREENSHOT_DIR = 'screenshots'
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
-
-def is_microphone_active():
-    """Check if microphone is currently in use."""
-    try:
-        import pyaudio
-        p = pyaudio.PyAudio()
-        for i in range(p.get_device_count()):
-            dev_info = p.get_device_info_by_index(i)
-            if dev_info.get('maxInputChannels', 0) > 0:
-                # Check if this input device is active
-                try:
-                    stream = p.open(
-                        format=pyaudio.paInt16,
-                        channels=1,
-                        rate=44100,
-                        input=True,
-                        input_device_index=i,
-                        frames_per_buffer=1024
-                    )
-                    stream.stop_stream()
-                    stream.close()
-                except Exception:
-                    # Device is likely in use by another application
-                    p.terminate()
-                    return True
-        p.terminate()
-    except Exception:
-        pass
-    return False
-
-def is_camera_active():
-    """Check if camera is currently in use."""
-    try:
-        import cv2
-        for i in range(5):
-            cap = cv2.VideoCapture(i)
-            if cap.isOpened():
-                cap.release()
-            else:
-                # Camera might be in use
-                return True
-    except Exception:
-        pass
-    return False
 
 def get_browser_url_from_title(title, proc_name):
     proc_lower = proc_name.lower()
@@ -249,16 +238,6 @@ def bring_window_to_front(hwnd):
 def capture_active_window():
     """捕获活动窗口的完整截图，仅保存至screenshots文件夹"""
     try:
-        # 检查麦克风是否正在使用
-        if is_microphone_active():
-            print("⚠️ 麦克风正在使用中，跳过截图以保护隐私")
-            return {'path': None, 'reason': 'microphone_active', 'message': '麦克风正在使用中，为保护隐私跳过截图'}
-        
-        # 检查摄像头是否正在使用
-        if is_camera_active():
-            print("⚠️ 摄像头正在使用中，跳过截图以保护隐私")
-            return {'path': None, 'reason': 'camera_active', 'message': '摄像头正在使用中，为保护隐私跳过截图'}
-            
         # 改用原生win32API获取前台窗口，比pygetwindow更稳定
         hwnd = win32gui.GetForegroundWindow()
         if not hwnd:
@@ -276,7 +255,7 @@ def capture_active_window():
         # 检查是否为隐私保护进程
         for privacy_proc in PRIVACY_PROCESSES:
             if privacy_proc.lower() in proc_name:
-                print(f"⚠️ 检测到隐私保护窗口 ({proc_name})，跳过截图")
+                print(f"[WARNING] 检测到隐私保护窗口 ({proc_name})，跳过截图")
                 return {'path': None, 'reason': 'privacy_protection', 'message': f'{proc_name} 窗口已设置隐私保护，跳过截图'}
             
         # 前置并恢复窗口
@@ -317,9 +296,13 @@ def capture_active_window():
 
 
 class DataCollector:
-    def __init__(self):
+    def __init__(self, avatar_path=None):
         self.active_window_title = None
         self.windows_data = []
+        if avatar_path and avatar_path.strip():
+            self.avatar_path = avatar_path
+        else:
+            self.avatar_path = get_latest_avatar()
 
     def get_active_window(self):
         try:
@@ -456,5 +439,6 @@ class DataCollector:
             'screenshot': screenshot_result['path'],
             'screenshot_reason': screenshot_result['reason'],
             'screenshot_message': screenshot_result['message'],
-            'timestamp': datetime.now().isoformat()
+            'timestamp': datetime.now().isoformat(),
+            'avatar': self.avatar_path
         }

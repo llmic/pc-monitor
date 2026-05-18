@@ -43,7 +43,7 @@ SCREENSHOT_DIR = 'screenshots'     # Directory for screenshot files
 
 # History Settings
 HISTORY_FILE = 'data/history_windows.json'  # History data file
-MAX_HISTORY = 30                          # Maximum number of history windows to keep
+MAX_HISTORY = 10                          # Maximum number of history windows to keep
 
 # Metrics History Settings
 METRICS_FILE = 'data/metrics_history.json'  # Metrics history file
@@ -212,6 +212,8 @@ def run_monitor_cycle(collector, history_manager, generator, metrics_history):
         data['computer_name'] = COMPUTER_NAME
         data['avatar'] = AVATAR_PATH
         data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
+        data['max_history'] = MAX_HISTORY
+        data['max_metrics_history'] = MAX_METRICS_HISTORY
         
         # Generate and save HTML
         html = generator.generate(data)
@@ -240,7 +242,7 @@ def main():
     init_system()
     
     # Initialize components
-    collector = DataCollector()
+    collector = DataCollector(avatar_path=AVATAR_PATH)
     history_manager = HistoryManager(
         history_file=HISTORY_FILE,
         max_history=MAX_HISTORY

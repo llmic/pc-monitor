@@ -209,6 +209,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+        }
         .lyrics-box::-webkit-scrollbar {
             width: 8px;
         }
@@ -272,25 +276,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div class="shutdown-time" id="shutdownTime"></div>
     </div>
     <div class="container-fluid">
-        <div class="text-center mb-4">
-            <div class="d-flex justify-content-center align-items-center gap-3">
-                {% if avatar and avatar != '' %}
-                <img src="{{ avatar }}" alt="Avatar" class="rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
-                {% else %}
-                <i class="bi bi-computer" style="font-size: 48px; color: #007bff;"></i>
-                {% endif %}
-                <div class="text-left">
-                    <h1><i class="bi bi-display"></i> {{ computer_name }}</h1>
-                    <small class="text-muted">Real-time Computer Monitoring System</small>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-12">
                 <div class="card" id="statusCard">
-                    <div class="card-header">
-                        <i class="bi bi-info-circle"></i> System Status
+                    <div class="card-header d-flex align-items-center gap-3">
+                        {% if avatar and avatar != '' %}
+                        <img src="{{ avatar }}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                        {% else %}
+                        <i class="bi bi-computer" style="font-size: 24px; color: #007bff;"></i>
+                        {% endif %}
+                        <div>
+                            <strong>{{ computer_name }}</strong>
+                            <small class="text-muted d-block">Real-time Computer Monitoring System</small>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
@@ -317,8 +315,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <i class="bi bi-graph-up"></i> System Performance Overview
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="row g-3">
+                            <div class="col">
                                 <div class="stats-card h-100">
                                     <div class="stats-number">{{ system_info.cpu|avg_cpu }}%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
@@ -327,7 +325,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="col">
                                 <div class="stats-card h-100">
                                     <div class="stats-number">{{ system_info.memory.percent }}%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
@@ -336,16 +334,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <div class="stats-card h-100">
-                                    <div class="stats-number">{{ system_info.disk.percent }}%</div>
-                                    <div class="stats-label"><i class="bi bi-hard-drive"></i> Disk Usage</div>
-                                    <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-disk" style="width: {{ system_info.disk.percent }}%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="col">
                                 <div class="stats-card h-100">
                                     <div class="stats-number">{{ system_info.memory.used }} / {{ system_info.memory.total }} GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
@@ -360,7 +349,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         {% if metrics_history and metrics_history.cpu and metrics_history.cpu|length > 1 %}
                         <div class="row mt-4">
                             <div class="col-12">
-                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ metrics_history|count }} updates)</h6>
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ max_metrics_history }} updates)</h6>
                                 <canvas id="metricsChart" height="80"></canvas>
                             </div>
                         </div>
@@ -398,34 +387,93 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
         {% endif %}
 
+        {% if lyrics_list %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <i class="bi bi-music-note-beamed"></i> Recent Played Lyrics
+                    </div>
+                    <div class="card-body" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+                        {% for item in lyrics_list %}
+                        <div class="lyrics-item mb-4 p-3" style="background: rgba(255,255,255,0.1); border-radius: 10px;">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="mb-1" style="color: inherit;">
+                                        {% if item.colors %}
+                                        <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: {{ item.colors.primary }}; margin-right: 8px;"></span>
+                                        {% endif %}
+                                        <i class="bi bi-disc"></i> {{ item.song }}
+                                    </h5>
+                                    {% if item.artist %}
+                                    <p class="mb-2" style="opacity: 0.7;">{{ item.artist }}</p>
+                                    {% endif %}
+                                </div>
+                                <span class="badge" style="background: rgba(255,255,255,0.2); color: inherit;">
+                                    <i class="bi bi-vinyl"></i> CloudMusic
+                                </span>
+                            </div>
+                            {% if item.lyrics %}
+                            <div class="lyrics-content mt-3 p-3" style="background: rgba(0,0,0,0.3); border-radius: 8px; max-height: 150px; overflow-y: auto;">
+                                <pre class="mb-0" style="color: inherit; white-space: pre-wrap; font-family: inherit; font-size: 14px; opacity: 0.9;">{{ item.lyrics }}</pre>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         {% if current_music %}
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header" style="background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;">
                         <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
+                        {% if current_music.desktop_lyrics_active %}
+                        <span class="badge bg-warning text-dark ms-2">
+                            <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
+                        </span>
+                        {% endif %}
                     </div>
-                    <div class="card-body" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white;">
-                        <div class="row">
+                    <div class="card-body" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}{% else %}background-color: #667eea{% endif %}; color: {% if current_music.colors %}{{ current_music.colors.primary|contrasting_color }}{% else %}#ffffff{% endif %};">
+                        <div class="row align-items-center">
                             <div class="col-md-8">
-                                <h4 class="mb-3">
+                                <h4 class="mb-2">
                                     <i class="bi bi-disc"></i> {{ current_music.song }}
                                 </h4>
                                 {% if current_music.artist %}
-                                <p class="mb-2">
+                                <p class="mb-2" style="opacity: 0.85;">
                                     <i class="bi bi-person"></i> {{ current_music.artist }}
                                 </p>
                                 {% endif %}
-                                {% if current_music.lyrics %}
-                                <div class="lyrics-box mt-3 p-3" style="background: rgba(0,0,0,0.3); border-radius: 10px; max-height: 200px; overflow-y: auto;">
-                                    <pre class="mb-0" style="color: #ecf0f1; white-space: pre-wrap; font-family: inherit;">{{ current_music.lyrics }}</pre>
+                                {% if current_music.album %}
+                                <p class="mb-3" style="opacity: 0.7; font-size: 0.9em;">
+                                    <i class="bi bi-vinyl"></i> {{ current_music.album }}
+                                </p>
+                                {% endif %}
+                                {% if current_music.parsed_lyrics %}
+                                <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <span id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></span>
+                                </div>
+                                {% elif current_music.current_lyric %}
+                                <div class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 1.1em; text-align: center;">{{ current_music.current_lyric }}</span>
                                 </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-4 text-center">
-                                <div class="music-visualizer">
-                                    <i class="bi bi-vinyl" style="font-size: 80px; animation: spin 4s linear infinite;"></i>
+                                {% if current_music.cover_url %}
+                                <div class="album-cover" style="width: 140px; height: 140px; border-radius: 50%; overflow: hidden; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: pulse 2s ease-in-out infinite;">
+                                    <img src="{{ current_music.cover_url }}" alt="Album Cover" style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
+                                {% else %}
+                                <div class="album-cover" style="width: 140px; height: 140px; border-radius: 50%; background: {% if current_music.colors %}linear-gradient(135deg, {{ current_music.colors.secondary }} 0%, {{ current_music.colors.primary }} 100%){% else %}linear-gradient(135deg, #764ba2 0%, #667eea 100%){% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: pulse 2s ease-in-out infinite;">
+                                    <i class="bi bi-disc" style="font-size: 60px; color: {% if current_music.colors %}{{ current_music.colors.primary|contrasting_color }}{% else %}#ffffff{% endif %};"></i>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -552,28 +600,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }} browser-card">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
-                                        {% if win.website and win.website.url %}
-                                        <a href="{{ win.website.url }}" target="_blank" class="window-title-link">
-                                            <strong>{{ win.title }}</strong>
-                                        </a>
-                                        {% else %}
                                         <strong>{{ win.title }}</strong>
-                                        {% endif %}
                                         <div class="text-muted-custom small">
                                             <i class="bi bi-app"></i> {{ win.process }} |
                                             <i class="bi bi-aspect-ratio"></i> {{ win.width }}x{{ win.height }}
                                         </div>
-                                        {% if win.website %}
-                                        <div class="mt-2">
-                                            {% if win.website.url %}
-                                            <a href="{{ win.website.url }}" target="_blank" class="website-link">
-                                                <i class="bi bi-link-45deg"></i> {{ win.website.url }}
-                                            </a>
-                                            {% else %}
-                                            <span class="text-muted-custom small"><i class="bi bi-info-circle"></i> 网页标题: {{ win.title }}</span>
-                                            {% endif %}
-                                        </div>
-                                        {% endif %}
                                     </div>
                                     {% if win.is_active %}
                                     <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> Active Window</span>
@@ -593,7 +624,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-clock-history"></i> Historical Window Open Records
+                        <i class="bi bi-clock-history"></i> Historical Window Open Records ({{ history_windows|length }}/{{ max_history }})
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -602,38 +633,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     <tr>
                                         <th>Window Title</th>
                                         <th>Process</th>
-                                        <th>URL / Info</th>
-                                        <th>Last Seen</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for win in history_windows %}
                                     <tr>
                                         <td>
-                                            <strong>{{ win.title[:50] }}{% if win.title|length > 50 %}...{% endif %}</strong>
+                                            <strong>{{ win.title[:80] }}{% if win.title|length > 80 %}...{% endif %}</strong>
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">{{ win.process }}</span>
-                                        </td>
-                                        <td>
-                                            {% if win.website and win.website.url %}
-                                            <a href="{{ win.website.url }}" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> {{ win.website.url[:60] }}{% if win.website.url|length > 60 %}...{% endif %}
-                                            </a>
-                                            {% elif win.bilibili %}
-                                            <span class="badge bg-pink" style="background-color: #f06595;">
-                                                <i class="bi bi-play-circle"></i> {{ win.bilibili.bv_id }}
-                                            </span>
-                                            {% elif win.music %}
-                                            <span class="badge bg-danger">
-                                                <i class="bi bi-music-note"></i> {{ win.music.song }}
-                                            </span>
-                                            {% else %}
-                                            <span class="text-muted">-</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">{{ win.last_seen }}</span>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -657,7 +666,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <script>
         const LAST_UPDATE_ISO = '{{ last_update_iso }}';
         let lastUpdateTime;
-        
+
         try {
             lastUpdateTime = new Date(LAST_UPDATE_ISO);
             if (isNaN(lastUpdateTime.getTime())) {
@@ -828,10 +837,60 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
 
         updateStatus();
-        
+
         console.log('PC Monitor initialized');
         console.log('Last update:', LAST_UPDATE_ISO);
         console.log('Current time:', new Date().toISOString());
+
+        const parsedLyrics = {{ current_music.parsed_lyrics|tojson if current_music and current_music.parsed_lyrics else '[]' }};
+        let currentLyricIndex = 0;
+        let playbackStartTime = null;
+        let playbackOffset = 0;
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
+        }
+
+        function updateLyricDisplay() {
+            if (!parsedLyrics || parsedLyrics.length === 0) return;
+
+            const now = Date.now();
+            if (playbackStartTime === null) {
+                playbackStartTime = now;
+                playbackOffset = {{ current_music.playback_position if current_music and current_music.playback_position else 0 }};
+            }
+
+            const elapsedSeconds = (now - playbackStartTime) / 1000 + playbackOffset;
+            const currentLine = document.getElementById('current-lyric-line');
+
+            if (!currentLine) return;
+
+            for (let i = parsedLyrics.length - 1; i >= 0; i--) {
+                if (elapsedSeconds >= parsedLyrics[i].time) {
+                    if (currentLyricIndex !== i) {
+                        currentLyricIndex = i;
+                        currentLine.textContent = parsedLyrics[i].text;
+                        currentLine.style.opacity = '0';
+                        setTimeout(() => {
+                            currentLine.style.transition = 'opacity 0.3s ease-in-out';
+                            currentLine.style.opacity = '1';
+                        }, 50);
+                    }
+                    break;
+                }
+            }
+
+            if (currentLyricIndex === 0 && elapsedSeconds < parsedLyrics[0].time) {
+                currentLine.textContent = parsedLyrics[0].text;
+            }
+        }
+
+        if (parsedLyrics && parsedLyrics.length > 0) {
+            updateLyricDisplay();
+            setInterval(updateLyricDisplay, 500);
+        }
     </script>
 </body>
 </html>"""
@@ -844,6 +903,7 @@ class HTMLGenerator:
         self.template.environment.filters['enumerate'] = self._enumerate_filter
         self.template.environment.filters['filename'] = self._filename_filter
         self.template.environment.filters['count'] = self._count_filter
+        self.template.environment.filters['contrasting_color'] = self._contrasting_color_filter
 
     def _avg_cpu_filter(self, cpu_list):
         if cpu_list:
@@ -862,6 +922,25 @@ class HTMLGenerator:
         if iterable is None:
             return 0
         return len(iterable)
+
+    def _contrasting_color_filter(self, hex_color):
+        """Calculate contrasting text color (black or white) based on background color."""
+        try:
+            if not hex_color:
+                return '#ffffff'
+            hex_color = hex_color.lstrip('#')
+            if len(hex_color) != 6:
+                return '#ffffff'
+            r = int(hex_color[0:2], 16)
+            g = int(hex_color[2:4], 16)
+            b = int(hex_color[4:6], 16)
+            luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+            if luminance > 0.5:
+                return '#212529'
+            else:
+                return '#ffffff'
+        except Exception:
+            return '#ffffff'
 
     def generate(self, data):
         windows = data.get('windows', [])
@@ -890,13 +969,33 @@ class HTMLGenerator:
                 current_music = win['music']
                 break
         
+        # Collect lyrics from history windows (music entries)
+        lyrics_list = []
+        for win in history_windows:
+            if win.get('music') and win['music'].get('lyrics'):
+                lyrics_list.append({
+                    'song': win['music'].get('song', 'Unknown'),
+                    'artist': win['music'].get('artist', ''),
+                    'lyrics': win['music'].get('lyrics', ''),
+                    'colors': win['music'].get('colors')
+                })
+        
+        # Get metrics history config
+        max_metrics_history = data.get('max_metrics_history', 5)
+        max_history = data.get('max_history', 10)
+        
+        # Limit history windows to max_history
+        history_windows = history_windows[:max_history]
+        
         html = self.template.render(
             windows=windows,
             history_windows=history_windows,
+            max_history=max_history,
             system_info=system_info,
             screenshot=screenshot,
             screenshot_message=screenshot_message,
             current_music=current_music,
+            lyrics_list=lyrics_list,
             active_window_title=active_window_title,
             timestamp=timestamp,
             last_update_iso=last_update,
@@ -904,7 +1003,8 @@ class HTMLGenerator:
             avatar=avatar,
             shutdown_timeout=shutdown_timeout,
             metrics_history=metrics_history,
-            metrics_labels=metrics_labels
+            metrics_labels=metrics_labels,
+            max_metrics_history=max_metrics_history
         )
 
         return html

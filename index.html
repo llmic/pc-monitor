@@ -206,6 +206,10 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+        }
         .lyrics-box::-webkit-scrollbar {
             width: 8px;
         }
@@ -309,29 +313,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">30%</div>
+                                    <div class="stats-number">8%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" style="width: 30%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 8%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">57.5%</div>
+                                    <div class="stats-number">57.9%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" style="width: 57.5%"></div>
+                                        <div class="progress-fill progress-memory" style="width: 57.9%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">18.1 / 31.47 GB</div>
+                                    <div class="stats-number">18.21 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 529.67 MB<br>
-                                        Received: 3407.17 MB
+                                        Sent: 563.73 MB<br>
+                                        Received: 3702.73 MB
                                     </div>
                                 </div>
                             </div>
@@ -363,59 +367,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">62.5%</div>
+                                    <div class="text-primary font-size-lg">54.3%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 62.5%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">84.4%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 84.4%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">81.2%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 81.2%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 4</div>
-                                    <div class="text-primary font-size-lg">50.0%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 50.0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">28.1%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 28.1%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 54.3%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -428,27 +382,13 @@
                             
                             
                             
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 9</div>
-                                    <div class="text-primary font-size-lg">81.8%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 81.8%"></div>
-                                    </div>
-                                </div>
-                            </div>
                             
                             
                             
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 10</div>
-                                    <div class="text-primary font-size-lg">50.0%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 50.0%"></div>
-                                    </div>
-                                </div>
-                            </div>
+                            
+                            
+                            
+                            
                             
                             
                             
@@ -456,13 +396,17 @@
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 12</div>
-                                    <div class="text-primary font-size-lg">50.0%</div>
+                                    <div class="font-weight-bold">Core 10</div>
+                                    <div class="text-primary font-size-lg">37.1%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 50.0%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 37.1%"></div>
                                     </div>
                                 </div>
                             </div>
+                            
+                            
+                            
+                            
                             
                             
                             
@@ -473,9 +417,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 15</div>
-                                    <div class="text-primary font-size-lg">53.1%</div>
+                                    <div class="text-primary font-size-lg">50.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 53.1%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 50.0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -500,28 +444,32 @@
                 <div class="card">
                     <div class="card-header" style="background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;">
                         <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
+                        
+                        <span class="badge bg-warning text-dark ms-2">
+                            <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
+                        </span>
+                        
                     </div>
-                    <div class="card-body" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white;">
-                        <div class="row">
+                    <div class="card-body" style="background-color: #ff9a9e; color: #212529;">
+                        <div class="row align-items-center">
                             <div class="col-md-8">
-                                <h4 class="mb-3">
-                                    <i class="bi bi-disc"></i> 月夜 (feat. 宵)
+                                <h4 class="mb-2">
+                                    <i class="bi bi-disc"></i> うそつきマカロン (feat. 重音テト)
                                 </h4>
                                 
-                                <p class="mb-2">
-                                    <i class="bi bi-person"></i> MIMI/宵
+                                <p class="mb-2" style="opacity: 0.85;">
+                                    <i class="bi bi-person"></i> 暴飲暴食P/重音テト
                                 </p>
                                 
                                 
-                                <div class="lyrics-box mt-3 p-3" style="background: rgba(0,0,0,0.3); border-radius: 10px; max-height: 200px; overflow-y: auto;">
-                                    <pre class="mb-0" style="color: #ecf0f1; white-space: pre-wrap; font-family: inherit;">桌面歌词</pre>
-                                </div>
                                 
                             </div>
                             <div class="col-md-4 text-center">
-                                <div class="music-visualizer">
-                                    <i class="bi bi-vinyl" style="font-size: 80px; animation: spin 4s linear infinite;"></i>
+                                
+                                <div class="album-cover" style="width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%); display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: pulse 2s ease-in-out infinite;">
+                                    <i class="bi bi-disc" style="font-size: 60px; color: #212529;"></i>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -534,16 +482,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header bg-warning">
-                        <i class="bi bi-exclamation-triangle"></i> Screenshot Unavailable
+                    <div class="card-header">
+                        <i class="bi bi-camera"></i> Current Active Window Screenshot
+                        <span class="badge bg-primary float-end">screenshots\screenshot_20260519_002910.png</span>
                     </div>
                     <div class="card-body">
-                        <div class="alert alert-warning d-flex align-items-center" role="alert">
-                            <i class="bi bi-shield-check mr-2"></i>
-                            <div>
-                                <strong>隐私保护提示:</strong><br>
-                                摄像头正在使用中，为保护隐私跳过截图
-                            </div>
+                        <div class="screenshot-container">
+                            <img src="screenshots\screenshot_20260519_002910.png" alt="Active Window Screenshot" class="img-fluid">
                         </div>
                     </div>
                 </div>
@@ -553,10 +498,6 @@
 
         
         
-        
-            
-                
-            
         
             
                 
@@ -617,7 +558,7 @@
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> Currently Open Windows
                         
-                        <span class="badge bg-danger float-end">Active: Quick settings...</span>
+                        <span class="badge bg-danger float-end">Active: PC Monitor - Real-time Compute...</span>
                         
                     </div>
                     <div class="card-body scroll-container">
@@ -641,10 +582,10 @@
                         <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>music.py - pc-monitor - Trae CN</strong>
+                                    <strong>generator.py - pc-monitor - Trae CN</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> Trae CN.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 2288x1326
+                                        <i class="bi bi-aspect-ratio"></i> 2465x1476
                                     </div>
                                     
                             
@@ -657,7 +598,7 @@
                         <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>月夜 (feat. 宵) - MIMI/宵</strong>
+                                    <strong>うそつきマカロン (feat. 重音テト) - 暴飲暴食P/重音テト</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> cloudmusic.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
@@ -667,15 +608,11 @@
                             
                             <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
                                 <div class="text-white font-bold">
-                                    <i class="bi bi-music-note"></i> 月夜 (feat. 宵)
+                                    <i class="bi bi-music-note"></i> うそつきマカロン (feat. 重音テト)
                                 </div>
                                 
-                                <div class="text-white-80 text-sm">MIMI/宵</div>
+                                <div class="text-white-80 text-sm">暴飲暴食P/重音テト</div>
                                 
-                                
-                                <div class="text-white-70 text-sm mt-2 font-italic" style="max-height: 100px; overflow-y: auto;">
-                                    桌面歌词
-                                </div>
                                 
                             </div>
                             
@@ -815,30 +752,19 @@
 
                         
                         <div class="mt-4 pt-4 border-top">
-                            <h5><i class="bi bi-browser-chrome text-primary"></i> Browser Windows (3)</h5>
+                            <h5><i class="bi bi-browser-chrome text-primary"></i> Browser Windows (2)</h5>
                             
-                            <div class="window-item window-normal browser-card">
+                            <div class="window-item window-active browser-card">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
-                                        <strong>PC Monitor - Real-time Computer Monitoring System and 1 more page - Personal - Microsoft​ Edge</strong>
+                                        <strong>PC Monitor - Real-time Computer Monitoring System and 2 more pages - Personal - Microsoft​ Edge</strong>
                                         <div class="text-muted-custom small">
                                             <i class="bi bi-app"></i> msedge.exe |
                                             <i class="bi bi-aspect-ratio"></i> 2049x1650
                                         </div>
                                     </div>
                                     
-                                </div>
-                            </div>
-                            
-                            <div class="window-item window-normal browser-card">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        <strong>网易云所播歌词获取 - Search and 1 more page - Personal - Microsoft​ Edge</strong>
-                                        <div class="text-muted-custom small">
-                                            <i class="bi bi-app"></i> msedge.exe |
-                                            <i class="bi bi-aspect-ratio"></i> 237x39
-                                        </div>
-                                    </div>
+                                    <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> Active Window</span>
                                     
                                 </div>
                             </div>
@@ -883,6 +809,69 @@
                                     
                                     <tr>
                                         <td>
+                                            <strong>うそつきマカロン (feat. 重音テト) - 暴飲暴食P/重音テト</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>PC Monitor - Real-time Computer Monitoring System and 2 more pages - Personal - ...</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>彷徨い酔い温度 - ずっと真夜中でいいのに。</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>fix_cache.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>I Will Touch the Sky - 塞壬唱片-MSR/Edine</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>python获取网易云音乐播放进度 - Search and 2 more pages - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>使用Python获取网易云正在播放的音乐 – 玉子烧 - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
                                             <strong>月夜 (feat. 宵) - MIMI/宵</strong>
                                         </td>
                                         <td>
@@ -908,69 +897,6 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>No title - Reol/Giga</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>输出requirements pip - Search - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>main.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Operation Lead Seal - 塞壬唱片-MSR/X. ARI</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>python 最新版网易云音乐获取桌面歌词 通过内存读取 在前人的肩膀上 2024 12.26_python 桌面歌词-CSDN博客 and 3 more pa...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Luv (Sic) - Nujabes</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>シリーテラー (feat. IA) - r-906/IA</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -981,7 +907,7 @@
         
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T00:01:18.770456</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T00:29:11.267829</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -989,7 +915,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const LAST_UPDATE_ISO = '2026-05-19T00:01:18.797047';
+        const LAST_UPDATE_ISO = '2026-05-19T00:29:11.305687';
         let lastUpdateTime;
 
         try {
@@ -1113,9 +1039,9 @@
         // Initialize metrics chart
         const metricsCtx = document.getElementById('metricsChart');
         if (metricsCtx) {
-            const metricsLabels = ["23:53:43", "23:54:48", "23:56:39", "23:59:45", "00:01:18"];
-            const cpuData = [8.127777777777778, 10.86111111111111, 12.255555555555555, 6.800000000000001, 30.061111111111114];
-            const memoryData = [55.7, 56.0, 56.8, 56.7, 57.5];
+            const metricsLabels = ["23:59:45", "00:02:47", "00:11:18", "00:19:35", "00:29:11"];
+            const cpuData = [6.800000000000001, 9.055555555555555, 9.288888888888888, 12.32777777777778, 7.855555555555556];
+            const memoryData = [56.7, 57.4, 59.2, 56.9, 57.9];
             
             new Chart(metricsCtx, {
                 type: 'line',
@@ -1166,6 +1092,56 @@
         console.log('PC Monitor initialized');
         console.log('Last update:', LAST_UPDATE_ISO);
         console.log('Current time:', new Date().toISOString());
+
+        const parsedLyrics = [];
+        let currentLyricIndex = 0;
+        let playbackStartTime = null;
+        let playbackOffset = 0;
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
+        }
+
+        function updateLyricDisplay() {
+            if (!parsedLyrics || parsedLyrics.length === 0) return;
+
+            const now = Date.now();
+            if (playbackStartTime === null) {
+                playbackStartTime = now;
+                playbackOffset = 0;
+            }
+
+            const elapsedSeconds = (now - playbackStartTime) / 1000 + playbackOffset;
+            const currentLine = document.getElementById('current-lyric-line');
+
+            if (!currentLine) return;
+
+            for (let i = parsedLyrics.length - 1; i >= 0; i--) {
+                if (elapsedSeconds >= parsedLyrics[i].time) {
+                    if (currentLyricIndex !== i) {
+                        currentLyricIndex = i;
+                        currentLine.textContent = parsedLyrics[i].text;
+                        currentLine.style.opacity = '0';
+                        setTimeout(() => {
+                            currentLine.style.transition = 'opacity 0.3s ease-in-out';
+                            currentLine.style.opacity = '1';
+                        }, 50);
+                    }
+                    break;
+                }
+            }
+
+            if (currentLyricIndex === 0 && elapsedSeconds < parsedLyrics[0].time) {
+                currentLine.textContent = parsedLyrics[0].text;
+            }
+        }
+
+        if (parsedLyrics && parsedLyrics.length > 0) {
+            updateLyricDisplay();
+            setInterval(updateLyricDisplay, 500);
+        }
     </script>
 </body>
 </html>

@@ -11,7 +11,7 @@ OUTPUT_FILE = 'index.html'
 
 # Configuration
 HISTORY_FILE = 'data/history_windows.json'
-MAX_HISTORY = 30
+MAX_HISTORY = 10
 MAX_METRICS_HISTORY = 5
 SHUTDOWN_TIMEOUT_SECONDS = 600
 
@@ -27,7 +27,7 @@ def init():
 def run_once():
     init()
 
-    collector = DataCollector()
+    collector = DataCollector(avatar_path=AVATAR_PATH)
     history_manager = HistoryManager()
     generator = HTMLGenerator()
     metrics_history = MetricsHistory(max_points=MAX_METRICS_HISTORY)
@@ -67,6 +67,8 @@ def run_once():
         data['computer_name'] = COMPUTER_NAME
         data['avatar'] = AVATAR_PATH
         data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
+        data['max_history'] = MAX_HISTORY
+        data['max_metrics_history'] = MAX_METRICS_HISTORY
 
         html = generator.generate(data)
         generator.save(html, OUTPUT_FILE)
