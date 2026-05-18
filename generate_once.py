@@ -5,12 +5,14 @@ from datetime import datetime
 from collector import DataCollector
 from history import HistoryManager
 from generator import HTMLGenerator
+from metrics import MetricsHistory
 
 OUTPUT_FILE = 'index.html'
 
 # Configuration
 HISTORY_FILE = 'data/history_windows.json'
 MAX_HISTORY = 30
+MAX_METRICS_HISTORY = 5
 SHUTDOWN_TIMEOUT_SECONDS = 600
 
 # Customization
@@ -28,6 +30,7 @@ def run_once():
     collector = DataCollector()
     history_manager = HistoryManager()
     generator = HTMLGenerator()
+    metrics_history = MetricsHistory(max_points=MAX_METRICS_HISTORY)
 
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始数据采集...")
 
@@ -47,7 +50,19 @@ def run_once():
                 title = fetch_bilibili_title(bv_id)
                 if title:
                     video['title'] = title
-
+        
+        # Record metrics history
+        system_info = data.get('system_info', {})
+        cpu_percent = system_info.get('cpu', [])
+        memory_percent = system_info.get('memory', {}).get('percent', 0)
+        if cpu_percent:
+            avg_cpu = sum(cpu_percent) / len(cpu_percent) if cpu_percent else 0
+        else:
+            avg_cpu = 0
+        metrics_history.add_data(avg_cpu, memory_percent)
+        data['metrics_history'] = metrics_history.get_history()
+        data['metrics_labels'] = metrics_history.get_labels()
+        
         data['history_windows'] = history_windows
         data['computer_name'] = COMPUTER_NAME
         data['avatar'] = AVATAR_PATH

@@ -22,11 +22,16 @@ import os
 import sys
 import subprocess
 import threading
+import os
 from datetime import datetime
+
+# Set UTF-8 encoding for Windows
+os.environ['PYTHONUTF8'] = '1'
 
 from collector import DataCollector
 from history import HistoryManager
 from generator import HTMLGenerator
+from metrics import MetricsHistory
 
 # Configuration
 COLLECTION_INTERVAL = 180          # Update interval in seconds
@@ -39,6 +44,10 @@ SCREENSHOT_DIR = 'screenshots'     # Directory for screenshot files
 # History Settings
 HISTORY_FILE = 'data/history_windows.json'  # History data file
 MAX_HISTORY = 30                          # Maximum number of history windows to keep
+
+# Metrics History Settings
+METRICS_FILE = 'data/metrics_history.json'  # Metrics history file
+MAX_METRICS_HISTORY = 5                    # Number of data points to keep for charts
 
 # Alert Settings
 SHUTDOWN_TIMEOUT_SECONDS = 600             # Timeout before showing shutdown alert (10 minutes)
@@ -161,7 +170,7 @@ def git_push_thread():
         time.sleep(COLLECTION_INTERVAL)
 
 
-def run_monitor_cycle(collector, history_manager, generator):
+def run_monitor_cycle(collector, history_manager, generator, metrics_history):
     """Run one complete monitoring cycle."""
     print(f"\n[{get_timestamp()}] Starting data collection...")
     
@@ -185,6 +194,18 @@ def run_monitor_cycle(collector, history_manager, generator):
                 title = fetch_bilibili_title(bv_id)
                 if title:
                     video['title'] = title
+        
+        # Record metrics history
+        system_info = data.get('system_info', {})
+        cpu_percent = system_info.get('cpu', [])
+        memory_percent = system_info.get('memory', {}).get('percent', 0)
+        if cpu_percent:
+            avg_cpu = sum(cpu_percent) / len(cpu_percent) if cpu_percent else 0
+        else:
+            avg_cpu = 0
+        metrics_history.add_data(avg_cpu, memory_percent)
+        data['metrics_history'] = metrics_history.get_history()
+        data['metrics_labels'] = metrics_history.get_labels()
         
         # Prepare data for HTML
         data['history_windows'] = history_windows
@@ -225,6 +246,7 @@ def main():
         max_history=MAX_HISTORY
     )
     generator = HTMLGenerator()
+    metrics_history = MetricsHistory(max_points=MAX_METRICS_HISTORY)
     
     # Start Git push thread
     if GIT_PUSH_ENABLED:
@@ -233,7 +255,7 @@ def main():
     
     try:
         # Run first cycle
-        run_monitor_cycle(collector, history_manager, generator)
+        run_monitor_cycle(collector, history_manager, generator, metrics_history)
         
         # Push to git after first cycle
         if GIT_PUSH_ENABLED:
@@ -246,7 +268,7 @@ def main():
         
         while True:
             time.sleep(COLLECTION_INTERVAL)
-            run_monitor_cycle(collector, history_manager, generator)
+            run_monitor_cycle(collector, history_manager, generator, metrics_history)
             
     except KeyboardInterrupt:
         print(f"\n\n[{get_timestamp()}] Stopping monitoring...")

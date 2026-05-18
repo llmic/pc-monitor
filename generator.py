@@ -310,41 +310,61 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
 
         {% if system_info %}
-        <div class="row row-eq-height">
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card h-100">
-                    <div class="stats-number">{{ system_info.cpu|avg_cpu }}%</div>
-                    <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
-                    <div class="progress-bar-custom mt-2">
-                        <div class="progress-fill progress-cpu" style="width: {{ system_info.cpu|avg_cpu }}%"></div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-graph-up"></i> System Performance Overview
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card h-100">
-                    <div class="stats-number">{{ system_info.memory.percent }}%</div>
-                    <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
-                    <div class="progress-bar-custom mt-2">
-                        <div class="progress-fill progress-memory" style="width: {{ system_info.memory.percent }}%"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card h-100">
-                    <div class="stats-number">{{ system_info.disk.percent }}%</div>
-                    <div class="stats-label"><i class="bi bi-hard-drive"></i> Disk Usage</div>
-                    <div class="progress-bar-custom mt-2">
-                        <div class="progress-fill progress-disk" style="width: {{ system_info.disk.percent }}%"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card h-100">
-                    <div class="stats-number">{{ system_info.memory.used }} / {{ system_info.memory.total }} GB</div>
-                    <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
-                    <div class="text-muted-custom small mt-2">
-                        Sent: {{ system_info.network.bytes_sent }} MB<br>
-                        Received: {{ system_info.network.bytes_recv }} MB
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="stats-card h-100">
+                                    <div class="stats-number">{{ system_info.cpu|avg_cpu }}%</div>
+                                    <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
+                                    <div class="progress-bar-custom mt-2">
+                                        <div class="progress-fill progress-cpu" style="width: {{ system_info.cpu|avg_cpu }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="stats-card h-100">
+                                    <div class="stats-number">{{ system_info.memory.percent }}%</div>
+                                    <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
+                                    <div class="progress-bar-custom mt-2">
+                                        <div class="progress-fill progress-memory" style="width: {{ system_info.memory.percent }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="stats-card h-100">
+                                    <div class="stats-number">{{ system_info.disk.percent }}%</div>
+                                    <div class="stats-label"><i class="bi bi-hard-drive"></i> Disk Usage</div>
+                                    <div class="progress-bar-custom mt-2">
+                                        <div class="progress-fill progress-disk" style="width: {{ system_info.disk.percent }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="stats-card h-100">
+                                    <div class="stats-number">{{ system_info.memory.used }} / {{ system_info.memory.total }} GB</div>
+                                    <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
+                                    <div class="text-muted-custom small mt-2">
+                                        Sent: {{ system_info.network.bytes_sent }} MB<br>
+                                        Received: {{ system_info.network.bytes_recv }} MB
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if metrics_history and metrics_history.cpu and metrics_history.cpu|length > 1 %}
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ metrics_history|count }} updates)</h6>
+                                <canvas id="metricsChart" height="80"></canvas>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -563,48 +583,68 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             {% endfor %}
                         </div>
                         {% endif %}
-
-                        {% if history_windows %}
-                        <div class="mt-4 pt-4 border-top">
-                            <h5><i class="bi bi-history text-secondary"></i> History ({{ history_windows|length }})</h5>
-                            {% for win in history_windows %}
-                            <div class="window-item window-normal history-card">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        {% if win.website and win.website.url %}
-                                        <a href="{{ win.website.url }}" target="_blank" class="window-title-link">
-                                            <strong>{{ win.title }}</strong>
-                                        </a>
-                                        {% else %}
-                                        <strong>{{ win.title }}</strong>
-                                        {% endif %}
-                                        <div class="text-muted-custom small">
-                                            <i class="bi bi-app"></i> {{ win.process }}
-                                        </div>
-                                        {% if win.website %}
-                                        <div class="mt-1">
-                                            {% if win.website.url %}
-                                            <a href="{{ win.website.url }}" target="_blank" class="website-link">
-                                                <i class="bi bi-link-45deg"></i> {{ win.website.url }}
-                                            </a>
-                                            {% endif %}
-                                        </div>
-                                        {% endif %}
-                                        {% if win.last_seen %}
-                                        <div class="text-muted-custom small mt-1">
-                                            <i class="bi bi-clock"></i> Last seen: {{ win.last_seen }}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+
+        {% if history_windows %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-clock-history"></i> Historical Window Open Records
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Window Title</th>
+                                        <th>Process</th>
+                                        <th>URL / Info</th>
+                                        <th>Last Seen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for win in history_windows %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ win.title[:50] }}{% if win.title|length > 50 %}...{% endif %}</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ win.process }}</span>
+                                        </td>
+                                        <td>
+                                            {% if win.website and win.website.url %}
+                                            <a href="{{ win.website.url }}" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
+                                                <i class="bi bi-link-45deg"></i> {{ win.website.url[:60] }}{% if win.website.url|length > 60 %}...{% endif %}
+                                            </a>
+                                            {% elif win.bilibili %}
+                                            <span class="badge bg-pink" style="background-color: #f06595;">
+                                                <i class="bi bi-play-circle"></i> {{ win.bilibili.bv_id }}
+                                            </span>
+                                            {% elif win.music %}
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-music-note"></i> {{ win.music.song }}
+                                            </span>
+                                            {% else %}
+                                            <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="text-muted small">{{ win.last_seen }}</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
         <footer class="text-center text-muted py-4">
             <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: {{ timestamp }}</p>
@@ -612,6 +652,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const LAST_UPDATE_ISO = '{{ last_update_iso }}';
@@ -735,6 +776,57 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
         setInterval(updateStatus, 1000);
 
+        // Initialize metrics chart
+        const metricsCtx = document.getElementById('metricsChart');
+        if (metricsCtx) {
+            const metricsLabels = {{ metrics_labels|tojson }};
+            const cpuData = {{ metrics_history.cpu|tojson }};
+            const memoryData = {{ metrics_history.memory|tojson }};
+            
+            new Chart(metricsCtx, {
+                type: 'line',
+                data: {
+                    labels: metricsLabels,
+                    datasets: [
+                        {
+                            label: 'CPU %',
+                            data: cpuData,
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Memory %',
+                            data: memoryData,
+                            borderColor: '#17a2b8',
+                            backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Usage %'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         updateStatus();
         
         console.log('PC Monitor initialized');
@@ -751,6 +843,7 @@ class HTMLGenerator:
         self.template.environment.filters['avg_cpu'] = self._avg_cpu_filter
         self.template.environment.filters['enumerate'] = self._enumerate_filter
         self.template.environment.filters['filename'] = self._filename_filter
+        self.template.environment.filters['count'] = self._count_filter
 
     def _avg_cpu_filter(self, cpu_list):
         if cpu_list:
@@ -764,6 +857,11 @@ class HTMLGenerator:
         if path:
             return path.split('/')[-1]
         return ''
+    
+    def _count_filter(self, iterable):
+        if iterable is None:
+            return 0
+        return len(iterable)
 
     def generate(self, data):
         windows = data.get('windows', [])
@@ -780,6 +878,10 @@ class HTMLGenerator:
         computer_name = data.get('computer_name', 'PC Monitor')
         avatar = data.get('avatar', '')
         shutdown_timeout = data.get('shutdown_timeout', 600)
+        
+        # Get metrics history for charts
+        metrics_history = data.get('metrics_history', {'cpu': [], 'memory': []})
+        metrics_labels = data.get('metrics_labels', [])
         
         # Get currently playing music
         current_music = None
@@ -800,7 +902,9 @@ class HTMLGenerator:
             last_update_iso=last_update,
             computer_name=computer_name,
             avatar=avatar,
-            shutdown_timeout=shutdown_timeout
+            shutdown_timeout=shutdown_timeout,
+            metrics_history=metrics_history,
+            metrics_labels=metrics_labels
         )
 
         return html
