@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -35,17 +37,15 @@ jobs:
           python generate_once.py
           echo "✅ Generated index.html successfully"
 
-      - name: List generated files
+      - name: Configure Git
         run: |
-          dir
-          echo "=== First 20 lines of index.html ==="
-          type index.html | head -20
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          force_orphan: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: Deploy to gh-pages (Fast Mode)
+        run: |
+          git checkout -b gh-pages --force 2>NUL || git checkout gh-pages
+          git add -f index.html screenshots/*.png 2>NUL || git add -f index.html
+          git commit -m "Auto deploy: $(date -u)" --allow-empty
+          git push origin gh-pages --force
+          echo "✅ Deployed to https://llmic.github.io/pc-monitor/"

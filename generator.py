@@ -478,15 +478,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             console.error('Error parsing timestamp:', e);
         }
 
+        function getTimezoneOffset() {
+            const offset = -lastUpdateTime.getTimezoneOffset();
+            const sign = offset >= 0 ? '+' : '-';
+            const hours = Math.floor(Math.abs(offset) / 60);
+            const minutes = Math.abs(offset) % 60;
+            return sign + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+        }
+
         function formatDate(date) {
-            return date.toLocaleString('en-US', {
+            return date.toLocaleString('zh-CN', {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit'
+                second: '2-digit',
+                hour12: false,
+                timeZoneName: 'short'
             });
+        }
+
+        function formatDateUTC(date) {
+            return date.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
         }
 
         function formatDuration(seconds) {
@@ -511,8 +525,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             const shutdownOverlay = document.getElementById('shutdownOverlay');
             const shutdownTime = document.getElementById('shutdownTime');
             
-            document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime);
-            document.getElementById('currentTimeDisplay').textContent = formatDate(now);
+            const timezone = getTimezoneOffset();
+            document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime) + ' (UTC' + timezone + ')';
+            document.getElementById('currentTimeDisplay').textContent = formatDate(now) + ' (UTC' + timezone + ')';
             
             if (diffSeconds > 300) {
                 shutdownOverlay.classList.add('show');
