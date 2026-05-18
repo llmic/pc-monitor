@@ -6,9 +6,8 @@ from datetime import datetime
 from collector import DataCollector
 from history import HistoryManager
 from generator import HTMLGenerator
-from mouse_listener import MouseListener
 
-COLLECTION_INTERVAL = 60
+COLLECTION_INTERVAL = 90
 OUTPUT_FILE = 'index.html'
 
 def init():
@@ -28,7 +27,6 @@ def run_cycle(collector, history_manager, generator):
         history_manager.update_from_current_windows(windows)
 
         history_windows = history_manager.get_history_windows()
-        mouse_actions = history_manager.get_mouse_actions()
         bilibili_windows = history_manager.get_bilibili_windows()
 
         for video in bilibili_windows:
@@ -40,14 +38,13 @@ def run_cycle(collector, history_manager, generator):
                     video['title'] = title
 
         data['history_windows'] = history_windows
-        data['mouse_actions'] = mouse_actions
 
         html = generator.generate(data)
         generator.save(html, OUTPUT_FILE)
 
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(f"[{timestamp}] HTML页面已更新: {OUTPUT_FILE}")
-        print(f"[{timestamp}] 进程数: {len(data['processes'])}, 窗口数: {len(windows)}, 历史窗口: {len(history_windows)}")
+        print(f"[{timestamp}] 窗口数: {len(windows)}, 历史窗口: {len(history_windows)}")
 
     except Exception as e:
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -62,9 +59,6 @@ def main():
     history_manager = HistoryManager()
     generator = HTMLGenerator()
 
-    mouse_listener = MouseListener(history_manager)
-    mouse_listener.start()
-
     try:
         run_cycle(collector, history_manager, generator)
 
@@ -76,7 +70,6 @@ def main():
 
     except KeyboardInterrupt:
         print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 停止监控...")
-        mouse_listener.stop()
         sys.exit(0)
 
 if __name__ == '__main__':

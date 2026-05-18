@@ -2,9 +2,12 @@ import psutil
 import pygetwindow as gw
 import win32process
 import win32gui
+import win32con
 import time
 import re
+import os
 from datetime import datetime
+from PIL import Image, ImageGrab
 from bilibili import extract_bv_info
 
 BROWSER_NAMES = {
@@ -17,6 +20,9 @@ BROWSER_NAMES = {
     'liebao.exe': '猎豹浏览器',
     'sogouexplorer.exe': '搜狗浏览器'
 }
+
+SCREENSHOT_DIR = 'screenshots'
+os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 def get_browser_url_from_title(title, proc_name):
     if proc_name.lower() not in BROWSER_NAMES and not any(b in proc_name.lower() for b in BROWSER_NAMES):
@@ -52,32 +58,52 @@ def get_website_info(url):
         pass
     return None
 
+def get_cpu_usage():
+    return psutil.cpu_percent(interval=0.5, percpu=True)
+
+def get_memory_usage():
+    mem = psutil.virtual_memory()
+    return {
+        'total': round(mem.total / (1024 ** 3), 2),
+        'available': round(mem.available / (1024 ** 3), 2),
+        'used': round(mem.used / (1024 ** 3), 2),
+        'percent': mem.percent
+    }
+
+def get_disk_usage():
+    disk = psutil.disk_usage('/')
+    return {
+        'total': round(disk.total / (1024 ** 3), 2),
+        'used': round(disk.used / (1024 ** 3), 2),
+        'free': round(disk.free / (1024 ** 3), 2),
+        'percent': disk.percent
+    }
+
+def get_network_usage():
+    net = psutil.net_io_counters()
+    return {
+        'bytes_sent': round(net.bytes_sent / (1024 ** 2), 2),
+        'bytes_recv': round(net.bytes_recv / (1024 ** 2), 2)
+    }
+
+def capture_active_window():
+    try:
+        window = gw.getActiveWindow()
+        if window:
+            left, top, right, bottom = window.left, window.top, window.left + window.width, window.top + window.height
+            screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f'{SCREENSHOT_DIR}/screenshot_{timestamp}.png'
+            screenshot.save(filename, 'PNG')
+            return filename
+    except Exception as e:
+        print(f"Screenshot error: {e}")
+    return None
+
 class DataCollector:
     def __init__(self):
         self.active_window_title = None
-        self.processes_data = []
         self.windows_data = []
-        self.mouse_actions = []
-
-    def collect_processes(self):
-        processes = []
-        for proc in psutil.process_iter(['pid', 'name', 'memory_info', 'status']):
-            try:
-                info = proc.info
-                if info['name'].startswith('svchost'):
-                    continue
-                memory_mb = info['memory_info'].rss / (1024 * 1024)
-                processes.append({
-                    'pid': info['pid'],
-                    'name': info['name'],
-                    'memory_mb': round(memory_mb, 2),
-                    'status': info['status']
-                })
-            except (psutil.NoSuchProcess, psutil.AccessDenied):
-                continue
-        processes.sort(key=lambda x: x['memory_mb'], reverse=True)
-        self.processes_data = processes[:50]
-        return self.processes_data
 
     def get_active_window(self):
         try:
@@ -140,12 +166,22 @@ class DataCollector:
         self.windows_data = windows
         return windows
 
-    def collect_all(self):
-        self.collect_processes()
-        self.collect_windows()
+    def collect_system_info(self):
         return {
-            'processes': self.processes_data,
+            'cpu': get_cpu_usage(),
+            'memory': get_memory_usage(),
+            'disk': get_disk_usage(),
+            'network': get_network_usage()
+        }
+
+    def collect_all(self):
+        self.collect_windows()
+        screenshot_path = capture_active_window()
+        
+        return {
             'windows': self.windows_data,
             'active_window': self.active_window_title,
+            'system_info': self.collect_system_info(),
+            'screenshot': screenshot_path,
             'timestamp': datetime.now().isoformat()
         }

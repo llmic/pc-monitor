@@ -3,38 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PC Monitor - 实时电脑使用状况监控系统</title>
+    <title>PC Monitor - 实时电脑监控系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #1a1d23;
-            --bg-card: #21252b;
-            --text-primary: #e6e6e6;
-            --text-secondary: #8b949e;
-            --accent-red: #ff6b6b;
-            --accent-green: #51cf66;
-            --accent-blue: #339af0;
-            --accent-pink: #f06595;
-            --shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
+            background-color: #FFFFFF;
+            color: #333333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             padding: 20px;
         }
         .card {
-            background-color: var(--bg-card);
-            border: none;
+            background-color: #FFFFFF;
+            border: 1px solid #e0e0e0;
             border-radius: 12px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
         }
         .card-header {
-            background-color: rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
             font-weight: 600;
             padding: 15px 20px;
         }
@@ -48,72 +41,53 @@
             display: inline-block;
             margin-right: 8px;
         }
-        .status-normal { background-color: var(--accent-green); }
-        .status-warning { background-color: var(--accent-red); animation: blink 1s infinite; }
+        .status-normal { background-color: #28a745; }
+        .status-warning { background-color: #dc3545; animation: blink 1s infinite; }
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
         }
         .window-active {
-            background-color: rgba(255, 107, 107, 0.15);
-            border-left: 4px solid var(--accent-red);
+            background-color: rgba(220, 53, 69, 0.08);
+            border-left: 4px solid #dc3545;
         }
         .window-normal {
-            background-color: rgba(255,255,255,0.03);
+            background-color: #fafafa;
             border-left: 4px solid transparent;
         }
         .bilibili-card {
-            border: 2px solid var(--accent-pink);
-            background: linear-gradient(135deg, rgba(240, 101, 149, 0.1), rgba(181, 78, 136, 0.1));
+            border: 2px solid #f06595;
+            background: linear-gradient(135deg, rgba(240, 101, 149, 0.05), rgba(181, 78, 136, 0.05));
         }
-        .process-item, .window-item, .history-item {
-            padding: 10px 15px;
-            margin-bottom: 8px;
+        .browser-card {
+            border-left: 4px solid #007bff;
+            background: linear-gradient(90deg, rgba(0, 123, 255, 0.08), transparent);
+        }
+        .window-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
             border-radius: 8px;
-            background-color: rgba(255,255,255,0.03);
             transition: all 0.2s;
         }
-        .process-item:hover, .window-item:hover, .history-item:hover {
-            background-color: rgba(255,255,255,0.08);
+        .window-item:hover {
+            transform: translateX(4px);
         }
-        .process-item strong, .window-item strong, .history-item strong {
-            color: var(--accent-blue);
+        .website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 123, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
         }
-        .mouse-action {
-            font-family: 'Consolas', monospace;
-            background-color: rgba(51, 154, 240, 0.1);
-            border-left: 3px solid var(--accent-blue);
-            padding: 8px 12px;
-            margin: 5px 0;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-        .alert-danger-custom {
-            background-color: rgba(255, 107, 107, 0.2);
-            border: 1px solid var(--accent-red);
-            color: var(--accent-red);
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .alert-warning-custom {
-            background-color: rgba(255, 184, 77, 0.2);
-            border: 1px solid #ffb84d;
-            color: #ffb84d;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .stats-card {
-            text-align: center;
-            padding: 20px;
-        }
-        .stats-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent-blue);
-        }
-        .stats-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        .website-link:hover {
+            background: rgba(0, 123, 255, 0.2);
+            color: #0056b3;
+            text-decoration: none;
         }
         .btn-bilibili {
             background: linear-gradient(135deg, #ff6b9d, #c44569);
@@ -130,54 +104,78 @@
             box-shadow: 0 4px 15px rgba(240, 101, 149, 0.4);
             color: white;
         }
-        .timestamp {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
         }
-        h1, h2, h3, h4, h5, h6 {
-            color: var(--text-primary);
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #007bff;
         }
-        .text-muted-custom {
-            color: var(--text-secondary);
+        .stats-label {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--text-secondary);
+        .progress-bar-custom {
+            height: 8px;
             border-radius: 4px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .progress-cpu { background-color: #28a745; }
+        .progress-memory { background-color: #17a2b8; }
+        .progress-disk { background-color: #ffc107; }
+        .screenshot-container {
+            max-width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .screenshot-container img {
+            width: 100%;
+            height: auto;
+        }
+        .alert-danger-custom {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .alert-warning-custom {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
         }
         .scroll-container {
             max-height: 400px;
             overflow-y: auto;
         }
-        .browser-card {
-            border-left: 4px solid #339af0;
-            background: linear-gradient(90deg, rgba(51, 154, 240, 0.1), transparent);
+        h1, h2, h3, h4, h5, h6 {
+            color: #333333;
         }
-        .website-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(51, 154, 240, 0.2);
-            padding: 4px 10px;
-            border-radius: 15px;
-            color: #339af0;
-            text-decoration: none;
+        .text-muted-custom {
+            color: #666666;
+        }
+        .timestamp {
+            color: #888888;
             font-size: 0.85rem;
-            transition: all 0.2s;
         }
-        .website-link:hover {
-            background: rgba(51, 154, 240, 0.4);
-            color: #74c0fc;
-            text-decoration: none;
-        }
-        .website-link img {
-            width: 16px;
-            height: 16px;
+        footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -185,7 +183,7 @@
     <div class="container-fluid">
         <h1 class="text-center mb-4">
             <i class="bi bi-display"></i> PC Monitor
-            <small class="text-muted-custom ms-2">实时电脑使用状况监控系统</small>
+            <small class="text-muted ms-2">实时电脑监控系统</small>
         </h1>
 
         <div class="row">
@@ -200,86 +198,260 @@
                             <span id="statusText" class="fs-5">正常更新中</span>
                         </div>
                         
-                        <div class="row mt-3">
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="stats-number">50</div>
-                                    <div class="stats-label"><i class="bi bi-cpu"></i> 总进程数</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">4%</div>
+                    <div class="stats-label"><i class="bi bi-cpu"></i> CPU 使用率</div>
+                    <div class="progress-bar-custom mt-2">
+                        <div class="progress-fill progress-cpu" style="width: 4%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">46.2%</div>
+                    <div class="stats-label"><i class="bi bi-memory-stick"></i> 内存使用率</div>
+                    <div class="progress-bar-custom mt-2">
+                        <div class="progress-fill progress-memory" style="width: 46.2%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">77.2%</div>
+                    <div class="stats-label"><i class="bi bi-hard-drive"></i> 磁盘使用率</div>
+                    <div class="progress-bar-custom mt-2">
+                        <div class="progress-fill progress-disk" style="width: 77.2%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">14.53 / 31.47 GB</div>
+                    <div class="stats-label"><i class="bi bi-database"></i> 内存使用</div>
+                    <div class="text-muted-custom small mt-2">
+                        已发送: 270.49 MB<br>
+                        已接收: 1079.39 MB
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-cpu"></i> CPU 核心使用详情
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 0</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="stats-number">11</div>
-                                    <div class="stats-label"><i class="bi bi-window"></i> 实时窗口</div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 1</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="stats-number">13</div>
-                                    <div class="stats-label"><i class="bi bi-clock-history"></i> 历史窗口</div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 2</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="timestamp">上次更新</div>
-                                    <div class="stats-label"></div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 3</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 4</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 5</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 6</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 7</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 8</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 9</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 10</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 11</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 12</div>
+                                    <div class="text-primary font-size-lg">21.2%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 21.2%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 13</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 14</div>
+                                    <div class="text-primary font-size-lg">52.8%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 52.8%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 15</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 16</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 17</div>
+                                    <div class="text-primary font-size-lg">0.0%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 0.0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
 
         
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-mouse"></i> 鼠标操作记录
+                        <i class="bi bi-camera"></i> 当前活动窗口截图
+                        <span class="badge bg-primary float-end">screenshot_20260518_200333.png</span>
                     </div>
                     <div class="card-body">
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:34.967912]</span> 点击 (left) at (1817, 1235)
+                        <div class="screenshot-container">
+                            <img src="screenshots/screenshot_20260518_200333.png" alt="活动窗口截图" class="img-fluid">
                         </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:30.041752]</span> 点击 (left) at (1847, 698)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:26.329383]</span> 点击 (left) at (2274, 258)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:24.037671]</span> 点击 (left) at (2052, 426)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:19.853253]</span> 点击 (left) at (2789, 1219)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:18.214227]</span> 点击 (left) at (433, 1035)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:15.782700]</span> 点击 (left) at (1381, 1200)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:14.519004]</span> 点击 (left) at (888, 1284)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:14.069255]</span> 点击 (left) at (907, 1270)
-                        </div>
-                        
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[2026-05-18T19:44:12.864301]</span> 点击 (left) at (2095, 1554)
-                        </div>
-                        
                     </div>
                 </div>
             </div>
@@ -291,685 +463,23 @@
         
 
         <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-list-task"></i> 任务栏进程
-                        <span class="badge bg-primary float-end">50 个</span>
-                    </div>
-                    <div class="card-body scroll-container">
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>MemCompression</strong>
-                                    <small class="text-muted-custom ms-2">PID: 4760</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">859.72 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 16396</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">673.29 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 8980</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">516.56 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 33388</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">474.71 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 12824</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">411.41 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 33096</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">366.81 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 12224</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">362.94 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>explorer.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 24324</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">333.37 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 13776</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">312.57 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 31948</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">276.96 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 8044</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">275.63 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 24452</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">237.76 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 30468</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">221.72 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 18064</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">215.99 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>dwm.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 19704</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">210.46 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 30608</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">187.25 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 31100</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">170.66 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>SearchIndexer.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 21000</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">169.4 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>SearchHost.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 3272</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">166.22 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 19572</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">165.58 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>PhoneExperienceHost.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 28500</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">164.2 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>ShellHost.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 12984</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">157.66 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Microsoft.Notes.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 7668</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">155.64 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>StartMenuExperienceHost.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 12300</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">152.61 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 23312</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">147.71 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 22616</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">136.11 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 29432</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">134.73 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>TextInputHost.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 27696</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">132.04 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>powershell.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 29284</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">131.09 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 20944</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">130.28 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>XboxPcApp.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 10076</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">127.7 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 27896</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">127.06 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedgewebview2.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 31176</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">126.57 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 32788</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">125.85 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>ShellExperienceHost.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 29376</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">123.6 MB</span>
-                                    <span class="badge bg-secondary">stopped</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 9616</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">111.67 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>powershell.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 19752</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">110.91 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong></strong>
-                                    <small class="text-muted-custom ms-2">PID: 260</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">109.01 MB</span>
-                                    <span class="badge bg-secondary">stopped</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 22344</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">108.19 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Trae CN.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 19244</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">106.77 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>powershell.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 7236</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">106.45 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 22016</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">100.52 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 33712</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">96.87 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>powershell.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 16424</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">92.84 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>IntelConnectivityNetworkService.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 1424</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">87.34 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>CrossDeviceService.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 19896</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">85.3 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>HipsDaemon.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 5652</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">81.97 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>ApplicationFrameHost.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 24368</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">81.94 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedge.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 22472</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">79.87 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>msedgewebview2.exe</strong>
-                                    <small class="text-muted-custom ms-2">PID: 20528</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">78.73 MB</span>
-                                    <span class="badge bg-secondary">running</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> 当前运行窗口
                         
-                        <span class="badge bg-danger float-end">活动: index.html - Seesee - Trae CN...</span>
+                        <span class="badge bg-danger float-end">活动: PC Monitor - 实时电脑使用状况监控系统 - Pe...</span>
                         
                     </div>
                     <div class="card-body scroll-container">
                         
-                        <div class="window-item window-active  ">
+                        <div class="window-item window-active ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>index.html - Seesee - Trae CN</strong>
+                                    <strong>PC Monitor - 实时电脑使用状况监控系统 - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Trae CN.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1440x906
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1310x832
                                     </div>
                                     
                                     
@@ -980,10 +490,10 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>Page not found · GitHub Pages and 1 more page - Personal - Microsoft​ Edge</strong>
+                                    <strong>Deployments · llmic/pc-monitor and 1 more page - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> msedge.exe |
                                         <i class="bi bi-aspect-ratio"></i> 1308x831
@@ -995,13 +505,13 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>llmic/pc-monitor - Personal - Microsoft​ Edge</strong>
+                                    <strong>monitor.py - Seesee - Trae CN</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1307x830
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1307x895
                                     </div>
                                     
                                     
@@ -1010,7 +520,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Sticky Notes</strong>
@@ -1025,7 +535,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Settings</strong>
@@ -1040,7 +550,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Settings</strong>
@@ -1055,7 +565,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Xbox</strong>
@@ -1070,7 +580,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Windows Input Experience</strong>
@@ -1085,7 +595,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Sticky Notes</strong>
@@ -1100,7 +610,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Xbox</strong>
@@ -1115,7 +625,7 @@
                             </div>
                         </div>
                         
-                        <div class="window-item window-normal  ">
+                        <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>Program Manager</strong>
@@ -1135,196 +645,9 @@
             </div>
         </div>
 
-        
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-clock-history"></i> 历史窗口记录
-                        <span class="badge bg-secondary float-end">最近 13 个</span>
-                    </div>
-                    <div class="card-body scroll-container">
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>窗口标题</th>
-                                        <th>所属进程</th>
-                                        <th>首次出现</th>
-                                        <th>最近查看</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                    <tr>
-                                        <td>1</td>
-                                        <td>
-                                            <strong>llmic/pc-monitor - Personal - Microsoft​ Edge</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">msedge.exe</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.407925</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.407925</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>2</td>
-                                        <td>
-                                            <strong>Page not found · GitHub Pages and 1 more page - Personal - M...</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">msedge.exe</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.404299</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.404299</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>3</td>
-                                        <td>
-                                            <strong>index.html - Seesee - Trae CN</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">Trae CN.exe</td>
-                                        <td class="timestamp">2026-05-18T19:43:38.455721</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.400262</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>4</td>
-                                        <td>
-                                            <strong>Commits · llmic/pc-monitor and 4 more pages - Personal - Mic...</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">msedge.exe</td>
-                                        <td class="timestamp">2026-05-18T19:43:38.453693</td>
-                                        <td class="timestamp">2026-05-18T19:43:38.453693</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>5</td>
-                                        <td>
-                                            <strong>Pages and 8 more pages - Personal - Microsoft​ Edge</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">msedge.exe</td>
-                                        <td class="timestamp">2026-05-18T19:40:24.280633</td>
-                                        <td class="timestamp">2026-05-18T19:40:24.280633</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>6</td>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">explorer.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.875692</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.427297</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>7</td>
-                                        <td>
-                                            <strong>Windows Input Experience</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">TextInputHost.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.872487</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.416708</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>8</td>
-                                        <td>
-                                            <strong>Xbox</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">XboxPcApp.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.871067</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.425271</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>9</td>
-                                        <td>
-                                            <strong>Settings</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">SystemSettings.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.864765</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.414671</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>10</td>
-                                        <td>
-                                            <strong>Sticky Notes</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">ApplicationFrameHost.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.861723</td>
-                                        <td class="timestamp">2026-05-18T19:46:16.422765</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>11</td>
-                                        <td>
-                                            <strong>豆包</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">Doubao.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.859723</td>
-                                        <td class="timestamp">2026-05-18T19:43:38.455721</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>12</td>
-                                        <td>
-                                            <strong>Page not found · GitHub Pages and 8 more pages - Personal - ...</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">msedge.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.858722</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.858722</td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>13</td>
-                                        <td>
-                                            <strong>collector.py - Seesee - Trae CN</strong>
-                                            
-                                            
-                                        </td>
-                                        <td class="text-muted-custom">Trae CN.exe</td>
-                                        <td class="timestamp">2026-05-18T19:39:19.856744</td>
-                                        <td class="timestamp">2026-05-18T19:40:24.284156</td>
-                                    </tr>
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="text-center text-muted-custom py-4">
-            <p>PC Monitor - 实时电脑使用状况监控系统 | 数据更新时间: 2026-05-18T19:46:16.400262</p>
-            <p class="small">页面每 30 秒自动刷新 | 由 Python + Bootstrap5 驱动</p>
+        <footer class="text-center text-muted py-4">
+            <p>PC Monitor - 实时电脑监控系统 | 数据更新时间: 2026-05-18T20:03:33.655318</p>
+            <p class="small">页面每 90 秒自动刷新 | 由 Python + Bootstrap5 驱动</p>
         </footer>
     </div>
 
@@ -1342,23 +665,23 @@
 
             if (diffSeconds > 180) {
                 statusLight.className = 'status-indicator status-warning';
-                statusText.innerHTML = '<i class="bi bi-exclamation-circle"></i> 长时间无更新! (0秒)';
-                statusCard.style.borderLeft = '4px solid #ff6b6b';
-            } else if (diffSeconds > 30) {
+                statusText.innerHTML = '<i class="bi bi-exclamation-circle"></i> 长时间无更新! (' + diffSeconds + '秒)';
+                statusCard.style.borderLeft = '4px solid #dc3545';
+            } else if (diffSeconds > 120) {
                 statusLight.className = 'status-indicator status-warning';
-                statusText.innerHTML = '<i class="bi bi-exclamation-triangle"></i> 超过30秒未更新! (0秒)';
-                statusCard.style.borderLeft = '4px solid #ffb84d';
+                statusText.innerHTML = '<i class="bi bi-exclamation-triangle"></i> 超过90秒未更新! (' + diffSeconds + '秒)';
+                statusCard.style.borderLeft = '4px solid #ffc107';
             } else {
                 statusLight.className = 'status-indicator status-normal';
                 statusText.innerHTML = '<i class="bi bi-check-circle"></i> 正常更新中';
-                statusCard.style.borderLeft = '4px solid #51cf66';
+                statusCard.style.borderLeft = '4px solid #28a745';
             }
         }
 
         setInterval(checkTimeout, 1000);
         setTimeout(function() {
             location.reload();
-        }, 60000);
+        }, 90000);
 
         checkTimeout();
     </script>

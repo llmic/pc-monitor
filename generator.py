@@ -6,38 +6,31 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PC Monitor - 实时电脑使用状况监控系统</title>
+    <title>PC Monitor - 实时电脑监控系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #1a1d23;
-            --bg-card: #21252b;
-            --text-primary: #e6e6e6;
-            --text-secondary: #8b949e;
-            --accent-red: #ff6b6b;
-            --accent-green: #51cf66;
-            --accent-blue: #339af0;
-            --accent-pink: #f06595;
-            --shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
+            background-color: #FFFFFF;
+            color: #333333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             padding: 20px;
         }
         .card {
-            background-color: var(--bg-card);
-            border: none;
+            background-color: #FFFFFF;
+            border: 1px solid #e0e0e0;
             border-radius: 12px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
         }
         .card-header {
-            background-color: rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
             font-weight: 600;
             padding: 15px 20px;
         }
@@ -51,72 +44,53 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: inline-block;
             margin-right: 8px;
         }
-        .status-normal { background-color: var(--accent-green); }
-        .status-warning { background-color: var(--accent-red); animation: blink 1s infinite; }
+        .status-normal { background-color: #28a745; }
+        .status-warning { background-color: #dc3545; animation: blink 1s infinite; }
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
         }
         .window-active {
-            background-color: rgba(255, 107, 107, 0.15);
-            border-left: 4px solid var(--accent-red);
+            background-color: rgba(220, 53, 69, 0.08);
+            border-left: 4px solid #dc3545;
         }
         .window-normal {
-            background-color: rgba(255,255,255,0.03);
+            background-color: #fafafa;
             border-left: 4px solid transparent;
         }
         .bilibili-card {
-            border: 2px solid var(--accent-pink);
-            background: linear-gradient(135deg, rgba(240, 101, 149, 0.1), rgba(181, 78, 136, 0.1));
+            border: 2px solid #f06595;
+            background: linear-gradient(135deg, rgba(240, 101, 149, 0.05), rgba(181, 78, 136, 0.05));
         }
-        .process-item, .window-item, .history-item {
-            padding: 10px 15px;
-            margin-bottom: 8px;
+        .browser-card {
+            border-left: 4px solid #007bff;
+            background: linear-gradient(90deg, rgba(0, 123, 255, 0.08), transparent);
+        }
+        .window-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
             border-radius: 8px;
-            background-color: rgba(255,255,255,0.03);
             transition: all 0.2s;
         }
-        .process-item:hover, .window-item:hover, .history-item:hover {
-            background-color: rgba(255,255,255,0.08);
+        .window-item:hover {
+            transform: translateX(4px);
         }
-        .process-item strong, .window-item strong, .history-item strong {
-            color: var(--accent-blue);
+        .website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 123, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
         }
-        .mouse-action {
-            font-family: 'Consolas', monospace;
-            background-color: rgba(51, 154, 240, 0.1);
-            border-left: 3px solid var(--accent-blue);
-            padding: 8px 12px;
-            margin: 5px 0;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-        .alert-danger-custom {
-            background-color: rgba(255, 107, 107, 0.2);
-            border: 1px solid var(--accent-red);
-            color: var(--accent-red);
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .alert-warning-custom {
-            background-color: rgba(255, 184, 77, 0.2);
-            border: 1px solid #ffb84d;
-            color: #ffb84d;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .stats-card {
-            text-align: center;
-            padding: 20px;
-        }
-        .stats-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent-blue);
-        }
-        .stats-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        .website-link:hover {
+            background: rgba(0, 123, 255, 0.2);
+            color: #0056b3;
+            text-decoration: none;
         }
         .btn-bilibili {
             background: linear-gradient(135deg, #ff6b9d, #c44569);
@@ -133,54 +107,78 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             box-shadow: 0 4px 15px rgba(240, 101, 149, 0.4);
             color: white;
         }
-        .timestamp {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
         }
-        h1, h2, h3, h4, h5, h6 {
-            color: var(--text-primary);
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #007bff;
         }
-        .text-muted-custom {
-            color: var(--text-secondary);
+        .stats-label {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--text-secondary);
+        .progress-bar-custom {
+            height: 8px;
             border-radius: 4px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .progress-cpu { background-color: #28a745; }
+        .progress-memory { background-color: #17a2b8; }
+        .progress-disk { background-color: #ffc107; }
+        .screenshot-container {
+            max-width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .screenshot-container img {
+            width: 100%;
+            height: auto;
+        }
+        .alert-danger-custom {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .alert-warning-custom {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
         }
         .scroll-container {
             max-height: 400px;
             overflow-y: auto;
         }
-        .browser-card {
-            border-left: 4px solid #339af0;
-            background: linear-gradient(90deg, rgba(51, 154, 240, 0.1), transparent);
+        h1, h2, h3, h4, h5, h6 {
+            color: #333333;
         }
-        .website-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(51, 154, 240, 0.2);
-            padding: 4px 10px;
-            border-radius: 15px;
-            color: #339af0;
-            text-decoration: none;
+        .text-muted-custom {
+            color: #666666;
+        }
+        .timestamp {
+            color: #888888;
             font-size: 0.85rem;
-            transition: all 0.2s;
         }
-        .website-link:hover {
-            background: rgba(51, 154, 240, 0.4);
-            color: #74c0fc;
-            text-decoration: none;
-        }
-        .website-link img {
-            width: 16px;
-            height: 16px;
+        footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -188,7 +186,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class="container-fluid">
         <h1 class="text-center mb-4">
             <i class="bi bi-display"></i> PC Monitor
-            <small class="text-muted-custom ms-2">实时电脑使用状况监控系统</small>
+            <small class="text-muted ms-2">实时电脑监控系统</small>
         </h1>
 
         <div class="row">
@@ -212,89 +210,126 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             </ul>
                         </div>
                         {% endif %}
-                        <div class="row mt-3">
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="stats-number">{{ total_processes }}</div>
-                                    <div class="stats-label"><i class="bi bi-cpu"></i> 总进程数</div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="stats-number">{{ active_windows|length }}</div>
-                                    <div class="stats-label"><i class="bi bi-window"></i> 实时窗口</div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="stats-number">{{ history_windows|length }}</div>
-                                    <div class="stats-label"><i class="bi bi-clock-history"></i> 历史窗口</div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <div class="stats-card">
-                                    <div class="timestamp">上次更新</div>
-                                    <div class="stats-label">{{ last_update }}</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {% if mouse_actions %}
+        {% if system_info %}
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">{{ system_info.cpu|avg_cpu }}%</div>
+                    <div class="stats-label"><i class="bi bi-cpu"></i> CPU 使用率</div>
+                    <div class="progress-bar-custom mt-2">
+                        <div class="progress-fill progress-cpu" style="width: {{ system_info.cpu|avg_cpu }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">{{ system_info.memory.percent }}%</div>
+                    <div class="stats-label"><i class="bi bi-memory-stick"></i> 内存使用率</div>
+                    <div class="progress-bar-custom mt-2">
+                        <div class="progress-fill progress-memory" style="width: {{ system_info.memory.percent }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">{{ system_info.disk.percent }}%</div>
+                    <div class="stats-label"><i class="bi bi-hard-drive"></i> 磁盘使用率</div>
+                    <div class="progress-bar-custom mt-2">
+                        <div class="progress-fill progress-disk" style="width: {{ system_info.disk.percent }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number">{{ system_info.memory.used }} / {{ system_info.memory.total }} GB</div>
+                    <div class="stats-label"><i class="bi bi-database"></i> 内存使用</div>
+                    <div class="text-muted-custom small mt-2">
+                        已发送: {{ system_info.network.bytes_sent }} MB<br>
+                        已接收: {{ system_info.network.bytes_recv }} MB
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-mouse"></i> 鼠标操作记录
+                        <i class="bi bi-cpu"></i> CPU 核心使用详情
                     </div>
                     <div class="card-body">
-                        {% for action in mouse_actions[:10] %}
-                        <div class="mouse-action">
-                            <span class="text-muted-custom">[{{ action.timestamp }}]</span> {{ action.action }}
+                        <div class="row">
+                            {% for (index, usage) in system_info.cpu|enumerate %}
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core {{ index }}</div>
+                                    <div class="text-primary font-size-lg">{{ usage }}%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: {{ usage }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
         {% endif %}
 
-        {% set browser_windows = [] %}
-        {% for win in active_windows if win.website %}
-            {% set _ = browser_windows.append(win) %}
-        {% endfor %}
-        {% if browser_windows %}
+        {% if screenshot %}
         <div class="row">
             <div class="col-12">
-                <div class="card browser-card" style="border-left-color: #339af0;">
-                    <div class="card-header" style="background: linear-gradient(135deg, rgba(51, 154, 240, 0.2), rgba(51, 154, 240, 0.1));">
-                        <i class="bi bi-browser-chrome" style="color: #339af0;"></i> 浏览器窗口
-                        <span class="badge float-end" style="background-color: #339af0;">{{ browser_windows|length }} 个标签页</span>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-camera"></i> 当前活动窗口截图
+                        <span class="badge bg-primary float-end">{{ screenshot|filename }}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="screenshot-container">
+                            <img src="{{ screenshot }}" alt="活动窗口截图" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% set active_windows = [] %}
+        {% for win in windows if win.website %}
+            {% set _ = active_windows.append(win) %}
+        {% endfor %}
+        {% if active_windows %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card browser-card" style="border-left-color: #007bff;">
+                    <div class="card-header" style="background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05));">
+                        <i class="bi bi-browser-chrome" style="color: #007bff;"></i> 浏览器窗口
+                        <span class="badge float-end" style="background-color: #007bff;">{{ active_windows|length }} 个标签页</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            {% for win in browser_windows %}
+                            {% for win in active_windows %}
                             <div class="col-md-6 col-lg-4 mb-3">
-                                <div class="p-3 rounded h-100" style="background: rgba(51, 154, 240, 0.08); border: 1px solid rgba(51, 154, 240, 0.2);">
-                                    <div class="d-flex align-items-start gap-2">
-                                        <img src="{{ win.website.favicon }}" alt="favicon" style="width: 20px; height: 20px; flex-shrink: 0;" onerror="this.style.display='none'">
-                                        <div class="flex-grow-1 min-width-0">
-                                            <h6 class="mb-1 text-truncate" style="color: #339af0;" title="{{ win.title }}">
-                                                {{ win.title[:40] }}{% if win.title|length > 40 %}...{% endif %}
-                                            </h6>
-                                            <a href="{{ win.website.url }}" target="_blank" class="website-link mb-2" style="display: inline-block;">
-                                                <i class="bi bi-link-45deg"></i> {{ win.website.domain }}
+                                <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }}">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="font-weight-bold mb-1">{{ win.title[:50] }}{% if win.title|length > 50 %}...{% endif %}</h6>
+                                            <div class="text-muted-custom small mb-2">{{ win.process }}</div>
+                                            {% if win.website %}
+                                            <a href="{{ win.website.url }}" target="_blank" class="website-link">
+                                                <i class="bi bi-globe"></i> {{ win.website.url }}
                                             </a>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <small class="text-muted-custom">{{ win.process }}</small>
-                                                {% if win.is_active %}
-                                                <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i></span>
-                                                {% endif %}
-                                            </div>
+                                            {% endif %}
                                         </div>
+                                        {% if win.is_active %}
+                                        <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> 活动</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -307,32 +342,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         {% endif %}
 
         <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-list-task"></i> 任务栏进程
-                        <span class="badge bg-primary float-end">{{ processes|length }} 个</span>
-                    </div>
-                    <div class="card-body scroll-container">
-                        {% for proc in processes[:50] %}
-                        <div class="process-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>{{ proc.name }}</strong>
-                                    <small class="text-muted-custom ms-2">PID: {{ proc.pid }}</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">{{ proc.memory_mb }} MB</span>
-                                    <span class="badge bg-secondary">{{ proc.status }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> 当前运行窗口
@@ -341,8 +351,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         {% endif %}
                     </div>
                     <div class="card-body scroll-container">
-                        {% for win in active_windows %}
-                        <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }} {{ 'bilibili-card' if win.bilibili else '' }} {{ 'browser-card' if win.website and not win.bilibili else '' }}">
+                        {% for win in windows %}
+                        <div class="window-item {{ 'window-active' if win.is_active else 'window-normal' }} {{ 'bilibili-card' if win.bilibili else '' }}">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>{{ win.title }}</strong>
@@ -353,8 +363,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     {% if win.website %}
                                     <div class="mt-2">
                                         <a href="{{ win.website.url }}" target="_blank" class="website-link">
-                                            <img src="{{ win.website.favicon }}" alt="favicon" onerror="this.style.display='none'">
-                                            <i class="bi bi-globe"></i> {{ win.website.domain }}
+                                            <i class="bi bi-link-45deg"></i> {{ win.website.url }}
                                         </a>
                                     </div>
                                     {% endif %}
@@ -380,91 +389,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </div>
         </div>
 
-        {% if bilibili_windows %}
-        <div class="row">
-            <div class="col-12">
-                <div class="card bilibili-card">
-                    <div class="card-header" style="background: linear-gradient(135deg, rgba(240, 101, 149, 0.3), rgba(181, 78, 136, 0.3));">
-                        <i class="bi bi-play-circle-fill" style="color: #f06595;"></i> B站视频追踪
-                        <span class="badge float-end" style="background-color: #f06595;">{{ bilibili_windows|length }} 个视频</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            {% for video in bilibili_windows %}
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <div class="p-3 rounded" style="background: rgba(240, 101, 149, 0.1); border: 1px solid rgba(240, 101, 149, 0.3);">
-                                    <h6 class="text-truncate" style="color: #f06595;">
-                                        <i class="bi bi-play-btn"></i> {{ video.bilibili.bv_id }}
-                                    </h6>
-                                    <p class="mb-2 text-muted-custom">{{ video.title[:50] if video.title else '获取中...' }}</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <small class="text-muted-custom">{{ video.last_seen }}</small>
-                                        <a href="{{ video.bilibili.url }}" target="_blank" class="btn-bilibili btn-sm">
-                                            <i class="bi bi-box-arrow-right"></i> 观看
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-clock-history"></i> 历史窗口记录
-                        <span class="badge bg-secondary float-end">最近 {{ history_windows|length }} 个</span>
-                    </div>
-                    <div class="card-body scroll-container">
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>窗口标题</th>
-                                        <th>所属进程</th>
-                                        <th>首次出现</th>
-                                        <th>最近查看</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for win in history_windows %}
-                                    <tr>
-                                        <td>{{ loop.index }}</td>
-                                        <td>
-                                            <strong>{{ win.title[:60] }}{% if win.title|length > 60 %}...{% endif %}</strong>
-                                            {% if win.bilibili %}
-                                            <span class="badge ms-2" style="background-color: #f06595;">
-                                                <i class="bi bi-play-circle"></i> {{ win.bilibili.bv_id }}
-                                            </span>
-                                            {% endif %}
-                                            {% if win.website and not win.bilibili %}
-                                            <a href="{{ win.website.url }}" target="_blank" class="website-link ms-2">
-                                                <i class="bi bi-globe"></i> {{ win.website.domain }}
-                                            </a>
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-muted-custom">{{ win.process }}</td>
-                                        <td class="timestamp">{{ win.first_seen }}</td>
-                                        <td class="timestamp">{{ win.last_seen }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="text-center text-muted-custom py-4">
-            <p>PC Monitor - 实时电脑使用状况监控系统 | 数据更新时间: {{ timestamp }}</p>
-            <p class="small">页面每 30 秒自动刷新 | 由 Python + Bootstrap5 驱动</p>
+        <footer class="text-center text-muted py-4">
+            <p>PC Monitor - 实时电脑监控系统 | 数据更新时间: {{ timestamp }}</p>
+            <p class="small">页面每 90 秒自动刷新 | 由 Python + Bootstrap5 驱动</p>
         </footer>
     </div>
 
@@ -482,23 +409,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             if (diffSeconds > 180) {
                 statusLight.className = 'status-indicator status-warning';
-                statusText.innerHTML = '<i class="bi bi-exclamation-circle"></i> 长时间无更新! ({{ diff_seconds }}秒)';
-                statusCard.style.borderLeft = '4px solid #ff6b6b';
-            } else if (diffSeconds > 30) {
+                statusText.innerHTML = '<i class="bi bi-exclamation-circle"></i> 长时间无更新! (' + diffSeconds + '秒)';
+                statusCard.style.borderLeft = '4px solid #dc3545';
+            } else if (diffSeconds > 120) {
                 statusLight.className = 'status-indicator status-warning';
-                statusText.innerHTML = '<i class="bi bi-exclamation-triangle"></i> 超过30秒未更新! ({{ diff_seconds }}秒)';
-                statusCard.style.borderLeft = '4px solid #ffb84d';
+                statusText.innerHTML = '<i class="bi bi-exclamation-triangle"></i> 超过90秒未更新! (' + diffSeconds + '秒)';
+                statusCard.style.borderLeft = '4px solid #ffc107';
             } else {
                 statusLight.className = 'status-indicator status-normal';
                 statusText.innerHTML = '<i class="bi bi-check-circle"></i> 正常更新中';
-                statusCard.style.borderLeft = '4px solid #51cf66';
+                statusCard.style.borderLeft = '4px solid #28a745';
             }
         }
 
         setInterval(checkTimeout, 1000);
         setTimeout(function() {
             location.reload();
-        }, 60000);
+        }, 90000);
 
         checkTimeout();
     </script>
@@ -509,17 +436,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 class HTMLGenerator:
     def __init__(self):
         self.template = Template(HTML_TEMPLATE)
+        self.template.environment.filters['avg_cpu'] = self._avg_cpu_filter
+        self.template.environment.filters['enumerate'] = self._enumerate_filter
+        self.template.environment.filters['filename'] = self._filename_filter
+
+    def _avg_cpu_filter(self, cpu_list):
+        if cpu_list:
+            return round(sum(cpu_list) / len(cpu_list))
+        return 0
+
+    def _enumerate_filter(self, iterable):
+        return list(enumerate(iterable))
+
+    def _filename_filter(self, path):
+        if path:
+            return path.split('/')[-1]
+        return ''
 
     def generate(self, data):
-        active_windows = data.get('windows', [])
-        history_windows = data.get('history_windows', [])
-        mouse_actions = data.get('mouse_actions', [])
-        bilibili_windows = [w for w in history_windows if w.get('bilibili')]
+        windows = data.get('windows', [])
+        system_info = data.get('system_info', {})
+        screenshot = data.get('screenshot', '')
 
-        processes = data.get('processes', [])
-        total_processes = len(processes)
         active_window_title = data.get('active_window')
-
         timestamp = data.get('timestamp', '')
         last_update = data.get('last_update', '')
 
@@ -532,7 +471,7 @@ class HTMLGenerator:
             except Exception:
                 pass
 
-        is_normal = diff_seconds <= 90
+        is_normal = diff_seconds <= 120
         alert_info = None
 
         if diff_seconds > 180:
@@ -546,7 +485,7 @@ class HTMLGenerator:
                     '电脑蓝屏或崩溃'
                 ]
             }
-        elif diff_seconds > 90:
+        elif diff_seconds > 120:
             alert_info = {
                 'level': 'warning',
                 'title': '短期超时异常 (90秒-3分钟)',
@@ -560,12 +499,9 @@ class HTMLGenerator:
         status_message = '正常更新中' if is_normal else f'超过{diff_seconds}秒未更新!'
 
         html = self.template.render(
-            processes=processes,
-            active_windows=active_windows,
-            history_windows=history_windows,
-            mouse_actions=mouse_actions,
-            bilibili_windows=bilibili_windows,
-            total_processes=total_processes,
+            windows=windows,
+            system_info=system_info,
+            screenshot=screenshot,
             active_window_title=active_window_title,
             timestamp=timestamp,
             last_update=last_update,

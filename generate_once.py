@@ -29,7 +29,6 @@ def run_once():
         history_manager.update_from_current_windows(windows)
 
         history_windows = history_manager.get_history_windows()
-        mouse_actions = history_manager.get_mouse_actions()
         bilibili_windows = history_manager.get_bilibili_windows()
 
         for video in bilibili_windows:
@@ -41,13 +40,12 @@ def run_once():
                     video['title'] = title
 
         data['history_windows'] = history_windows
-        data['mouse_actions'] = mouse_actions
 
         html = generator.generate(data)
         generator.save(html, OUTPUT_FILE)
 
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] HTML页面已更新: {OUTPUT_FILE}")
-        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 进程数: {len(data['processes'])}, 窗口数: {len(windows)}, 历史窗口: {len(history_windows)}")
+        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 窗口数: {len(windows)}, 历史窗口: {len(history_windows)}")
         return True
 
     except Exception as e:
