@@ -29,12 +29,28 @@ from history import HistoryManager
 from generator import HTMLGenerator
 
 # Configuration
-COLLECTION_INTERVAL = 300
-OUTPUT_FILE = 'index.html'
-GIT_PUSH_ENABLED = True
-GIT_COMMIT_MESSAGE = "Auto update: {timestamp}"
-DATA_DIR = 'data'
-SCREENSHOT_DIR = 'screenshots'
+COLLECTION_INTERVAL = 300          # Update interval in seconds
+OUTPUT_FILE = 'index.html'         # Output HTML file name
+GIT_PUSH_ENABLED = True            # Enable/disable auto Git push
+GIT_COMMIT_MESSAGE = "Auto update: {timestamp}"  # Git commit message template
+DATA_DIR = 'data'                  # Directory for data files
+SCREENSHOT_DIR = 'screenshots'     # Directory for screenshot files
+
+# History Settings
+HISTORY_FILE = 'data/history_windows.json'  # History data file
+MOUSE_FILE = 'data/mouse_actions.json'      # Mouse actions file
+MAX_HISTORY = 30                          # Maximum number of history windows to keep
+MAX_MOUSE_ACTIONS = 50                    # Maximum number of mouse actions to keep
+
+# Alert Settings
+SHUTDOWN_TIMEOUT_SECONDS = 600             # Timeout before showing shutdown alert (10 minutes)
+
+# Collector Settings
+SCREENSHOT_BUFFER_PIXELS = 15              # Buffer pixels around window for screenshots
+
+# Customization
+COMPUTER_NAME = "Liuli 的电脑"              # Display name for the dashboard
+AVATAR_PATH = ""                           # Leave empty for default icon, or set to local path/URL
 
 
 def init_system():
@@ -171,6 +187,9 @@ def run_monitor_cycle(collector, history_manager, generator):
         
         # Prepare data for HTML
         data['history_windows'] = history_windows
+        data['computer_name'] = COMPUTER_NAME
+        data['avatar'] = AVATAR_PATH
+        data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
         
         # Generate and save HTML
         html = generator.generate(data)
@@ -200,7 +219,12 @@ def main():
     
     # Initialize components
     collector = DataCollector()
-    history_manager = HistoryManager()
+    history_manager = HistoryManager(
+        history_file=HISTORY_FILE,
+        mouse_file=MOUSE_FILE,
+        max_history=MAX_HISTORY,
+        max_mouse_actions=MAX_MOUSE_ACTIONS
+    )
     generator = HTMLGenerator()
     
     # Start Git push thread

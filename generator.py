@@ -257,10 +257,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div class="shutdown-time" id="shutdownTime"></div>
     </div>
     <div class="container-fluid">
-        <h1 class="text-center mb-4">
-            <i class="bi bi-display"></i> PC Monitor
-            <small class="text-muted ms-2">Real-time Computer Monitoring System</small>
-        </h1>
+        <div class="text-center mb-4">
+            <div class="d-flex justify-content-center align-items-center gap-3">
+                {% if avatar and avatar != '' %}
+                <img src="{{ avatar }}" alt="Avatar" class="rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
+                {% else %}
+                <i class="bi bi-computer" style="font-size: 48px; color: #007bff;"></i>
+                {% endif %}
+                <div class="text-left">
+                    <h1><i class="bi bi-display"></i> {{ computer_name }}</h1>
+                    <small class="text-muted">Real-time Computer Monitoring System</small>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-12">
@@ -535,7 +544,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime) + ' (UTC' + timezone + ')';
             document.getElementById('currentTimeDisplay').textContent = formatDate(now) + ' (UTC' + timezone + ')';
             
-            if (diffSeconds > 600) {
+            if (diffSeconds > {{ shutdown_timeout }}) {
                 shutdownOverlay.classList.add('show');
                 shutdownTime.textContent = '最后更新：' + formatDate(lastUpdateTime) + '（已过去 ' + formatDuration(diffSeconds) + '）';
                 return;
@@ -631,13 +640,20 @@ class HTMLGenerator:
         
         last_update = datetime.now().isoformat()
         
+        computer_name = data.get('computer_name', 'PC Monitor')
+        avatar = data.get('avatar', '')
+        shutdown_timeout = data.get('shutdown_timeout', 600)
+        
         html = self.template.render(
             windows=windows,
             system_info=system_info,
             screenshot=screenshot,
             active_window_title=active_window_title,
             timestamp=timestamp,
-            last_update_iso=last_update
+            last_update_iso=last_update,
+            computer_name=computer_name,
+            avatar=avatar,
+            shutdown_timeout=shutdown_timeout
         )
 
         return html

@@ -8,6 +8,17 @@ from generator import HTMLGenerator
 
 OUTPUT_FILE = 'index.html'
 
+# Configuration
+HISTORY_FILE = 'data/history_windows.json'
+MOUSE_FILE = 'data/mouse_actions.json'
+MAX_HISTORY = 30
+MAX_MOUSE_ACTIONS = 50
+SHUTDOWN_TIMEOUT_SECONDS = 600
+
+# Customization
+COMPUTER_NAME = "Liuli 的电脑"  # Display name for the dashboard
+AVATAR_PATH = ""  # Leave empty for default icon, or set to local path like "./avatar.png" or URL
+
 def init():
     os.makedirs('data', exist_ok=True)
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] PC Monitor 启动")
@@ -40,6 +51,9 @@ def run_once():
                     video['title'] = title
 
         data['history_windows'] = history_windows
+        data['computer_name'] = COMPUTER_NAME
+        data['avatar'] = AVATAR_PATH
+        data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
 
         html = generator.generate(data)
         generator.save(html, OUTPUT_FILE)
@@ -65,7 +79,10 @@ def run_once():
                     'network': {'bytes_sent': -1, 'bytes_recv': -1}
                 },
                 'screenshot': None,
-                'timestamp': datetime.now().isoformat()
+                'timestamp': datetime.now().isoformat(),
+                'computer_name': COMPUTER_NAME,
+                'avatar': AVATAR_PATH,
+                'shutdown_timeout': SHUTDOWN_TIMEOUT_SECONDS
             }
             
             html = generator.generate(data)

@@ -2,6 +2,11 @@
 
 A unified Python application that combines monitoring, data collection, and Git deployment into a single easy-to-use script.
 
+![Demo](https://img.shields.io/badge/Demo-Online-green)
+![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-blue)
+
+**Live Demo:** [https://llmic.github.io/pc-monitor/](https://llmic.github.io/pc-monitor/)
+
 ## Features
 
 - ✅ **System Monitoring**: CPU, memory, disk, network metrics
