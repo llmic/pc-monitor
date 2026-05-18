@@ -388,10 +388,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             {% for core in cpu_cores %}
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core {{ loop.index0 }}</div>
-                                    <div class="text-primary font-size-lg">{{ core }}%</div>
+                                    <div class="font-weight-bold">Core {{ core.core_index }}</div>
+                                    <div class="text-primary font-size-lg">{{ core.usage }}%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: {{ core }}%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: {{ core.usage }}%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -531,6 +531,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-globe"></i> Currently Open Browser ({{ browser_windows|length }})
+                        {% if active_window_title and active_window_title != 'None' %}
+                        {% set is_browser_active = false %}
+                        {% for win in browser_windows %}
+                        {% if win.is_active %}
+                        {% set is_browser_active = true %}
+                        {% endif %}
+                        {% endfor %}
+                        {% if is_browser_active %}
+                        <span class="badge bg-danger float-end">Active: {{ active_window_title|truncate(40) }}</span>
+                        {% endif %}
+                        {% endif %}
                     </div>
                     <div class="card-body scroll-container">
                         {% for window in browser_windows %}
@@ -914,6 +925,12 @@ class HTMLGenerator:
         disk_info = system_info.get('disk', {})
         network_info = system_info.get('network', {})
 
+        # 只保留大于0.1%的CPU核心，并保存核心索引
+        active_cpu_cores = []
+        for idx, core in enumerate(cpu_percent_list):
+            if core > 0.1:
+                active_cpu_cores.append({'core_index': idx, 'usage': core})
+
         cpu_percent = int(sum(cpu_percent_list) / len(cpu_percent_list)) if cpu_percent_list else 0
 
         memory_total_gb = f"{memory_info.get('total', 0):.2f}"
@@ -941,7 +958,7 @@ class HTMLGenerator:
             'timestamp': data.get('timestamp', datetime.now().isoformat()),
             'shutdown': data.get('shutdown', False),
             'cpu_percent': cpu_percent,
-            'cpu_cores': cpu_percent_list,
+            'cpu_cores': active_cpu_cores,
             'memory_percent': int(memory_percent),
             'memory_used_gb': memory_used_gb,
             'memory_total_gb': memory_total_gb,
