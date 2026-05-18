@@ -483,13 +483,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> Currently Open Windows
-                        {% if active_window %}
-                        <span class="badge bg-danger float-end">Active: {{ active_window.title|truncate(40) }}</span>
+                        {% if active_window_title and active_window_title != 'None' %}
+                        <span class="badge bg-danger float-end">Active: {{ active_window_title|truncate(40) }}</span>
                         {% endif %}
                     </div>
                     <div class="card-body scroll-container">
                         {% for window in windows %}
-                        <div class="window-item {% if window.is_active %}window-active{% else %}window-normal{% endif %} {% if window.browser %}browser-card{% endif %}">
+                        {% if not window.browser %}
+                        <div class="window-item {% if window.is_active %}window-active{% else %}window-normal{% endif %}">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>{{ window.title|truncate(80) }}</strong>
@@ -497,15 +498,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                         <i class="bi bi-app"></i> {{ window.process }} |
                                         <i class="bi bi-aspect-ratio"></i> {{ window.width }}x{{ window.height }}
                                     </div>
-                                    {% if window.website and window.website.url %}
-                                    <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain={{ window.website.netloc }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="{{ window.website.url }}" target="_blank" rel="noopener noreferrer"
-                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> {{ window.website.url }}
-                                        </a>
-                                    </div>
-                                    {% endif %}
                                     {% if window.music and window.music.parsed_lyrics %}
                                     <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
                                         <div class="text-white font-bold">
@@ -517,6 +509,46 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                             [{{ lyric.time|format_time }}]{{ lyric.text }}
                                             {% endfor %}
                                         </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% if window.is_active %}
+                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if browser_windows and browser_windows|length > 0 %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-globe"></i> Currently Open Browser ({{ browser_windows|length }})
+                    </div>
+                    <div class="card-body scroll-container">
+                        {% for window in browser_windows %}
+                        <div class="window-item {% if window.is_active %}window-active{% else %}window-normal{% endif %} browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>{{ window.title|truncate(80) }}</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> {{ window.process }} |
+                                        <i class="bi bi-aspect-ratio"></i> {{ window.width }}x{{ window.height }}
+                                    </div>
+                                    {% if window.website and window.website.url %}
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain={{ window.website.domain }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="{{ window.website.url }}" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> {{ window.website.url }}
+                                        </a>
                                     </div>
                                     {% endif %}
                                 </div>

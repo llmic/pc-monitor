@@ -428,11 +428,13 @@ class DataCollector:
                 website_info = get_website_info(browser_url)
                 if website_info:
                     window_info['website'] = website_info
+                    window_info['browser'] = True
             else:
                 proc_lower = proc_name.lower() if proc_name else ''
                 for b in BROWSER_NAMES:
                     if b.lower() in proc_lower or b.lower() in win.title.lower():
                         window_info['website'] = {'url': None, 'title': win.title}
+                        window_info['browser'] = True
                         break
 
             windows.append(window_info)

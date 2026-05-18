@@ -5,3 +5,4 @@ data/
 .env
 *.log
 netease-cloudmusic-detector/
+download.htm
