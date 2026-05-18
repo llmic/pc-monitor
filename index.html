@@ -269,23 +269,17 @@
         <div class="shutdown-time" id="shutdownTime"></div>
     </div>
     <div class="container-fluid">
-        <div class="text-center mb-4">
-            <div class="d-flex justify-content-center align-items-center gap-3">
-                
-                <i class="bi bi-computer" style="font-size: 48px; color: #007bff;"></i>
-                
-                <div class="text-left">
-                    <h1><i class="bi bi-display"></i> Liuli 的电脑</h1>
-                    <small class="text-muted">Real-time Computer Monitoring System</small>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-12">
                 <div class="card" id="statusCard">
-                    <div class="card-header">
-                        <i class="bi bi-info-circle"></i> System Status
+                    <div class="card-header d-flex align-items-center gap-3">
+                        
+                        <i class="bi bi-computer" style="font-size: 24px; color: #007bff;"></i>
+                        
+                        <div>
+                            <strong>Liuli 的电脑</strong>
+                            <small class="text-muted d-block">Real-time Computer Monitoring System</small>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
@@ -312,41 +306,32 @@
                         <i class="bi bi-graph-up"></i> System Performance Overview
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="row g-3">
+                            <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">15%</div>
+                                    <div class="stats-number">11%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" style="width: 15%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 11%"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">50.1%</div>
+                                    <div class="stats-number">56.0%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" style="width: 50.1%"></div>
+                                        <div class="progress-fill progress-memory" style="width: 56.0%"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">77.2%</div>
-                                    <div class="stats-label"><i class="bi bi-hard-drive"></i> Disk Usage</div>
-                                    <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-disk" style="width: 77.2%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <div class="stats-card h-100">
-                                    <div class="stats-number">15.77 / 31.47 GB</div>
+                                    <div class="stats-number">17.62 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 475.7 MB<br>
-                                        Received: 2946.55 MB
+                                        Sent: 521.32 MB<br>
+                                        Received: 3354.08 MB
                                     </div>
                                 </div>
                             </div>
@@ -355,7 +340,7 @@
                         
                         <div class="row mt-4">
                             <div class="col-12">
-                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last 3 updates)</h6>
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last 5 updates)</h6>
                                 <canvas id="metricsChart" height="80"></canvas>
                             </div>
                         </div>
@@ -375,12 +360,32 @@
                         <div class="row">
                             
                             
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">61.8%</div>
+                                    <div class="font-weight-bold">Core 10</div>
+                                    <div class="text-primary font-size-lg">50.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 61.8%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 50.0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -389,75 +394,15 @@
                             
                             
                             
-                            
-                            
-                            
-                            
-                            
-                            
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">6.5%</div>
+                                    <div class="font-weight-bold">Core 12</div>
+                                    <div class="text-primary font-size-lg">45.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 6.5%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 45.5%"></div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 6</div>
-                                    <div class="text-primary font-size-lg">48.5%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 48.5%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 7</div>
-                                    <div class="text-primary font-size-lg">44.1%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 44.1%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 8</div>
-                                    <div class="text-primary font-size-lg">37.5%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 37.5%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 9</div>
-                                    <div class="text-primary font-size-lg">15.6%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 15.6%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            
-                            
-                            
                             
                             
                             
@@ -466,9 +411,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 14</div>
-                                    <div class="text-primary font-size-lg">64.7%</div>
+                                    <div class="text-primary font-size-lg">100.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 64.7%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 100.0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -485,6 +430,8 @@
                 </div>
             </div>
         </div>
+        
+
         
 
         
@@ -495,11 +442,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshots\screenshot_20260518_232643.png</span>
+                        <span class="badge bg-primary float-end">screenshots\screenshot_20260518_235447.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="screenshots\screenshot_20260518_232643.png" alt="Active Window Screenshot" class="img-fluid">
+                            <img src="screenshots\screenshot_20260518_235447.png" alt="Active Window Screenshot" class="img-fluid">
                         </div>
                     </div>
                 </div>
@@ -509,14 +456,6 @@
 
         
         
-        
-            
-                
-            
-        
-            
-                
-            
         
             
                 
@@ -611,10 +550,10 @@
                         <div class="window-item window-normal ">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>閃光 - [Alexandros]</strong>
+                                    <strong>Operation Lead Seal - 塞壬唱片-MSR/X. ARI</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> cloudmusic.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1585x1128
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
                                     </div>
                                     
                             
@@ -631,38 +570,6 @@
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> ApplicationFrameHost.exe |
                                         <i class="bi bi-aspect-ratio"></i> 570x1098
-                                    </div>
-                                    
-                            
-                            
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal ">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Settings</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> SystemSettings.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1519x1026
-                                    </div>
-                                    
-                            
-                            
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal ">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Settings</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1541x1038
                                     </div>
                                     
                             
@@ -760,20 +667,11 @@
                             <div class="window-item window-normal browser-card">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
-                                        
-                                        <strong>PC Monitor - Real-time Computer Monitoring System - Personal - Microsoft​ Edge</strong>
-                                        
+                                        <strong>PC Monitor - Real-time Computer Monitoring System and 1 more page - Personal - Microsoft​ Edge</strong>
                                         <div class="text-muted-custom small">
                                             <i class="bi bi-app"></i> msedge.exe |
                                             <i class="bi bi-aspect-ratio"></i> 2049x1650
                                         </div>
-                                        
-                                        <div class="mt-2">
-                                            
-                                            <span class="text-muted-custom small"><i class="bi bi-info-circle"></i> 网页标题: PC Monitor - Real-time Computer Monitoring System - Personal - Microsoft​ Edge</span>
-                                            
-                                        </div>
-                                        
                                     </div>
                                     
                                 </div>
@@ -782,24 +680,11 @@
                             <div class="window-item window-normal browser-card">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
-                                        
-                                        <a href="https://github.com/llmic/pc-monitor" target="_blank" class="window-title-link">
-                                            <strong>llmic/pc-monitor - Personal - Microsoft​ Edge</strong>
-                                        </a>
-                                        
+                                        <strong>llmic/pc-monitor - Personal - Microsoft​ Edge</strong>
                                         <div class="text-muted-custom small">
                                             <i class="bi bi-app"></i> msedge.exe |
                                             <i class="bi bi-aspect-ratio"></i> 237x39
                                         </div>
-                                        
-                                        <div class="mt-2">
-                                            
-                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" class="website-link">
-                                                <i class="bi bi-link-45deg"></i> https://github.com/llmic/pc-monitor
-                                            </a>
-                                            
-                                        </div>
-                                        
                                     </div>
                                     
                                 </div>
@@ -817,7 +702,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-clock-history"></i> Historical Window Open Records
+                        <i class="bi bi-clock-history"></i> Historical Window Open Records (10/10)
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -826,11 +711,81 @@
                                     <tr>
                                         <th>Window Title</th>
                                         <th>Process</th>
-                                        <th>URL / Info</th>
-                                        <th>Last Seen</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>main.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Operation Lead Seal - 塞壬唱片-MSR/X. ARI</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>python 最新版网易云音乐获取桌面歌词 通过内存读取 在前人的肩膀上 2024 12.26_python 桌面歌词-CSDN博客 and 3 more pa...</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Luv (Sic) - Nujabes</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>シリーテラー (feat. IA) - r-906/IA</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>can't say - Jux</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>PC Monitor - Real-time Computer Monitoring System and 1 more page - Personal - M...</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>豆包</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Doubao.exe</span>
+                                        </td>
+                                    </tr>
                                     
                                     <tr>
                                         <td>
@@ -838,16 +793,6 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> https://github.com/llmic/pc-monitor
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.139723</span>
                                         </td>
                                     </tr>
                                     
@@ -857,502 +802,6 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.136156</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>惑わせらいやー feat. z²,BigDogOof - Loveit Core/z²/BigDog...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:21:13.452935</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>music.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:21:13.438324</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">explorer.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.158664</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Windows Input Experience</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">TextInputHost.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.152688</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Xbox</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">XboxPcApp.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.155631</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Settings</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">SystemSettings.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.148601</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Sticky Notes</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.152688</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>他者的悲哀 On Another's Sorrow - The 1999</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:07:05.609652</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>generator.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:07:05.607635</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>collector.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:04:04.247009</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Deployments · llmic/pc-monitor - Personal - Micros...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> https://github.com/llmic/pc-monitor
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:01:03.023412</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Auto update: 2026-05-18 22:17:50 · llmic/pc-monito...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> https://github.com/llmic/pc-monitor
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T22:20:52.973496</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>PC Monitor - Real-time Computer Monitoring System ...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.133639</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>github.com and 1 more page - Personal - Microsoft​...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <a href="https://github.com and 1 more page" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> https://github.com and 1 more page
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T22:14:46.919735</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>EonVPN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">EonVPN Beta.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T22:39:48.809599</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>PC Monitor - Real-time Computer Monitoring System ...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T22:12:35.399596</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>llmic/pc-monitor and 2 more pages - Personal - Mic...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> https://github.com/llmic/pc-monitor
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T21:44:55.920191</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Deployments · llmic/pc-monitor and 2 more pages - ...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> https://github.com/llmic/pc-monitor
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T22:13:53.585006</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>deploy.yml - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T21:36:31.990836</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>桌面歌词</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.125481</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Auto update: 2026-05-18 20:54:46 · llmic/pc-monito...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <a href="https://github.com/llmic/pc-monitor" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                                <i class="bi bi-link-45deg"></i> https://github.com/llmic/pc-monitor
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T20:56:18.418142</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>main.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T23:26:45.130599</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Chat History for 事Gogo</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Weixin.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T21:19:24.145569</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Photos and Videos</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Weixin.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T20:29:34.436632</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Weixin</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Weixin.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T20:29:34.439444</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>generator.py - Seesee - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T20:08:27.356337</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Deployments · llmic/pc-monitor and 1 more page - P...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T22:58:01.681379</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>PC Monitor - 实时电脑使用状况监控系统 - Personal - Microsoft​ ...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                        <td>
-                                            
-                                            <span class="text-muted">-</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">2026-05-18T20:20:55.880346</span>
                                         </td>
                                     </tr>
                                     
@@ -1366,7 +815,7 @@
         
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-18T23:26:45.125481</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-18T23:54:48.351277</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -1374,9 +823,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const LAST_UPDATE_ISO = '2026-05-18T23:26:45.168619';
+        const LAST_UPDATE_ISO = '2026-05-18T23:54:48.369637';
         let lastUpdateTime;
-        
+
         try {
             lastUpdateTime = new Date(LAST_UPDATE_ISO);
             if (isNaN(lastUpdateTime.getTime())) {
@@ -1498,9 +947,9 @@
         // Initialize metrics chart
         const metricsCtx = document.getElementById('metricsChart');
         if (metricsCtx) {
-            const metricsLabels = ["23:21:13", "23:26:45"];
-            const cpuData = [10.86111111111111, 15.483333333333333];
-            const memoryData = [50.8, 50.1];
+            const metricsLabels = ["23:43:17", "23:44:08", "23:50:23", "23:53:43", "23:54:48"];
+            const cpuData = [18.1, 39.32222222222222, 13.016666666666666, 8.127777777777778, 10.86111111111111];
+            const memoryData = [55.9, 56.0, 56.7, 55.7, 56.0];
             
             new Chart(metricsCtx, {
                 type: 'line',
@@ -1547,7 +996,7 @@
         }
 
         updateStatus();
-        
+
         console.log('PC Monitor initialized');
         console.log('Last update:', LAST_UPDATE_ISO);
         console.log('Current time:', new Date().toISOString());
