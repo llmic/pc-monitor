@@ -450,9 +450,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                 </p>
                                 {% endif %}
                                 {% if current_music.album %}
-                                <p class="mb-3" style="opacity: 0.7; font-size: 0.9em;">
+                                <p class="mb-2" style="opacity: 0.7; font-size: 0.9em;">
                                     <i class="bi bi-vinyl"></i> {{ current_music.album }}
                                 </p>
+                                {% endif %}
+                                {% if current_music.current_time_str and current_music.total_time_str %}
+                                <div class="mb-3">
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {% if current_music.total_duration %}{{ (current_music.playback_position / current_music.total_duration * 100)|round(1) }}{% else %}0{% endif %}%;"
+                                             aria-valuenow="{{ current_music.playback_position|round(1) if current_music.playback_position else 0 }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="{{ current_music.total_duration|round(1) if current_music.total_duration else 0 }}">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1" style="font-size: 0.85em; opacity: 0.85;">
+                                        <span>{{ current_music.current_time_str }}</span>
+                                        <span class="me-2">
+                                            <i class="bi bi-{{ 'play-fill' if current_music.playback_status == 'Playing' else 'pause-fill' }}"></i>
+                                            {{ current_music.playback_status }}
+                                        </span>
+                                        <span>{{ current_music.total_time_str }}</span>
+                                    </div>
+                                </div>
                                 {% endif %}
                                 {% if current_music.parsed_lyrics %}
                                 <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
@@ -605,9 +625,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                             <i class="bi bi-app"></i> {{ win.process }} |
                                             <i class="bi bi-aspect-ratio"></i> {{ win.width }}x{{ win.height }}
                                         </div>
+                                        {% if win.website and win.website.url %}
+                                        <div class="mt-2">
+                                            {% if win.website.favicon %}
+                                            <img src="{{ win.website.favicon }}" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;">
+                                            {% endif %}
+                                            <a href="{{ win.website.url }}" target="_blank" rel="noopener noreferrer" 
+                                               style="color: var(--primary-color); text-decoration: none; word-break: break-all;">
+                                                <i class="bi bi-box-arrow-up-right"></i> {{ win.website.url }}
+                                            </a>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                     {% if win.is_active %}
-                                    <span class="badge bg-danger"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                    <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
                                     {% endif %}
                                 </div>
                             </div>

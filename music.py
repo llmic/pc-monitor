@@ -143,11 +143,17 @@ def get_predefined_color_palette():
     ]
     return palettes
 
-def get_color_for_song(song_name, artist_name=None):
-    """Get color palette for a song, using cache or generating from song name hash."""
+def get_color_for_song(song_name, artist_name=None, cover_url=None):
+    """Get color palette for a song, extracting from cover if available."""
     cached = get_song_color_from_cache(song_name, artist_name)
     if cached:
         return cached
+
+    if cover_url:
+        colors = get_dominant_colors(image_path=cover_url)
+        if colors:
+            save_song_colors(song_name, artist_name, colors)
+            return colors
 
     palettes = get_predefined_color_palette()
     hash_input = f"{song_name}_{artist_name or ''}"
@@ -415,63 +421,68 @@ def parse_lrc_with_timestamps(lrc_text):
 
     return parsed
 
-def get_current_playback_position():
-    """Get current playback position from NetEase Cloud Music memory."""
-    if pymem is None or win32api is None:
-        return None
-
+def time_to_seconds(time_str: str) -> int:
+    """Convert time string 01:23 to total seconds 83"""
+    if not time_str or ":" not in time_str:
+        return 0
     try:
-        import win32gui
+        minute, second = time_str.split(":")
+        return int(minute) * 60 + int(second)
+    except:
+        return 0
 
-        lyric_classes = ["OrpheusDesktopLyricWidget", "DesktopLyrics"]
+def get_cloudmusic_progress():
+    """
+    Get NetEase Cloud Music playback progress from window title
+    Returns: (current_sec, total_sec, current_time, total_time, status)
+    Example: (83, 225, "01:23", "03:45", "Playing")
+    """
+    if win32gui is None:
+        return 0, 0, "00:00", "00:00", "Not Running"
+    
+    PLAYER_WINDOW_CLASS = "OrpheusPlayerWidget"
+    
+    progress_info = {
+        "current_sec": 0,
+        "total_sec": 0, 
+        "current_time": "00:00",
+        "total_time": "00:00",
+        "status": "Not Playing"
+    }
+    
+    def callback(handle, extra):
+        if win32gui.GetClassName(handle) == PLAYER_WINDOW_CLASS:
+            window_text = win32gui.GetWindowText(handle)
+            match = re.search(r'(\d+:\d+)\s*/\s*(\d+:\d+)', window_text)
+            if match:
+                current_time = match.group(1)
+                total_time = match.group(2)
+                current_sec = time_to_seconds(current_time)
+                total_sec = time_to_seconds(total_time)
+                extra.update({
+                    "current_sec": current_sec,
+                    "total_sec": total_sec,
+                    "current_time": current_time,
+                    "total_time": total_time,
+                    "status": "Playing" if current_sec > 0 else "Paused"
+                })
+        return True
+    
+    result = {}
+    win32gui.EnumWindows(callback, result)
+    return (
+        result.get("current_sec", 0),
+        result.get("total_sec", 0),
+        result.get("current_time", "00:00"),
+        result.get("total_time", "00:00"),
+        result.get("status", "Not Running/Not Playing")
+    )
 
-        def find_lyric_window(handle, extra):
-            class_name = win32gui.GetClassName(handle)
-            if class_name in lyric_classes:
-                extra["handle"] = handle
-            return True
-
-        result = {}
-        win32gui.EnumWindows(find_lyric_window, result)
-
-        if not result.get("handle"):
-            return None
-
-        hwnd = result["handle"]
-        _, pid = win32process.GetWindowThreadProcessId(hwnd)
-        hProcess = win32api.OpenProcess(PROCESS_ALL_ACCESS, False, pid)
-
-        kernel32 = ctypes.windll.kernel32
-        ReadProcessMemory = kernel32.ReadProcessMemory
-        ReadProcessMemory.argtypes = [wintypes.HANDLE, wintypes.LPCVOID, wintypes.LPVOID, ctypes.c_size_t, ctypes.POINTER(ctypes.c_size_t)]
-        ReadProcessMemory.restype = wintypes.BOOL
-
-        pm = pymem.Pymem(pid)
-        cloudmusic_module = None
-        for module in pm.list_modules():
-            if module.name == "cloudmusic.dll":
-                cloudmusic_module = module.lpBaseOfDll
-                break
-
-        if not cloudmusic_module:
-            return None
-
-        base_addr = cloudmusic_module + 0x019D9410
-        addr = ctypes.c_ulonglong()
-        bytes_read = ctypes.c_size_t()
-
-        if ReadProcessMemory(int(hProcess), ctypes.c_void_p(base_addr), ctypes.byref(addr), 8, ctypes.byref(bytes_read)):
-            ret = addr.value + 0xE0
-            if ReadProcessMemory(int(hProcess), ctypes.c_void_p(ret), ctypes.byref(addr), 8, ctypes.byref(bytes_read)):
-                ret2 = addr.value + 0x8
-                if ReadProcessMemory(int(hProcess), ctypes.c_void_p(ret2), ctypes.byref(addr), 8, ctypes.byref(bytes_read)):
-                    ret3 = addr.value + 0xB0
-                    if ReadProcessMemory(int(hProcess), ctypes.c_void_p(ret3), ctypes.byref(addr), 8, ctypes.byref(bytes_read)):
-                        position = addr.value / 1000.0
-                        return position
-
-    except Exception:
-        pass
+def get_current_playback_position():
+    """Get current playback position from NetEase Cloud Music window title"""
+    current_sec, _, _, _, _ = get_cloudmusic_progress()
+    if current_sec > 0:
+        return float(current_sec)
     return None
 
 def fetch_lyrics(song_name, artist_name=None):
@@ -557,13 +568,13 @@ def get_music_info(title):
         song = netease_info['song']
         artist = netease_info['artist']
 
-        colors = get_color_for_song(song, artist)
-        netease_info['colors'] = colors
-
         song_detail = search_song_cover(song, artist)
         if song_detail:
             netease_info['cover_url'] = song_detail.get('cover_url', '')
             netease_info['album'] = song_detail.get('album', '')
+
+        colors = get_color_for_song(song, artist, netease_info.get('cover_url'))
+        netease_info['colors'] = colors
 
         netease_info['desktop_lyrics_active'] = is_desktop_lyrics_active()
 
@@ -582,9 +593,12 @@ def get_music_info(title):
                     netease_info['lyrics'] = lyrics
                     netease_info['parsed_lyrics'] = parse_lrc_with_timestamps(lyrics)
 
-        playback_position = get_current_playback_position()
-        if playback_position is not None:
-            netease_info['playback_position'] = playback_position
+        current_sec, total_sec, current_time, total_time, status = get_cloudmusic_progress()
+        netease_info['playback_position'] = float(current_sec) if current_sec > 0 else None
+        netease_info['total_duration'] = float(total_sec) if total_sec > 0 else None
+        netease_info['current_time_str'] = current_time
+        netease_info['total_time_str'] = total_time
+        netease_info['playback_status'] = status
 
         return netease_info
     return None
