@@ -205,9 +205,57 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: flex;
             flex-direction: column;
         }
+        .shutdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+        .shutdown-overlay.show {
+            display: flex;
+        }
+        .shutdown-icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .shutdown-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .shutdown-subtitle {
+            font-size: 18px;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+        }
+        .shutdown-time {
+            font-size: 16px;
+            color: #888888;
+        }
     </style>
 </head>
 <body>
+    <div class="shutdown-overlay" id="shutdownOverlay">
+        <div class="shutdown-icon">
+            <i class="bi bi-power"></i>
+        </div>
+        <div class="shutdown-title">已关机</div>
+        <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
+        <div class="shutdown-time" id="shutdownTime"></div>
+    </div>
     <div class="container-fluid">
         <h1 class="text-center mb-4">
             <i class="bi bi-display"></i> PC Monitor
@@ -441,6 +489,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             });
         }
 
+        function formatDuration(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            let result = '';
+            if (hours > 0) result += hours + '小时 ';
+            if (minutes > 0) result += minutes + '分钟 ';
+            if (secs > 0) result += secs + '秒';
+            return result || '0秒';
+        }
+
         function updateStatus() {
             const now = new Date();
             const diffSeconds = Math.floor((now - lastUpdateTime) / 1000);
@@ -449,9 +508,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             const statusText = document.getElementById('statusText');
             const statusCard = document.getElementById('statusCard');
             const alertContainer = document.getElementById('alertContainer');
+            const shutdownOverlay = document.getElementById('shutdownOverlay');
+            const shutdownTime = document.getElementById('shutdownTime');
             
             document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime);
             document.getElementById('currentTimeDisplay').textContent = formatDate(now);
+            
+            if (diffSeconds > 300) {
+                shutdownOverlay.classList.add('show');
+                shutdownTime.textContent = '最后更新：' + formatDate(lastUpdateTime) + '（已过去 ' + formatDuration(diffSeconds) + '）';
+                return;
+            } else {
+                shutdownOverlay.classList.remove('show');
+            }
             
             let statusHTML = '';
             let alertHTML = '';

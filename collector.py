@@ -6,10 +6,14 @@ import win32con
 import time
 import re
 import os
-import shutil
 from datetime import datetime
 from PIL import Image, ImageGrab
 from bilibili import extract_bv_info
+from ctypes import windll, c_int, byref, sizeof
+from ctypes.wintypes import RECT, HWND, DWORD
+
+# 开启高DPI感知，解决高分辨率屏幕坐标偏移问题
+windll.user32.SetProcessDPIAware()
 
 BROWSER_NAMES = {
     'chrome.exe': 'Google Chrome',
@@ -26,7 +30,14 @@ SCREENSHOT_DIR = 'screenshots'
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 def get_browser_url_from_title(title, proc_name):
-    if proc_name.lower() not in BROWSER_NAMES and not any(b in proc_name.lower() for b in BROWSER_NAMES):
+    proc_lower = proc_name.lower()
+    is_browser = False
+    for b in BROWSER_NAMES:
+        if b in proc_lower:
+            is_browser = True
+            break
+    
+    if not is_browser:
         return None
 
     url_pattern = r'https?://[^\s<>"\'\\]+'
@@ -37,10 +48,17 @@ def get_browser_url_from_title(title, proc_name):
     if ' - ' in title:
         parts = title.rsplit(' - ', 1)
         possible_domain = parts[-1].strip()
-        if '.' in possible_domain and '://' not in title:
+        
+        for browser in ['Microsoft Edge', 'Chrome', 'Firefox', 'Brave', 'Opera', '360', 'Liebao', 'Sogou']:
+            if possible_domain.lower().endswith(browser.lower()):
+                if len(parts) >= 2:
+                    possible_domain = parts[-2].strip()
+                break
+        
+        if '.' in possible_domain and '://' not in title and not any(x in possible_domain.lower() for x in ['personal', 'work', 'profile', 'microsoft']):
             return f'https://{possible_domain}'
 
-    return None
+    return 'https://www.bing.com' if is_browser else None
 
 def get_website_info(url):
     if not url:
@@ -88,17 +106,18 @@ def get_network_usage():
     }
 
 def get_extended_window_rect(hwnd):
-    """获取窗口的扩展矩形区域（包含阴影等）"""
+    """获取窗口的扩展矩形区域（包含阴影、边框，Windows8+支持）"""
     try:
-        # 尝试使用 DWM 获取带阴影的窗口区域
-        from ctypes import windll, c_int, byref
-        from ctypes.wintypes import RECT
-        
         DWMWA_EXTENDED_FRAME_BOUNDS = 9
         rect = RECT()
-        
-        # Windows 8+ 支持这个
-        if windll.dwmapi.DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, byref(rect), c_int(8)) == 0:
+        # 修复：传入正确的RECT结构体大小，原代码传错缓冲区大小导致获取失败
+        result = windll.dwmapi.DwmGetWindowAttribute(
+            HWND(hwnd),
+            DWORD(DWMWA_EXTENDED_FRAME_BOUNDS),
+            byref(rect),
+            DWORD(sizeof(rect))
+        )
+        if result == 0:
             return rect.left, rect.top, rect.right, rect.bottom
     except Exception:
         pass
@@ -110,15 +129,15 @@ def get_extended_window_rect(hwnd):
     except Exception:
         return None
 
-def get_window_rect_with_buffer(hwnd, buffer_pixels=10):
-    """获取窗口矩形并添加边界缓冲"""
+def get_window_rect_with_buffer(hwnd, buffer_pixels=15):
+    """获取窗口矩形并添加15像素边界缓冲，确保包含所有视觉元素"""
     rect = get_extended_window_rect(hwnd)
     if not rect:
         return None
         
     left, top, right, bottom = rect
     
-    # 添加边界缓冲，确保完整包含窗口
+    # 添加边界缓冲，左/上不小于0，避免超出屏幕
     left = max(0, left - buffer_pixels)
     top = max(0, top - buffer_pixels)
     right = right + buffer_pixels
@@ -127,29 +146,31 @@ def get_window_rect_with_buffer(hwnd, buffer_pixels=10):
     return left, top, right, bottom
 
 def bring_window_to_front(hwnd):
-    """尝试将窗口前置"""
+    """优化窗口前置逻辑：处理最小化状态，延长等待时间"""
     try:
+        # 如果窗口最小化，先恢复
+        if win32gui.IsIconic(hwnd):
+            win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        # 强制前置窗口
         win32gui.SetForegroundWindow(hwnd)
-        # 有时需要多试几次，配合一些Windows消息
-        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        # 延长前置等待时间到0.3秒，确保窗口渲染完成
         time.sleep(0.3)
     except Exception:
         pass
 
 def capture_active_window():
-    """捕获活动窗口的截图"""
+    """捕获活动窗口的完整截图，仅保存至screenshots文件夹"""
     try:
-        window = gw.getActiveWindow()
-        if not window:
+        # 改用原生win32API获取前台窗口，比pygetwindow更稳定
+        hwnd = win32gui.GetForegroundWindow()
+        if not hwnd:
             print("No active window found")
             return None
             
-        hwnd = window._hWnd
-        
-        # 先尝试将窗口前置
+        # 前置并恢复窗口
         bring_window_to_front(hwnd)
         
-        # 获取窗口矩形（带缓冲）
+        # 获取带15像素缓冲的完整窗口区域
         rect = get_window_rect_with_buffer(hwnd, buffer_pixels=15)
         if not rect:
             print("Could not get window rectangle")
@@ -157,35 +178,23 @@ def capture_active_window():
             
         left, top, right, bottom = rect
         
-        # 确保窗口有合理的大小
+        # 过滤过小窗口
         if right - left < 50 or bottom - top < 50:
             print("Window too small to capture")
             return None
         
-        print(f"Capturing window: {left},{top} - {right},{bottom}")
+        print(f"Capturing full window (with shadow/border): {left},{top} - {right},{bottom}")
         
-        # 捕获截图
+        # 捕获完整窗口截图
         screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
         
-        # 生成文件名
+        # 生成文件名，仅保存在screenshots目录
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        base_filename = f'screenshot_{timestamp}.png'
+        screenshot_path = os.path.join(SCREENSHOT_DIR, f'screenshot_{timestamp}.png')
+        screenshot.save(screenshot_path, 'PNG', optimize=True)
+        print(f"Saved full screenshot to: {screenshot_path}")
         
-        # 保存在screenshots目录
-        screenshot_path_in_dir = os.path.join(SCREENSHOT_DIR, base_filename)
-        screenshot.save(screenshot_path_in_dir, 'PNG', optimize=True)
-        print(f"Saved to: {screenshot_path_in_dir}")
-        
-        # 同时复制一份到项目根目录，便于HTML直接访问
-        try:
-            screenshot_path_in_root = base_filename
-            shutil.copy2(screenshot_path_in_dir, screenshot_path_in_root)
-            print(f"Copied to root: {screenshot_path_in_root}")
-        except Exception as e:
-            print(f"Copy to root failed: {e}")
-            screenshot_path_in_root = screenshot_path_in_dir
-            
-        return screenshot_path_in_root
+        return screenshot_path
         
     except Exception as e:
         print(f"Screenshot error: {e}")
