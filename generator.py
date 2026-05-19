@@ -1,5 +1,6 @@
 from jinja2 import Template
 from datetime import datetime
+import os
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="zh-CN">
@@ -430,56 +431,70 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         {% if current_music %}
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;{% endif %}">
-                        <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
-                        {% if current_music.desktop_lyrics_active %}
-                        <span class="badge bg-warning text-dark ms-2">
-                            <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
-                        </span>
-                        {% endif %}
-                    </div>
-                    <div class="card-body" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background-color: #fad0c4; color: #212529;{% endif %}">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h4 class="mb-2">
-                                    <i class="bi bi-disc"></i> {{ current_music.song }}
-                                </h4>
-                                {% if current_music.artist %}
-                                <p class="mb-2" style="opacity: 0.85;">
-                                    <i class="bi bi-person"></i> {{ current_music.artist }}
-                                </p>
-                                {% endif %}
-                                {% if current_music.album %}
-                                <p class="mb-2" style="opacity: 0.7; font-size: 0.9em;">
-                                    <i class="bi bi-vinyl"></i> {{ current_music.album }}
-                                </p>
-                                {% endif %}
+                <a href="{{ current_music.song_url if current_music.song_url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <div class="card music-card" style="cursor: pointer;">
+                        <div class="card-header" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;{% endif %}">
+                            <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
+                            {% if current_music.desktop_lyrics_active %}
+                            <span class="badge bg-warning text-dark ms-2">
+                                <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
+                            </span>
+                            {% endif %}
+                            {% if current_music.song_url %}
+                            <span class="badge bg-white/20 float-end" style="cursor: pointer;">
+                                <i class="bi bi-external-link"></i> 打开歌曲页
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background-color: #fad0c4; color: #212529;{% endif %}">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="mb-2">
+                                        <i class="bi bi-disc"></i> {{ current_music.song }}
+                                    </h4>
+                                    {% if current_music.artist %}
+                                    <p class="mb-2" style="opacity: 0.85;">
+                                        <i class="bi bi-person"></i> {{ current_music.artist }}
+                                    </p>
+                                    {% endif %}
+                                    {% if current_music.album %}
+                                    <p class="mb-2" style="opacity: 0.7; font-size: 0.9em;">
+                                        <i class="bi bi-vinyl"></i> {{ current_music.album }}
+                                    </p>
+                                    {% endif %}
 
-                                {% if current_music.parsed_lyrics %}
-                                <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
-                                    <span id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></span>
+                                    {% if current_music.parsed_lyrics %}
+                                    <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <span id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></span>
+                                        <span id="current-lyric-translation" style="display: block; font-size: 0.8em; opacity: 0.7; text-align: center; margin-top: 5px;"></span>
+                                    </div>
+                                    {% elif current_music.current_lyric %}
+                                    <div class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <span style="font-size: 1.1em; text-align: center;">{{ current_music.current_lyric }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if current_music.current_time_str and current_music.total_time_str %}
+                                    <div class="mt-3 text-center" style="opacity: 0.8;">
+                                        <span id="playback-time">{{ current_music.current_time_str }} / {{ current_music.total_time_str }}</span>
+                                    </div>
+                                    {% endif %}
                                 </div>
-                                {% elif current_music.current_lyric %}
-                                <div class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
-                                    <span style="font-size: 1.1em; text-align: center;">{{ current_music.current_lyric }}</span>
+                                <div class="col-md-4 text-center">
+                                    {% if current_music.cover_url %}
+                                    <div class="music-cover">
+                                        <img src="{{ current_music.cover_url }}" alt="Music Cover">
+                                    </div>
+                                    {% else %}
+                                    <div class="music-cover" style="background: linear-gradient(135deg, #434343 0%, #000000 100%); display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-music-note text-white" style="font-size: 48px;"></i>
+                                    </div>
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4 text-center">
-                                {% if current_music.cover_url %}
-                                <div class="music-cover">
-                                    <img src="{{ current_music.cover_url }}" alt="Music Cover">
-                                </div>
-                                {% else %}
-                                <div class="music-cover" style="background: linear-gradient(135deg, #434343 0%, #000000 100%); display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-music-note text-white" style="font-size: 48px;"></i>
-                                </div>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         {% endif %}
@@ -494,7 +509,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="{{ screenshot }}" alt="Active Window Screenshot" class="img-fluid">
+                            <img src="{{ screenshot_url if screenshot_url else screenshot|replace('\\\\', '/') }}" alt="Active Window Screenshot" class="img-fluid" onerror="this.src='{{ screenshot|replace('\\\\', '/') }}'">
                         </div>
                     </div>
                 </div>
@@ -548,7 +563,44 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
         {% endif %}
 
-        {% if browser_windows and browser_windows|length > 0 %}
+        {% if browser_tabs and browser_tabs|length > 0 %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-globe"></i> Currently Open Browser ({{ browser_tabs|length }} tabs)
+                    </div>
+                    <div class="card-body scroll-container">
+                        {% for tab in browser_tabs %}
+                        <div class="window-item window-normal browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>{{ tab.title|truncate(80) }}</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-browser-edge"></i> Browser Tab
+                                    </div>
+                                    {% if tab.url and tab.domain and tab.url.startswith('http') %}
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain={{ tab.domain }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="{{ tab.url }}" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> {{ tab.domain }}
+                                        </a>
+                                    </div>
+                                    {% elif tab.url %}
+                                    <div class="mt-2 text-muted-custom small">
+                                        <i class="bi bi-info-circle"></i> {{ tab.title|truncate(60) }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elif browser_windows and browser_windows|length > 0 %}
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -568,12 +620,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                         <i class="bi bi-app"></i> {{ window.process }} |
                                         <i class="bi bi-aspect-ratio"></i> {{ window.width }}x{{ window.height }}
                                     </div>
-                                    {% if window.website and window.website.url %}
+                                    {% if window.website and window.website.url and window.website.url.startswith('http') %}
                                     <div class="mt-2">
                                         <img src="https://www.google.com/s2/favicons?domain={{ window.website.domain }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
                                         <a href="{{ window.website.url }}" target="_blank" rel="noopener noreferrer"
                                            style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> {{ window.website.url }}
+                                            <i class="bi bi-box-arrow-up-right"></i> {{ window.website.domain }}
                                         </a>
                                     </div>
                                     {% endif %}
@@ -801,7 +853,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                max: 100,
+                                max: {{ max_usage }},
                                 title: {
                                     display: true,
                                     text: 'Usage %'
@@ -962,6 +1014,25 @@ class HTMLGenerator:
             else:
                 return f"{bytes_val / 1024 / 1024 / 1024:.2f} GB"
 
+        def extract_domain(url):
+            """从URL中提取域名"""
+            if not url:
+                return ''
+            try:
+                from urllib.parse import urlparse
+                parsed = urlparse(url)
+                return parsed.netloc or parsed.path.split('/')[0]
+            except:
+                return url.split('/')[2] if '/' in url else url
+
+        def convert_to_github_proxy_url(local_path, repo_url='https://github.com/llmic/pc-monitor'):
+            """将本地screenshot路径转换为GitHub代理加速URL"""
+            if not local_path:
+                return ''
+            filename = os.path.basename(local_path)
+            github_raw_url = f"{repo_url}/blob/master/screenshots/{filename}?raw=true"
+            return f"https://hk.gh-proxy.org/{github_raw_url}"
+
         active_window_title = 'None'
         if isinstance(active_window, dict):
             active_window_title = active_window.get('title', 'None')
@@ -993,13 +1064,22 @@ class HTMLGenerator:
         # 准备 metrics history 用于模板
         metrics_history = data.get('metrics_history', {})
         chart_data = []
+        max_usage = 100  # 默认最大值
         if metrics_history and 'cpu' in metrics_history and 'memory' in metrics_history:
             for i, (cpu, mem) in enumerate(zip(metrics_history['cpu'], metrics_history['memory'])):
                 chart_data.append({'cpu': cpu, 'memory': mem})
+            # 计算历史最大值，取整并加一点余量
+            all_values = metrics_history['cpu'] + metrics_history['memory']
+            if all_values:
+                max_usage = int(max(all_values)) + 10
+                # 确保至少为 100，且不超过 100（百分比上限）
+                max_usage = min(max(max_usage, 100), 100)
 
-        # 获取头像路径（使用缓存的，如果没有则使用原始的）
+        # 获取头像路径（使用缓存的）
         avatar_path = data.get('cached_avatar') or data.get('avatar')
-        
+        if avatar_path:
+            avatar_path = avatar_path.replace('\\', '/')
+
         context = {
             'computer_name': data.get('computer_name', 'PC Monitor'),
             'timestamp': data.get('timestamp', datetime.now().isoformat()),
@@ -1020,6 +1100,7 @@ class HTMLGenerator:
             'current_music': current_music,
             'history_windows': data.get('history_windows', []),
             'browser_windows': browser_windows,
+            'browser_tabs': data.get('browser_tabs', []),
             'is_browser_active': is_browser_active,
             'active_browser_title': active_browser_title,
             'is_normal_window_active': is_normal_window_active,
@@ -1027,10 +1108,12 @@ class HTMLGenerator:
             'windows': normal_windows,
             'screenshot': data.get('screenshot'),
             'screenshot_message': data.get('screenshot_message'),
+            'screenshot_url': convert_to_github_proxy_url(data.get('screenshot')),
             'metrics_history': chart_data,
             'metrics_labels': data.get('metrics_labels', []),
             'max_history': data.get('max_history', 10),
             'max_metrics_history': data.get('max_metrics_history', 5),
+            'max_usage': max_usage,
             'avatar': avatar_path
         }
 

@@ -7,6 +7,9 @@ import time
 import re
 import os
 import glob
+import json
+import urllib.request
+import urllib.error
 from datetime import datetime
 from PIL import Image, ImageGrab
 from bilibili import extract_bv_info, get_bilibili_info
@@ -40,27 +43,168 @@ def get_user_avatar_paths():
 
     return sorted(avatar_files)
 
+def get_windows_user_avatar():
+    """通过 PowerShell 获取 Windows 用户头像路径"""
+    try:
+        import subprocess
+
+        # PowerShell 脚本来获取用户头像
+        ps_script = '''
+        $avatar = Get-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\AccountPicture" -Name "UserTile" -ErrorAction SilentlyContinue
+        if ($avatar) {
+            Write-Output $avatar.UserTile
+        } else {
+            # 尝试其他方法：获取 Microsoft 账户头像
+            $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+            $userName = $user.Name -replace '.*\\\\', ''
+            $profilePath = $env:USERPROFILE
+            $avatarPath = "$profilePath\\AppData\\Roaming\\Microsoft\\Windows\\AccountPictures"
+
+            if (Test-Path $avatarPath) {
+                Get-ChildItem -Path $avatarPath -File | Where-Object { $_.Extension -in @('.png', '.jpg', '.jpeg', '.bmp') } |
+                Sort-Object LastWriteTime -Descending |
+                Select-Object -First 1 -ExpandProperty FullName
+            }
+        }
+        '''
+
+        result = subprocess.run(
+            ['powershell', '-Command', ps_script],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+
+        avatar_path = result.stdout.strip()
+        if avatar_path and os.path.exists(avatar_path):
+            return avatar_path
+
+        return None
+    except Exception as e:
+        print(f"[DEBUG] PowerShell avatar fetch failed: {e}")
+        return None
+
 def get_latest_avatar():
     """获取最新的头像文件"""
+    # 首先检查是否有已缓存的 Microsoft 账户头像
+    ms_avatar_path = "ms_account_avatar.png"
+    if os.path.exists(ms_avatar_path):
+        return ms_avatar_path
+
     avatar_files = get_user_avatar_paths()
     if not avatar_files:
+        # 如果标准路径没有头像，尝试通过 PowerShell 获取
+        windows_avatar = get_windows_user_avatar()
+        if windows_avatar:
+            return windows_avatar
+        # 如果 PowerShell 也失败，尝试通过浏览器获取
+        ms_avatar = get_ms_avatar_via_browser()
+        if ms_avatar:
+            return ms_avatar
         return None
 
     avatar_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
     return avatar_files[0]
 
+def get_ms_avatar_via_browser(save_path="ms_account_avatar.png"):
+    """通过浏览器获取 Microsoft 账户头像"""
+    # 如果文件已存在，直接返回
+    if os.path.exists(save_path):
+        return save_path
+
+    try:
+        from selenium import webdriver
+        from selenium.webdriver.edge.options import Options
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        import requests
+        from io import BytesIO
+        from PIL import Image
+        import base64
+
+        edge_options = Options()
+        edge_options.add_argument("--disable-gpu")
+        edge_options.add_argument("--no-sandbox")
+        edge_options.add_argument("--disable-dev-shm-usage")
+        edge_options.add_argument("--disable-blink-features=AutomationControlled")
+        edge_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0")
+
+        driver = webdriver.Edge(options=edge_options)
+        driver.get("https://account.microsoft.com/profile/")
+
+        avatar_selectors = [
+            "img.c-identity-profile-photo",
+            "img.profile-photo",
+            "img.user-avatar",
+            "[class*='profile-photo']",
+            "[class*='avatar'] img",
+            "div.profile-header img",
+            "img[alt*='profile']",
+            "img[alt*='avatar']",
+            "img[alt*='photo']"
+        ]
+
+        avatar_img = None
+        for selector in avatar_selectors:
+            try:
+                avatar_img = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                )
+                if avatar_img:
+                    break
+            except:
+                continue
+
+        if not avatar_img:
+            driver.quit()
+            return None
+
+        avatar_url = avatar_img.get_attribute("src")
+
+        if avatar_url.startswith('blob:'):
+            img_base64 = driver.execute_script("""
+                var img = arguments[0];
+                var canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth || img.width;
+                canvas.height = img.naturalHeight || img.height;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                return canvas.toDataURL('image/png').split(',')[1];
+            """, avatar_img)
+
+            if img_base64:
+                img_data = base64.b64decode(img_base64)
+                img = Image.open(BytesIO(img_data))
+                img.save(save_path)
+                driver.quit()
+                return save_path
+        else:
+            resp = requests.get(avatar_url, timeout=10)
+            img = Image.open(BytesIO(resp.content))
+            img.save(save_path)
+            driver.quit()
+            return save_path
+
+        driver.quit()
+        return None
+
+    except Exception as e:
+        print(f"[DEBUG] Browser avatar fetch failed: {e}")
+        return None
+
 def cache_avatar(avatar_source_path, target_dir='screenshots'):
     """缓存头像到指定目录，返回缓存后的路径"""
     if not avatar_source_path or not os.path.exists(avatar_source_path):
         return None
-    
+
     try:
         os.makedirs(target_dir, exist_ok=True)
-        
+
         # 使用固定的文件名，避免每次都生成新文件
         target_filename = 'user_avatar' + os.path.splitext(avatar_source_path)[1]
         target_path = os.path.join(target_dir, target_filename)
-        
+
         # 检查是否已经有缓存且未过期
         if os.path.exists(target_path):
             source_mtime = os.path.getmtime(avatar_source_path)
@@ -68,13 +212,13 @@ def cache_avatar(avatar_source_path, target_dir='screenshots'):
             if target_mtime >= source_mtime:
                 # 缓存有效，直接返回
                 return target_path
-        
+
         # 复制并缓存头像
         with Image.open(avatar_source_path) as img:
             # 调整大小为合适的尺寸
             img.thumbnail((80, 80), Image.Resampling.LANCZOS)
             img.save(target_path)
-        
+
         return target_path
     except Exception as e:
         print(f"缓存头像失败: {e}")
@@ -91,6 +235,53 @@ BROWSER_NAMES = {
     'sogouexplorer.exe': '搜狗浏览器'
 }
 
+def get_browser_tabs_via_cdp():
+    """通过 Chrome DevTools Protocol (CDP) 获取浏览器标签页"""
+    tabs = []
+
+    # Edge 和 Chrome 使用 localhost:9222
+    cdp_urls = [
+        'http://localhost:9222/json',
+        'http://127.0.0.1:9222/json'
+    ]
+
+    for cdp_url in cdp_urls:
+        try:
+            req = urllib.request.Request(cdp_url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=3) as response:
+                data = json.loads(response.read().decode('utf-8'))
+
+                for tab in data:
+                    if tab.get('type') == 'page' and tab.get('url'):
+                        url = tab.get('url', '')
+                        domain = ''
+                        try:
+                            from urllib.parse import urlparse
+                            parsed = urlparse(url)
+                            if parsed.scheme in ('http', 'https') and parsed.netloc:
+                                domain = parsed.netloc
+                            elif tab.get('favicon') and tab.get('favicon').startswith('data:'):
+                                domain = ''
+                            elif not url.startswith(('http://', 'https://', 'blob:', 'chrome:', 'about:')):
+                                domain = ''
+                        except:
+                            domain = ''
+
+                        tabs.append({
+                            'id': tab.get('id', ''),
+                            'title': tab.get('title', 'Untitled'),
+                            'url': url,
+                            'domain': domain
+                        })
+
+                if tabs:
+                    break
+
+        except (urllib.error.URLError, json.JSONDecodeError, Exception) as e:
+            continue
+
+    return tabs
+
 # Privacy protection - windows that should not be captured in screenshots
 PRIVACY_PROCESSES = {
     'qq.exe',
@@ -101,6 +292,58 @@ PRIVACY_PROCESSES = {
     'teams.exe',
     'zoom.exe',
     'skype.exe'
+}
+
+# VPN processes - windows that should not be uploaded to GitHub
+VPN_PROCESSES = {
+    'clash.exe',
+    'clashforwindows.exe',
+    'v2ray.exe',
+    'xray.exe',
+    'shadowsocks.exe',
+    'shadowsocksr.exe',
+    'trojan.exe',
+    'trojan-go.exe',
+    'naiveproxy.exe',
+    'quantumult.exe',
+    'surge.exe',
+    'petalink.exe',
+    'wings.exe',
+    'fork.exe',
+    'vpn.exe',
+    'openvpn.exe',
+    'wireguard.exe',
+    'ipsec.exe',
+    'forticlient.exe',
+    'globalprotect.exe',
+    'anyconnect.exe',
+    'checkpoint.exe',
+    'nordvpn.exe',
+    'expressvpn.exe',
+    'surfshark.exe',
+    'cyberghost.exe',
+    'hotspot.exe',
+    'ultravpn.exe',
+    'windscribe.exe',
+    'protonvpn.exe',
+    'mullvad.exe',
+    'airvpn.exe',
+    'ivpn.exe',
+    'btguard.exe',
+    'torguard.exe',
+    'ovpn.exe',
+    'pia.exe',
+    'strongvpn.exe',
+    'purevpn.exe',
+    'hide.me.exe',
+    'zenmate.exe',
+    'avg.exe',
+    'avira.exe',
+    'kaspersky.exe',
+    'nod32.exe',
+    'bitdefender.exe',
+    'malwarebytes.exe',
+    'adb.exe'
 }
 
 SCREENSHOT_DIR = 'screenshots'
@@ -172,24 +415,8 @@ def get_browser_url_from_title(title, proc_name):
         domain = domain_match.group(1)
         if domain.lower() not in ['microsoft', 'edge', 'chrome', 'firefox', 'brave', 'opera']:
             return f'https://{domain}'
-    
-    # 如果以上都没找到，尝试从标题推断常见网站的URL
-    title_lower = title.lower()
-    if 'pc monitor' in title_lower:
-        return 'https://github.com/llmic/pc-monitor'
-    if 'github' in title_lower and '加速' in title_lower:
-        return 'https://github.com/'
-    if 'deployments' in title_lower:
-        return 'https://github.com/llmic/pc-monitor/deployments'
-    
-    # 作为最后的尝试，返回标题中的第一个非浏览器部分作为URL提示
-    if ' - ' in title:
-        parts = title.split(' - ')
-        for part in parts:
-            part_clean = part.strip()
-            if part_clean and part_clean.lower() not in ['personal', 'work', 'microsoft edge', 'edge', 'chrome']:
-                return f'https://{part_clean.lower().replace(" ", "-")}.com'
-    
+
+    # 如果以上都没找到，返回 None，不要生成假的 URL
     return None
 
 def get_website_info(url):
@@ -354,12 +581,18 @@ class DataCollector:
     def __init__(self, avatar_path=None):
         self.active_window_title = None
         self.windows_data = []
+        self.browser_tabs = []
         if avatar_path and avatar_path.strip():
             self.avatar_path = avatar_path
         else:
             self.avatar_path = get_latest_avatar()
         # 缓存头像
         self.cached_avatar_path = cache_avatar(self.avatar_path)
+
+    def collect_browser_tabs(self):
+        """通过 CDP 获取所有浏览器标签页"""
+        self.browser_tabs = get_browser_tabs_via_cdp()
+        return self.browser_tabs
 
     def get_active_window(self):
         try:
@@ -396,7 +629,12 @@ class DataCollector:
 
             proc_lower = proc_name.lower()
             is_browser = any(b.lower() in proc_lower for b in BROWSER_NAMES)
-            
+
+            # Skip VPN processes - do not upload to GitHub
+            is_vpn = any(vpn.lower() in proc_lower for vpn in VPN_PROCESSES)
+            if is_vpn:
+                continue
+
             # Check if it's a media app (should capture even when minimized) - only match cloudmusic.exe
             is_media_app = (
                 'cloudmusic' in proc_lower or
@@ -485,8 +723,9 @@ class DataCollector:
 
     def collect_all(self):
         self.collect_windows()
+        self.collect_browser_tabs()
         screenshot_result = capture_active_window()
-        
+
         return {
             'windows': self.windows_data,
             'active_window': self.active_window_title,
@@ -496,5 +735,6 @@ class DataCollector:
             'screenshot_message': screenshot_result['message'],
             'timestamp': datetime.now().isoformat(),
             'avatar': self.avatar_path,
-            'cached_avatar': self.cached_avatar_path
+            'cached_avatar': self.cached_avatar_path,
+            'browser_tabs': self.browser_tabs
         }

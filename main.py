@@ -35,7 +35,7 @@ from generator import HTMLGenerator
 from metrics import MetricsHistory
 
 # Configuration
-COLLECTION_INTERVAL = 180          # Update interval in seconds
+COLLECTION_INTERVAL = 300          # Update interval in seconds
 OUTPUT_FILE = 'index.html'         # Output HTML file name
 GIT_PUSH_ENABLED = True            # Enable/disable auto Git push
 GIT_COMMIT_MESSAGE = "Auto update: {timestamp}"  # Git commit message template
@@ -216,6 +216,7 @@ def run_monitor_cycle(collector, history_manager, generator, metrics_history):
         data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
         data['max_history'] = MAX_HISTORY
         data['max_metrics_history'] = MAX_METRICS_HISTORY
+        data['browser_tabs'] = data.get('browser_tabs', [])
         
         # Generate and save HTML
         html = generator.generate(data)

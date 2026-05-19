@@ -401,13 +401,28 @@ def get_song_detail(song_id):
         pass
     return None
 
-def parse_lrc_with_timestamps(lrc_text):
-    """Parse LRC format lyrics and extract timestamps."""
+def parse_lrc_with_timestamps(lrc_text, translation_text=None):
+    """Parse LRC format lyrics and extract timestamps, with optional translation."""
     if not lrc_text:
         return []
 
     lines = lrc_text.strip().split('\n')
     parsed = []
+    
+    # Parse translation if provided
+    translations = {}
+    if translation_text:
+        trans_lines = translation_text.strip().split('\n')
+        for line in trans_lines:
+            match = re.match(r'\[(\d+):(\d+)\.(\d+)\](.*)', line)
+            if match:
+                minutes = int(match.group(1))
+                seconds = int(match.group(2))
+                milliseconds = int(match.group(3))
+                content = match.group(4).strip()
+                if content:
+                    total_seconds = minutes * 60 + seconds + milliseconds / 1000.0
+                    translations[round(total_seconds, 3)] = content
 
     for line in lines:
         match = re.match(r'\[(\d+):(\d+)\.(\d+)\](.*)', line)
@@ -419,9 +434,11 @@ def parse_lrc_with_timestamps(lrc_text):
 
             if content:
                 total_seconds = minutes * 60 + seconds + milliseconds / 1000.0
+                translation = translations.get(round(total_seconds, 3), None)
                 parsed.append({
                     'time': total_seconds,
-                    'text': content
+                    'text': content,
+                    'translation': translation
                 })
 
     return parsed
@@ -491,7 +508,7 @@ def get_current_playback_position():
     return None
 
 def fetch_lyrics(song_name, artist_name=None):
-    """Fetch lyrics for a song using NetEase Cloud Music API."""
+    """Fetch lyrics for a song using NetEase Cloud Music API, including translation."""
     cache = load_music_cache()
     cache_key = f"{song_name}_{artist_name or 'unknown'}"
     
@@ -534,11 +551,11 @@ def fetch_lyrics(song_name, artist_name=None):
                     
                     # Get lyrics
                     song_id = song.get('id')
-                    lyrics = fetch_lyrics_by_id(song_id)
-                    if lyrics:
-                        cache[cache_key] = lyrics
+                    lyrics_data = fetch_lyrics_by_id(song_id)
+                    if lyrics_data:
+                        cache[cache_key] = lyrics_data
                         save_music_cache(cache)
-                        return lyrics
+                        return lyrics_data
                     
                     break
     
@@ -548,7 +565,7 @@ def fetch_lyrics(song_name, artist_name=None):
     return None
 
 def fetch_lyrics_by_id(song_id):
-    """Fetch lyrics by song ID."""
+    """Fetch lyrics by song ID, including translation."""
     try:
         url = f'https://music.163.com/api/song/lyric?id={song_id}&lv=-1&kv=-1&tv=-1'
         headers = {
@@ -560,8 +577,12 @@ def fetch_lyrics_by_id(song_id):
         if response.status_code == 200:
             data = response.json()
             lyrics = data.get('lrc', {}).get('lyric', '')
+            translation = data.get('tlyric', {}).get('lyric', '')
             if lyrics:
-                return lyrics.strip()
+                return {
+                    'lyrics': lyrics.strip(),
+                    'translation': translation.strip() if translation else None
+                }
     except Exception:
         pass
     return None
@@ -577,6 +598,10 @@ def get_music_info(title):
         if song_detail:
             netease_info['cover_url'] = song_detail.get('cover_url', '')
             netease_info['album'] = song_detail.get('album', '')
+            song_id = song_detail.get('song_id')
+            if song_id:
+                netease_info['song_id'] = song_id
+                netease_info['song_url'] = f'https://music.163.com/#/song?id={song_id}'
 
         colors = get_color_for_song(song, artist, netease_info.get('cover_url'))
         netease_info['colors'] = colors
@@ -593,10 +618,18 @@ def get_music_info(title):
                 netease_info['current_lyric'] = memory_lyric
                 netease_info['lyrics'] = memory_lyric
             else:
-                lyrics = fetch_lyrics(song, artist)
-                if lyrics:
-                    netease_info['lyrics'] = lyrics
-                    netease_info['parsed_lyrics'] = parse_lrc_with_timestamps(lyrics)
+                lyrics_data = fetch_lyrics(song, artist)
+                if lyrics_data:
+                    if isinstance(lyrics_data, dict):
+                        netease_info['lyrics'] = lyrics_data.get('lyrics', '')
+                        translation = lyrics_data.get('translation')
+                        netease_info['parsed_lyrics'] = parse_lrc_with_timestamps(
+                            lyrics_data.get('lyrics', ''), 
+                            translation
+                        )
+                    else:
+                        netease_info['lyrics'] = lyrics_data
+                        netease_info['parsed_lyrics'] = parse_lrc_with_timestamps(lyrics_data)
 
         current_sec, total_sec, current_time, total_time, status = get_cloudmusic_progress()
         netease_info['playback_position'] = float(current_sec) if current_sec > 0 else None
