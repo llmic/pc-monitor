@@ -549,11 +549,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             <!-- 主体 -->
                             <div class="card-body p-0" style="padding: 0 !important; margin: 0;">
                                 <div style="height: 130px; position: relative;">
-                                    {% if bilibili_info.cover %}
+                                    {% if bilibili_info.bv_id %}
                                     <div class="bilibili-cover-placeholder" style="width: 100%; height: 100%; background: linear-gradient(135deg, #4a90d9 0%, #2d5aa0 100%); display: flex; align-items: center; justify-content: center;">
                                         <i class="bi bi-play-circle text-white opacity-50" style="font-size: 32px;"></i>
                                     </div>
-                                    <img src="" alt="Video Cover" class="w-100 h-100 bilibili-cover-image" style="object-fit: cover; position: absolute; top: 0; left: 0; display: none;" data-src="{{ bilibili_info.cover }}">
+                                    <img src="" alt="Video Cover" class="w-100 h-100 bilibili-cover-image" style="object-fit: cover; position: absolute; top: 0; left: 0; display: none;" data-bvid="{{ bilibili_info.bv_id }}">
                                     <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);"></div>
                                     <!-- 播放按钮 -->
                                     <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0';">
@@ -814,6 +814,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <script>
         const LAST_UPDATE_ISO = '{{ timestamp }}';
         let lastUpdateTime;
+        
+        // 隐藏的bilibili数据（由后端生成）
+        const bilibiliCoverCache = {{ bilibili_cover_cache|tojson if bilibili_cover_cache else '{}' }};
 
         try {
             lastUpdateTime = new Date(LAST_UPDATE_ISO);
@@ -1024,23 +1027,36 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             tempImg.src = src;
         }
         
-        // 延迟加载Bilibili封面图片
+        // 从缓存中获取封面URL
+        function getBilibiliCoverFromCache(bvId) {
+            if (bilibiliCoverCache && bilibiliCoverCache[bvId]) {
+                return bilibiliCoverCache[bvId];
+            }
+            return null;
+        }
+        
+        // 延迟加载Bilibili封面图片（从缓存读取）
         function lazyLoadBilibiliCovers() {
             const coverImages = document.querySelectorAll('.bilibili-cover-image');
             coverImages.forEach(function(img) {
-                const src = img.getAttribute('data-src');
-                if (src) {
-                    loadImageWithCache(img, src);
-                    // 图片加载后显示
-                    const tempImg = new Image();
-                    tempImg.onload = function() {
-                        img.style.display = 'block';
-                        const placeholder = img.parentElement.querySelector('.bilibili-cover-placeholder');
-                        if (placeholder) {
-                            placeholder.style.display = 'none';
-                        }
-                    };
-                    tempImg.src = src;
+                const bvId = img.getAttribute('data-bvid');
+                if (bvId) {
+                    const coverUrl = getBilibiliCoverFromCache(bvId);
+                    if (coverUrl) {
+                        loadImageWithCache(img, coverUrl);
+                        const tempImg = new Image();
+                        tempImg.onload = function() {
+                            img.style.display = 'block';
+                            const placeholder = img.parentElement.querySelector('.bilibili-cover-placeholder');
+                            if (placeholder) {
+                                placeholder.style.display = 'none';
+                            }
+                        };
+                        tempImg.onerror = function() {
+                            console.warn('Failed to load Bilibili cover image:', coverUrl);
+                        };
+                        tempImg.src = coverUrl;
+                    }
                 }
             });
         }
@@ -1475,6 +1491,13 @@ class HTMLGenerator:
         if avatar_path:
             avatar_path = avatar_path.replace('\\', '/')
 
+        # 构建bilibili封面缓存（由后端生成，避免前端CORS问题）
+        bilibili_cover_cache = {}
+        for win in windows:
+            bilibili_info = win.get('bilibili')
+            if bilibili_info and bilibili_info.get('bv_id') and bilibili_info.get('cover'):
+                bilibili_cover_cache[bilibili_info['bv_id']] = bilibili_info['cover']
+
         context = {
             'computer_name': data.get('computer_name', 'PC Monitor'),
             'timestamp': data.get('timestamp', datetime.now().isoformat()),
@@ -1510,7 +1533,8 @@ class HTMLGenerator:
             'max_metrics_history': data.get('max_metrics_history', 5),
             'max_usage': max_usage,
             'avatar': avatar_path,
-            'timestamp': data.get('timestamp', datetime.now().isoformat())
+            'timestamp': data.get('timestamp', datetime.now().isoformat()),
+            'bilibili_cover_cache': bilibili_cover_cache
         }
 
         return self.template.render(context)
