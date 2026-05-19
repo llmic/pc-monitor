@@ -1077,25 +1077,18 @@
             });
         }
         
-        // 获取当前时间函数
-        function getCurrentTime() {
-            const now = new Date();
-            const formattedTime = now.getFullYear() + "-" +
-                String(now.getMonth() + 1).padStart(2, '0') + "-" +
-                String(now.getDate()).padStart(2, '0') + " " +
-                String(now.getHours()).padStart(2, '0') + ":" +
-                String(now.getMinutes()).padStart(2, '0') + ":" +
-                String(now.getSeconds()).padStart(2, '0');
-            return formattedTime;
-        }
-
         // 确保DOM完全加载后再执行updateStatus和图片加载
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOMContentLoaded fired');
             console.log('lastUpdateTime:', lastUpdateTime);
-            console.log('lastUpdatedDisplay element:', document.getElementById('lastUpdatedDisplay'));
+            console.log('currentTimeDisplay element:', document.getElementById('currentTimeDisplay'));
+            console.log('statusLight element:', document.getElementById('statusLight'));
+            console.log('statusText element:', document.getElementById('statusText'));
             
+            // 首次执行状态更新
             updateStatus();
+            
+            // 每秒更新状态（包括时间、状态灯、状态文本）
             setInterval(updateStatus, 1000);
             
             // 延迟加载图片
@@ -1103,30 +1096,6 @@
                 lazyLoadBilibiliCovers();
                 lazyLoadScreenshots();
             }, 100);
-        });
-        
-        // 备用方案：确保updateStatus在页面加载后执行
-        window.addEventListener('load', function() {
-            console.log('window.load fired');
-            console.log('currentTimeDisplay element:', document.getElementById('currentTimeDisplay'));
-            
-            // 首次渲染当前时间
-            const currentTimeDisplay = document.getElementById('currentTimeDisplay');
-            if (currentTimeDisplay) {
-                currentTimeDisplay.textContent = getCurrentTime();
-                console.log('Initial currentTimeDisplay set to:', getCurrentTime());
-            }
-            
-            // 每秒刷新当前时间
-            setInterval(() => {
-                const currentTimeDisplay = document.getElementById('currentTimeDisplay');
-                if (currentTimeDisplay) {
-                    currentTimeDisplay.textContent = getCurrentTime();
-                    console.log('currentTimeDisplay updated to:', getCurrentTime());
-                }
-            }, 1000);
-            
-            updateStatus();
         });
         
         // 添加立即执行的调试信息
@@ -1205,13 +1174,10 @@
             }
         }
 
-        const parsedLyrics = [];
         const currentSong = "";
-        const totalDuration = 0;
         let currentLyricIndex = 0;
         let playbackStartTime = null;
         let playbackOffset = 0;
-        let songEnded = false;
 
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);

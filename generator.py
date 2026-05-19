@@ -834,6 +834,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             return sign + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
         }
 
+        // 格式化时间为 "YYYY-MM-DD HH:mm:ss" 格式
+        function formatDateTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
         function formatDate(date) {
             return date.toLocaleString('zh-CN', {
                 year: 'numeric',
@@ -879,10 +890,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             
             // 更新时间显示
             if (lastUpdatedDisplay) {
-                lastUpdatedDisplay.textContent = formatDate(lastUpdateTime) + ' (UTC' + timezone + ')';
+                lastUpdatedDisplay.textContent = formatDateTime(lastUpdateTime) + ' (UTC' + timezone + ')';
             }
             if (currentTimeDisplay) {
-                currentTimeDisplay.textContent = formatDate(now) + ' (UTC' + timezone + ')';
+                currentTimeDisplay.textContent = formatDateTime(now);
             }
 
             // 检查是否超过关机时间
@@ -1049,9 +1060,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOMContentLoaded fired');
             console.log('lastUpdateTime:', lastUpdateTime);
-            console.log('lastUpdatedDisplay element:', document.getElementById('lastUpdatedDisplay'));
+            console.log('currentTimeDisplay element:', document.getElementById('currentTimeDisplay'));
+            console.log('statusLight element:', document.getElementById('statusLight'));
+            console.log('statusText element:', document.getElementById('statusText'));
             
+            // 首次执行状态更新
             updateStatus();
+            
+            // 每秒更新状态（包括时间、状态灯、状态文本）
             setInterval(updateStatus, 1000);
             
             // 延迟加载图片
@@ -1059,12 +1075,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 lazyLoadBilibiliCovers();
                 lazyLoadScreenshots();
             }, 100);
-        });
-        
-        // 备用方案：确保updateStatus在页面加载后执行
-        window.addEventListener('load', function() {
-            console.log('window.load fired');
-            updateStatus();
         });
         
         // 添加立即执行的调试信息
@@ -1131,13 +1141,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }
         }
 
-        const parsedLyrics = {{ current_music.parsed_lyrics|tojson if current_music and current_music.parsed_lyrics else '[]' }};
         const currentSong = "{{ current_music.song if current_music else '' }}";
-        const totalDuration = {{ current_music.total_duration if current_music and current_music.total_duration else 0 }};
         let currentLyricIndex = 0;
         let playbackStartTime = null;
         let playbackOffset = 0;
-        let songEnded = false;
 
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
