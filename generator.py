@@ -7,7 +7,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ computer_name }} 视奸</title>
+    <title>视奸 {{ computer_name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -229,6 +229,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .hover-float {
+            transition: transform 0.3s ease-in-out;
+        }
+        .hover-float:hover {
+            animation: float 2s ease-in-out infinite;
+        }
         @keyframes pulse {
             0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
             50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
@@ -432,17 +442,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div class="row">
             <div class="col-12">
                 <a href="{{ current_music.song_url if current_music.song_url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                    <div class="card music-card" style="cursor: pointer;">
+                    <div class="card music-card hover-float" style="cursor: pointer;">
                         <div class="card-header" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;{% endif %}">
                             <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
                             {% if current_music.desktop_lyrics_active %}
                             <span class="badge bg-warning text-dark ms-2">
                                 <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
-                            </span>
-                            {% endif %}
-                            {% if current_music.song_url %}
-                            <span class="badge bg-white/20 float-end" style="cursor: pointer;">
-                                <i class="bi bi-external-link"></i> 打开歌曲页
                             </span>
                             {% endif %}
                         </div>
@@ -452,21 +457,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     <h4 class="mb-2">
                                         <i class="bi bi-disc"></i> {{ current_music.song }}
                                     </h4>
-                                    {% if current_music.artist %}
-                                    <p class="mb-2" style="opacity: 0.85;">
-                                        <i class="bi bi-person"></i> {{ current_music.artist }}
+                                    <p class="mb-3" style="opacity: 0.85; font-size: 1.1em;">
+                                        <i class="bi bi-person"></i> {{ current_music.artist if current_music.artist else '未知歌手' }}
                                     </p>
-                                    {% endif %}
-                                    {% if current_music.album %}
-                                    <p class="mb-2" style="opacity: 0.7; font-size: 0.9em;">
-                                        <i class="bi bi-vinyl"></i> {{ current_music.album }}
-                                    </p>
-                                    {% endif %}
 
-                                    {% if current_music.parsed_lyrics %}
-                                    <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
-                                        <span id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></span>
-                                        <span id="current-lyric-translation" style="display: block; font-size: 0.8em; opacity: 0.7; text-align: center; margin-top: 5px;"></span>
+                                    {% if current_music.song_ended %}
+                                    <div class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 80px; display: flex; align-items: center; justify-content: center;">
+                                        <span style="font-size: 1.2em; text-align: center; opacity: 0.6;">🎵 播放已结束</span>
+                                    </div>
+                                    {% elif current_music.parsed_lyrics %}
+                                    <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                        <div id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></div>
+                                        <div id="current-lyric-translation" style="font-size: 0.8em; opacity: 0.7; text-align: center; margin-top: 8px; display: none;"></div>
                                     </div>
                                     {% elif current_music.current_lyric %}
                                     <div class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
@@ -474,19 +476,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     </div>
                                     {% endif %}
                                     
-                                    {% if current_music.current_time_str and current_music.total_time_str %}
+                                    {% if current_music.total_time_str %}
                                     <div class="mt-3 text-center" style="opacity: 0.8;">
-                                        <span id="playback-time">{{ current_music.current_time_str }} / {{ current_music.total_time_str }}</span>
+                                        <span id="playback-time">{{ current_music.current_time_str if current_music.current_time_str else '00:00' }} / {{ current_music.total_time_str }}</span>
                                     </div>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-4 text-center">
                                     {% if current_music.cover_url %}
-                                    <div class="music-cover">
+                                    <div class="music-cover" id="music-cover" {% if not current_music.song_ended %}style="animation: spin 8s linear infinite;"{% endif %}>
                                         <img src="{{ current_music.cover_url }}" alt="Music Cover">
                                     </div>
                                     {% else %}
-                                    <div class="music-cover" style="background: linear-gradient(135deg, #434343 0%, #000000 100%); display: flex; align-items: center; justify-content: center;">
+                                    <div class="music-cover" {% if not current_music.song_ended %}style="animation: spin 8s linear infinite; background: linear-gradient(135deg, #434343 0%, #000000 100%);"{% else %}style="background: linear-gradient(135deg, #434343 0%, #000000 100%);"{% endif %} display: flex; align-items: center; justify-content: center;">
                                         <i class="bi bi-music-note text-white" style="font-size: 48px;"></i>
                                     </div>
                                     {% endif %}
@@ -498,6 +500,45 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </div>
         </div>
         {% endif %}
+
+        {% for win in windows if win.get('bilibili') %}
+        {% set bilibili_info = win.bilibili %}
+        <div class="row">
+            <div class="col-12">
+                <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <div class="card bilibili-card" style="cursor: pointer;">
+                        <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d, #c44569); color: white;">
+                            <i class="bi bi-play-circle"></i> Watching Bilibili
+                            {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
+                            <span class="badge bg-white text-dark ms-2">{{ bilibili_info.bv_id }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    {% if bilibili_info.title %}
+                                    <h4 class="mb-2">{{ bilibili_info.title }}</h4>
+                                    {% endif %}
+                                    {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
+                                    <p class="text-muted small">视频ID: {{ bilibili_info.bv_id }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    {% if bilibili_info.cover %}
+                                    <img src="{{ bilibili_info.cover }}" alt="Video Cover" style="max-width: 100px; border-radius: 8px;"/>
+                                    {% else %}
+                                    <div style="width: 100px; height: 56px; background: linear-gradient(135deg, #ff6b9d, #c44569); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                        <i class="bi bi-play-fill text-white" style="font-size: 24px;"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
 
         {% if screenshot %}
         <div class="row">
@@ -575,23 +616,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>{{ tab.title|truncate(80) }}</strong>
-                                    <div class="text-muted-custom small">
+                                    {% if tab.url and tab.url.startswith('http') %}
+                                    <a href="{{ tab.url }}" target="_blank" rel="noopener noreferrer"
+                                       style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all; display: block;">
+                                        <img src="https://www.google.com/s2/favicons?domain={{ tab.domain }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <strong>{{ tab.url }}</strong>
+                                    </a>
+                                    {% elif tab.url %}
+                                    <strong class="text-muted-custom">{{ tab.url }}</strong>
+                                    {% else %}
+                                    <strong>{{ tab.title }}</strong>
+                                    {% endif %}
+                                    <div class="text-muted-custom small mt-1">
                                         <i class="bi bi-browser-edge"></i> Browser Tab
                                     </div>
-                                    {% if tab.url and tab.domain and tab.url.startswith('http') %}
-                                    <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain={{ tab.domain }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="{{ tab.url }}" target="_blank" rel="noopener noreferrer"
-                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> {{ tab.domain }}
-                                        </a>
-                                    </div>
-                                    {% elif tab.url %}
-                                    <div class="mt-2 text-muted-custom small">
-                                        <i class="bi bi-info-circle"></i> {{ tab.title|truncate(60) }}
-                                    </div>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -872,14 +910,61 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         console.log('Current time:', new Date().toISOString());
 
         const parsedLyrics = {{ current_music.parsed_lyrics|tojson if current_music and current_music.parsed_lyrics else '[]' }};
+        const currentSong = "{{ current_music.song if current_music else '' }}";
+        const totalDuration = {{ current_music.total_duration if current_music and current_music.total_duration else 0 }};
         let currentLyricIndex = 0;
         let playbackStartTime = null;
         let playbackOffset = 0;
+        let songEnded = false;
 
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
+        }
+
+        function getCachedPlaybackPosition(songName) {
+            try {
+                const cache = localStorage.getItem('music_playback_cache');
+                if (cache) {
+                    const data = JSON.parse(cache);
+                    if (data[songName] && data[songName].timestamp > Date.now() - 300000) {
+                        return data[songName].position;
+                    }
+                }
+            } catch(e) {
+                console.warn('Failed to read playback cache:', e);
+            }
+            return null;
+        }
+
+        function savePlaybackPosition(songName, position) {
+            try {
+                const cache = localStorage.getItem('music_playback_cache');
+                const data = cache ? JSON.parse(cache) : {};
+                data[songName] = {
+                    position: position,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('music_playback_cache', JSON.stringify(data));
+            } catch(e) {
+                console.warn('Failed to save playback cache:', e);
+            }
+        }
+
+        function stopCoverRotation() {
+            const cover = document.getElementById('music-cover');
+            if (cover) {
+                cover.style.animation = 'none';
+            }
+        }
+
+        function showSongEnded() {
+            const lyricsDisplay = document.getElementById('lyrics-display');
+            if (lyricsDisplay) {
+                lyricsDisplay.innerHTML = '<span style="font-size: 1.2em; text-align: center; opacity: 0.6;">🎵 播放已结束</span>';
+            }
+            stopCoverRotation();
         }
 
         function updateLyricDisplay() {
@@ -888,11 +973,28 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             const now = Date.now();
             if (playbackStartTime === null) {
                 playbackStartTime = now;
-                playbackOffset = {{ current_music.playback_position if current_music and current_music.playback_position else 0 }};
+                const cachedPosition = getCachedPlaybackPosition(currentSong);
+                if (cachedPosition !== null) {
+                    playbackOffset = cachedPosition;
+                } else {
+                    playbackOffset = {{ current_music.playback_position if current_music and current_music.playback_position else 0 }};
+                }
             }
 
             const elapsedSeconds = (now - playbackStartTime) / 1000 + playbackOffset;
+            
+            // Check if song has ended
+            if (totalDuration > 0 && elapsedSeconds >= totalDuration - 2) {
+                if (!songEnded) {
+                    songEnded = true;
+                    showSongEnded();
+                }
+                return;
+            }
+
             const currentLine = document.getElementById('current-lyric-line');
+            const translationLine = document.getElementById('current-lyric-translation');
+            const playbackTime = document.getElementById('playback-time');
 
             if (!currentLine) return;
 
@@ -901,10 +1003,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     if (currentLyricIndex !== i) {
                         currentLyricIndex = i;
                         currentLine.textContent = parsedLyrics[i].text;
+                        
+                        // Update translation
+                        if (translationLine) {
+                            if (parsedLyrics[i].translation) {
+                                translationLine.textContent = parsedLyrics[i].translation;
+                                translationLine.style.display = 'block';
+                            } else {
+                                translationLine.textContent = '';
+                                translationLine.style.display = 'none';
+                            }
+                        }
+                        
                         currentLine.style.opacity = '0';
+                        if (translationLine) translationLine.style.opacity = '0';
                         setTimeout(() => {
                             currentLine.style.transition = 'opacity 0.3s ease-in-out';
                             currentLine.style.opacity = '1';
+                            if (translationLine) {
+                                translationLine.style.transition = 'opacity 0.3s ease-in-out';
+                                translationLine.style.opacity = '0.7';
+                            }
                         }, 50);
                     }
                     break;
@@ -913,7 +1032,24 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             if (currentLyricIndex === 0 && elapsedSeconds < parsedLyrics[0].time) {
                 currentLine.textContent = parsedLyrics[0].text;
+                if (translationLine) {
+                    if (parsedLyrics[0].translation) {
+                        translationLine.textContent = parsedLyrics[0].translation;
+                        translationLine.style.display = 'block';
+                    } else {
+                        translationLine.textContent = '';
+                        translationLine.style.display = 'none';
+                    }
+                }
             }
+
+            // Update playback time
+            if (playbackTime) {
+                playbackTime.textContent = formatTime(elapsedSeconds) + ' / ' + formatTime(totalDuration);
+            }
+
+            // Save playback position to cache
+            savePlaybackPosition(currentSong, elapsedSeconds);
         }
 
         if (parsedLyrics && parsedLyrics.length > 0) {
@@ -1072,8 +1208,8 @@ class HTMLGenerator:
             all_values = metrics_history['cpu'] + metrics_history['memory']
             if all_values:
                 max_usage = int(max(all_values)) + 10
-                # 确保至少为 100，且不超过 100（百分比上限）
-                max_usage = min(max(max_usage, 100), 100)
+                # 确保至少为 20（避免 y 轴范围太小）
+                max_usage = max(max_usage, 20)
 
         # 获取头像路径（使用缓存的）
         avatar_path = data.get('cached_avatar') or data.get('avatar')

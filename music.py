@@ -58,7 +58,14 @@ def get_dominant_colors(image_path=None, num_colors=3):
             return None
 
         if image_path and image_path.startswith(('http://', 'https://')):
-            response = requests.get(image_path, timeout=5)
+            # Add proper headers for NetEase Cloud Music images
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Referer': 'https://music.163.com'
+            }
+            response = requests.get(image_path, headers=headers, timeout=5)
+            if response.status_code != 200:
+                return None
             img = Image.open(BytesIO(response.content))
         elif image_path and os.path.exists(image_path):
             img = Image.open(image_path)
@@ -128,18 +135,13 @@ def get_contrasting_text_color(hex_color):
         return '#ffffff'
 
 def get_predefined_color_palette():
-    """Return a set of beautiful predefined gradient palettes for songs without album art."""
+    """Return a white-based color palette for songs without album art."""
     palettes = [
-        {'primary': '#667eea', 'secondary': '#764ba2', 'gradient': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'},
-        {'primary': '#f093fb', 'secondary': '#f5576c', 'gradient': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'},
-        {'primary': '#4facfe', 'secondary': '#00f2fe', 'gradient': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'},
-        {'primary': '#43e97b', 'secondary': '#38f9d7', 'gradient': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'},
-        {'primary': '#fa709a', 'secondary': '#fee140', 'gradient': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'},
-        {'primary': '#a8edea', 'secondary': '#fed6e3', 'gradient': 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'},
-        {'primary': '#ff9a9e', 'secondary': '#fecfef', 'gradient': 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)'},
-        {'primary': '#ffecd2', 'secondary': '#fcb69f', 'gradient': 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'},
-        {'primary': '#a18cd1', 'secondary': '#fbc2eb', 'gradient': 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'},
-        {'primary': '#fad0c4', 'secondary': '#ffd1ff', 'gradient': 'linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%)'},
+        {'primary': '#ffffff', 'secondary': '#f8f9fa', 'gradient': 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)'},
+        {'primary': '#ffffff', 'secondary': '#e9ecef', 'gradient': 'linear-gradient(135deg, #ffffff 0%, #e9ecef 100%)'},
+        {'primary': '#ffffff', 'secondary': '#dee2e6', 'gradient': 'linear-gradient(135deg, #ffffff 0%, #dee2e6 100%)'},
+        {'primary': '#f8f9fa', 'secondary': '#ffffff', 'gradient': 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)'},
+        {'primary': '#ffffff', 'secondary': '#ffffff', 'gradient': 'linear-gradient(135deg, #ffffff 0%, #ffffff 100%)'},
     ]
     return palettes
 
@@ -149,11 +151,16 @@ def get_color_for_song(song_name, artist_name=None, cover_url=None):
     if cached:
         return cached
 
+    colors = None
     if cover_url:
-        colors = get_dominant_colors(image_path=cover_url)
-        if colors:
-            save_song_colors(song_name, artist_name, colors)
-            return colors
+        try:
+            colors = get_dominant_colors(image_path=cover_url)
+        except Exception:
+            pass
+
+    if colors:
+        save_song_colors(song_name, artist_name, colors)
+        return colors
 
     palettes = get_predefined_color_palette()
     hash_input = f"{song_name}_{artist_name or ''}"
@@ -308,7 +315,8 @@ def parse_netease_music_title(title):
         r'^(.+?)\s*[-–—]\s*([^-–—]+?)\s*[-–—]\s*网易云音乐',
         r'^(.+?)\s*-\s*([^-]+?)\s*-\s*网易云音乐',
         r'^(.+?)\s*[-–—]\s*网易云音乐',
-        r'^(.+?)\s*[-–—]\s*[^\s]+?$'
+        r'^(.+?)\s*[-–—]\s*([^\s]+?)$',
+        r'^(.+?)\s+-\s+(.+?)$'
     ]
 
     for pattern in patterns:
@@ -317,18 +325,20 @@ def parse_netease_music_title(title):
             if len(match.groups()) == 2:
                 song = match.group(1).strip()
                 artist = match.group(2).strip()
-                if song and song != 'No title':
+                if song and song != 'No title' and song != 'None':
                     return {
                         'song': song,
                         'artist': artist,
                         'player': '网易云音乐'
                     }
             else:
-                return {
-                    'song': match.group(1).strip(),
-                    'artist': None,
-                    'player': '网易云音乐'
-                }
+                song = match.group(1).strip()
+                if song and song != 'No title' and song != 'None':
+                    return {
+                        'song': song,
+                        'artist': None,
+                        'player': '网易云音乐'
+                    }
     return None
 
 def search_song_cover(song_name, artist_name=None):
@@ -375,7 +385,7 @@ def search_song_cover(song_name, artist_name=None):
     return None
 
 def get_song_detail(song_id):
-    """Get song details including cover URL."""
+    """Get song details including cover URL and duration."""
     try:
         url = f'https://music.163.com/api/song/detail/?id={song_id}&ids=[{song_id}]'
         headers = {
@@ -395,7 +405,8 @@ def get_song_detail(song_id):
                     'title': song.get('name'),
                     'artist': ', '.join([a.get('name', '') for a in song.get('artists', [])]),
                     'album': album.get('name', ''),
-                    'cover_url': album.get('picUrl', '')
+                    'cover_url': album.get('picUrl', ''),
+                    'duration': song.get('duration', 0)
                 }
     except Exception:
         pass
@@ -587,6 +598,13 @@ def fetch_lyrics_by_id(song_id):
         pass
     return None
 
+def format_duration(milliseconds):
+    """Convert milliseconds to MM:SS format."""
+    seconds = int(milliseconds / 1000)
+    mins = seconds // 60
+    secs = seconds % 60
+    return f"{mins:02d}:{secs:02d}"
+
 def get_music_info(title):
     """Get music info from window title, with real-time lyrics from desktop lyric window or memory."""
     netease_info = parse_netease_music_title(title)
@@ -602,8 +620,19 @@ def get_music_info(title):
             if song_id:
                 netease_info['song_id'] = song_id
                 netease_info['song_url'] = f'https://music.163.com/#/song?id={song_id}'
+            
+            # Use artist from API if available
+            api_artist = song_detail.get('artist')
+            if api_artist:
+                netease_info['artist'] = api_artist
+            
+            # Use duration from API if available
+            api_duration = song_detail.get('duration', 0)
+            if api_duration > 0:
+                netease_info['total_duration'] = api_duration / 1000.0
+                netease_info['total_time_str'] = format_duration(api_duration)
 
-        colors = get_color_for_song(song, artist, netease_info.get('cover_url'))
+        colors = get_color_for_song(song, netease_info.get('artist'), netease_info.get('cover_url'))
         netease_info['colors'] = colors
 
         netease_info['desktop_lyrics_active'] = is_desktop_lyrics_active()
@@ -618,7 +647,7 @@ def get_music_info(title):
                 netease_info['current_lyric'] = memory_lyric
                 netease_info['lyrics'] = memory_lyric
             else:
-                lyrics_data = fetch_lyrics(song, artist)
+                lyrics_data = fetch_lyrics(song, netease_info.get('artist'))
                 if lyrics_data:
                     if isinstance(lyrics_data, dict):
                         netease_info['lyrics'] = lyrics_data.get('lyrics', '')
@@ -632,11 +661,28 @@ def get_music_info(title):
                         netease_info['parsed_lyrics'] = parse_lrc_with_timestamps(lyrics_data)
 
         current_sec, total_sec, current_time, total_time, status = get_cloudmusic_progress()
-        netease_info['playback_position'] = float(current_sec) if current_sec > 0 else None
-        netease_info['total_duration'] = float(total_sec) if total_sec > 0 else None
-        netease_info['current_time_str'] = current_time
-        netease_info['total_time_str'] = total_time
+        
+        # Use API duration as primary source, fallback to progress info
+        if 'total_duration' not in netease_info or netease_info['total_duration'] <= 0:
+            netease_info['total_duration'] = float(total_sec) if total_sec > 0 else None
+            netease_info['total_time_str'] = total_time if total_time else '00:00'
+        
+        if 'playback_position' not in netease_info or netease_info['playback_position'] is None:
+            netease_info['playback_position'] = float(current_sec) if current_sec > 0 else None
+        
+        if 'current_time_str' not in netease_info or not netease_info['current_time_str']:
+            netease_info['current_time_str'] = current_time if current_time else '00:00'
+        
         netease_info['playback_status'] = status
+
+        # Check if song has ended
+        if netease_info['total_duration'] and netease_info['playback_position']:
+            if netease_info['playback_position'] >= netease_info['total_duration'] - 2:
+                netease_info['song_ended'] = True
+            else:
+                netease_info['song_ended'] = False
+        else:
+            netease_info['song_ended'] = False
 
         return netease_info
     return None
