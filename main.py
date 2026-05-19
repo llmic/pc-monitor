@@ -106,8 +106,9 @@ def run_git_push():
             return
         
         print(f"[{get_timestamp()}] 1️⃣ 执行 Git Add...")
+        # 添加 index.html 和 screenshots 目录
         add_result = subprocess.run(
-            ['git', 'add', OUTPUT_FILE],
+            ['git', 'add', OUTPUT_FILE, SCREENSHOT_DIR],
             capture_output=True,
             text=True
         )
