@@ -28,6 +28,10 @@ from datetime import datetime
 
 # Set UTF-8 encoding for Windows
 os.environ['PYTHONUTF8'] = '1'
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8')
 
 from collector import DataCollector
 from history import HistoryManager

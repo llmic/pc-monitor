@@ -126,6 +126,13 @@ def format_duration(duration):
             return f"{mins:02d}:{secs:02d}"
     return duration
 
+def fetch_bilibili_title(bv_id):
+    """Fetch video title by BV ID - compatible with main.py."""
+    detail = fetch_bilibili_video_detail(bv_id)
+    if detail:
+        return detail.get('title', '')
+    return None
+
 def get_bilibili_info(title):
     """Get bilibili video info from window title, with fallback to search."""
     # First try to extract BV from title

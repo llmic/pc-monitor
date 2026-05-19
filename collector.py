@@ -678,15 +678,25 @@ class DataCollector:
                 else:
                     window_info['bilibili'] = bv_info
             else:
+                # Check if title contains bilibili keywords
+                has_bilibili_keyword = 'bilibili' in win.title.lower() or '哔哩哔哩' in win.title
+                
                 # Also check if URL contains bilibili
                 temp_url = get_browser_url_from_title(win.title, proc_name)
-                if temp_url and 'bilibili.com' in temp_url.lower():
-                    window_info['bilibili'] = {
-                        'bv_id': 'bilibili',
-                        'url': temp_url,
-                        'title': 'B站内容',
-                        'cover': None
-                    }
+                has_bilibili_url = temp_url and 'bilibili.com' in temp_url.lower()
+                
+                # Use get_bilibili_info to search for video if we have bilibili content
+                if has_bilibili_keyword or has_bilibili_url:
+                    full_bv_info = get_bilibili_info(win.title)
+                    if full_bv_info:
+                        window_info['bilibili'] = full_bv_info
+                    elif has_bilibili_url:
+                        window_info['bilibili'] = {
+                            'bv_id': 'bilibili',
+                            'url': temp_url,
+                            'title': 'B站内容',
+                            'cover': None
+                        }
 
             # Check for NetEase Cloud Music (even when minimized) - only match cloudmusic.exe process
             if proc_name and 'cloudmusic' in proc_name.lower():
