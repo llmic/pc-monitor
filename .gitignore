@@ -1,9 +1,7 @@
-.venv/
+venv/
 __pycache__/
 *.pyc
 data/
 .env
 *.log
-netease-cloudmusic-detector/
-download.htm
-generator copy.py
+.venv/
