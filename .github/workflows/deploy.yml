@@ -30,41 +30,47 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 创建临时目录存放要部署的文件
-          mkdir -p deploy
+          # 创建临时目录存放要部署的文件（使用 /tmp 避免 git checkout 影响）
+          DEPLOY_DIR=$(mktemp -d)
+          echo "✅ Created deploy directory: $DEPLOY_DIR"
           
           # 复制 index.html（必须存在）
           if [ -f "index.html" ]; then
-            cp index.html deploy/
-            echo "✅ Copied index.html"
+            cp index.html "$DEPLOY_DIR/"
+            echo "✅ Copied index.html to $DEPLOY_DIR"
           else
             echo "❌ index.html not found!"
             exit 1
           fi
           
           # 复制 screenshots（如果存在）
-          if [ -d "screenshots" ]; then
-            cp -r screenshots deploy/
-            echo "✅ Copied screenshots"
+          if [ -d "screenshots" ] && [ -n "$(ls -A screenshots)" ]; then
+            cp -r screenshots "$DEPLOY_DIR/"
+            echo "✅ Copied screenshots to $DEPLOY_DIR"
           else
-            echo "⚠ screenshots directory not found, skipping"
+            echo "⚠ screenshots directory empty or not found, skipping"
           fi
           
-          # 检查 deploy 目录是否有文件
-          if [ -z "$(ls -A deploy)" ]; then
+          # 检查是否有文件可部署
+          if [ -z "$(ls -A "$DEPLOY_DIR")" ]; then
             echo "❌ No files to deploy!"
             exit 1
           fi
           
           # 切换到 gh-pages 分支
           git checkout -b gh-pages 2>/dev/null || git checkout gh-pages
+          echo "✅ Switched to gh-pages branch"
           
           # 删除旧文件，只保留 .git 目录
           find . -maxdepth 1 ! -name '.' ! -name '.git' -exec rm -rf {} \;
+          echo "✅ Cleaned up old files"
           
           # 复制新文件到根目录
-          cp -r deploy/* .
-          rm -rf deploy
+          cp -r "$DEPLOY_DIR"/* .
+          echo "✅ Copied new files from $DEPLOY_DIR"
+          
+          # 清理临时目录
+          rm -rf "$DEPLOY_DIR"
           
           # 提交并推送
           git add -A
