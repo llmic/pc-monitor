@@ -476,8 +476,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     </div>
                                     {% endif %}
                                     
-                                    {% if current_music.total_time_str %}
-                                    <div class="mt-3 text-center" style="opacity: 0.8;">
+                                    {% if current_music.total_time_str and not current_music.song_ended %}
+                                    <div id="playback-time-container" class="mt-3 text-center" style="opacity: 0.8; transition: all 0.3s ease;">
                                         <span id="playback-time">{{ current_music.current_time_str if current_music.current_time_str else '00:00' }} / {{ current_music.total_time_str }}</span>
                                     </div>
                                     {% endif %}
@@ -505,37 +505,44 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         {% set bilibili_info = win.bilibili %}
         <div class="row">
             <div class="col-12">
-                <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                    <div class="card bilibili-card" style="cursor: pointer;">
-                        <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d, #c44569); color: white;">
-                            <i class="bi bi-play-circle"></i> Watching Bilibili
-                            {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
-                            <span class="badge bg-white text-dark ms-2">{{ bilibili_info.bv_id }}</span>
-                            {% endif %}
-                        </div>
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    {% if bilibili_info.title %}
-                                    <h4 class="mb-2">{{ bilibili_info.title }}</h4>
-                                    {% endif %}
-                                    {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
-                                    <p class="text-muted small">视频ID: {{ bilibili_info.bv_id }}</p>
-                                    {% endif %}
+                <div class="card bilibili-card" style="cursor: pointer;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d, #c44569); color: white;">
+                        <i class="bi bi-play-circle"></i> Watching Bilibili
+                        {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
+                        <span class="badge bg-white text-dark ms-2">{{ bilibili_info.bv_id }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                {% if bilibili_info.title %}
+                                <h4 class="mb-2">{{ bilibili_info.title }}</h4>
+                                {% endif %}
+                                {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
+                                <p class="text-muted small">视频ID: {{ bilibili_info.bv_id }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 text-center">
+                                {% if bilibili_info.cover %}
+                                <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer">
+                                    <img src="{{ bilibili_info.cover }}" alt="Video Cover" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s;"/>
+                                </a>
+                                {% if bilibili_info.duration %}
+                                <div class="mt-2 text-muted small">
+                                    <i class="bi bi-clock"></i> {{ bilibili_info.duration }}
                                 </div>
-                                <div class="col-md-4 text-center">
-                                    {% if bilibili_info.cover %}
-                                    <img src="{{ bilibili_info.cover }}" alt="Video Cover" style="max-width: 100px; border-radius: 8px;"/>
-                                    {% else %}
-                                    <div style="width: 100px; height: 56px; background: linear-gradient(135deg, #ff6b9d, #c44569); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
-                                        <i class="bi bi-play-fill text-white" style="font-size: 24px;"></i>
+                                {% endif %}
+                                {% else %}
+                                <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer">
+                                    <div style="width: 120px; height: 68px; background: linear-gradient(135deg, #ff6b9d, #c44569); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                        <i class="bi bi-play-fill text-white" style="font-size: 28px;"></i>
                                     </div>
-                                    {% endif %}
-                                </div>
+                                </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -960,10 +967,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
 
         function showSongEnded() {
+            // Fade out playback time
+            const playbackContainer = document.getElementById('playback-time-container');
+            if (playbackContainer) {
+                playbackContainer.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                playbackContainer.style.opacity = '0';
+                playbackContainer.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    playbackContainer.style.display = 'none';
+                }, 500);
+            }
+            
+            // Fade out lyrics and show "ended" message
             const lyricsDisplay = document.getElementById('lyrics-display');
             if (lyricsDisplay) {
-                lyricsDisplay.innerHTML = '<span style="font-size: 1.2em; text-align: center; opacity: 0.6;">🎵 播放已结束</span>';
+                lyricsDisplay.style.transition = 'opacity 0.5s ease-out';
+                lyricsDisplay.style.opacity = '0';
+                setTimeout(() => {
+                    lyricsDisplay.innerHTML = '<span style="font-size: 1.2em; text-align: center; opacity: 0.6;">🎵 播放已结束</span>';
+                    lyricsDisplay.style.transition = 'opacity 0.5s ease-in';
+                    lyricsDisplay.style.opacity = '1';
+                }, 500);
             }
+            
+            // Stop cover rotation smoothly
             stopCoverRotation();
         }
 
