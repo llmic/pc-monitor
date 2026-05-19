@@ -6,4 +6,4 @@ data/
 *.log
 .venv/
 12/
-netease-cloudmusic-detector/
+netease-cloudmusic-detector/*
