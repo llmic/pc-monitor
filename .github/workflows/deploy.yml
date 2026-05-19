@@ -10,9 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: "pages"
@@ -21,26 +19,38 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./
-          include: |
-            index.html
-            screenshots/**
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 创建临时目录存放要部署的文件
+          mkdir -p deploy
+          cp index.html deploy/
+          cp -r screenshots deploy/ 2>/dev/null || true
+          
+          # 切换到 gh-pages 分支
+          git checkout -b gh-pages 2>/dev/null || git checkout gh-pages
+          
+          # 删除旧文件，只保留 .git 目录
+          find . -maxdepth 1 ! -name '.' ! -name '.git' -exec rm -rf {} \;
+          
+          # 复制新文件到根目录
+          cp -r deploy/* .
+          rm -rf deploy
+          
+          # 提交并推送
+          git add -A
+          if git diff --cached --quiet; then
+            echo "✅ No changes to deploy"
+          else
+            git commit -m "Auto deploy: $(date -u)"
+            git push origin gh-pages --force
+            echo "✅ Deployed to https://llmic.github.io/pc-monitor/"
+          fi
