@@ -225,6 +225,10 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
         @keyframes pulse {
             0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
             50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
@@ -354,29 +358,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">10%</div>
+                                    <div class="stats-number">7%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" style="width: 10%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 7%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">45%</div>
+                                    <div class="stats-number">46%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" style="width: 45%"></div>
+                                        <div class="progress-fill progress-memory" style="width: 46%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">14.40 / 31.47 GB</div>
+                                    <div class="stats-number">14.76 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 129.66 B<br>
-                                        Received: 1.05 KB
+                                        Sent: 133.7 B<br>
+                                        Received: 1.10 KB
                                     </div>
                                 </div>
                             </div>
@@ -406,10 +410,10 @@
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">42.4%</div>
+                                    <div class="font-weight-bold">Core 1</div>
+                                    <div class="text-primary font-size-lg">46.9%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 42.4%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 46.9%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -417,9 +421,29 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">12.9%</div>
+                                    <div class="text-primary font-size-lg">3.1%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 12.9%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 3.1%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 3</div>
+                                    <div class="text-primary font-size-lg">12.5%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 12.5%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 4</div>
+                                    <div class="text-primary font-size-lg">10.8%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 10.8%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -427,49 +451,29 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">24.2%</div>
+                                    <div class="text-primary font-size-lg">3.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 24.2%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 3.0%"></div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 6</div>
-                                    <div class="text-primary font-size-lg">43.8%</div>
+                                    <div class="font-weight-bold">Core 14</div>
+                                    <div class="text-primary font-size-lg">51.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 43.8%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 51.5%"></div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 8</div>
-                                    <div class="text-primary font-size-lg">3.2%</div>
+                                    <div class="font-weight-bold">Core 17</div>
+                                    <div class="text-primary font-size-lg">6.1%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 3.2%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 9</div>
-                                    <div class="text-primary font-size-lg">23.3%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 23.3%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 15</div>
-                                    <div class="text-primary font-size-lg">40.6%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 40.6%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 6.1%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -481,6 +485,53 @@
         </div>
 
         
+        <div class="row">
+            <div class="col-12">
+                <a href="https://music.163.com/#/song?id=1310728498" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <div class="card music-card" style="cursor: pointer; animation: float 3s ease-in-out infinite;">
+                        <div class="card-header" style="background-color: #fa709a; color: #000000;">
+                            <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
+                            
+                            <span class="badge bg-warning text-dark ms-2">
+                                <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
+                            </span>
+                            
+                        </div>
+                        <div class="card-body" style="background-color: #fa709a; color: #000000;">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="mb-2">
+                                        <i class="bi bi-disc"></i> R
+                                    </h4>
+                                    
+
+                                    
+                                    <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <span id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></span>
+                                        <span id="current-lyric-translation" style="display: block; font-size: 0.8em; opacity: 0.7; text-align: center; margin-top: 5px;"></span>
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div class="mt-3 text-center" style="opacity: 0.8;">
+                                        <span id="playback-time">00:00 / 00:00</span>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    
+                                    <div class="music-cover" style="animation: spin 8s linear infinite;">
+                                        <img src="https://p2.music.126.net/mir042BmDvrBeta0sDt0xQ==/109951163555488144.jpg" alt="Music Cover">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
 
         
         <div class="row">
@@ -488,11 +539,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260519_094506.png</span>
+                        <span class="badge bg-primary float-end">screenshot_20260519_094805.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260519_094506.png?raw=true" alt="Active Window Screenshot" class="img-fluid" onerror="this.src='screenshots/screenshot_20260519_094506.png'">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260519_094805.png?raw=true" alt="Active Window Screenshot" class="img-fluid" onerror="this.src='screenshots/screenshot_20260519_094805.png'">
                         </div>
                     </div>
                 </div>
@@ -545,10 +596,60 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>風が頬に触れたら - Koi no Koe</strong>
+                                    <strong>R - Roselia</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> cloudmusic.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                    <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
+                                        <div class="text-white font-bold">
+                                            <i class="bi bi-music-note"></i> R
+                                        </div>
+                                        <div class="text-white-80 text-sm">None</div>
+                                        <div class="text-white-70 text-sm mt-2 font-italic lyrics-box" style="max-height: 100px; overflow-y: auto;">
+                                            
+                                            [00:00]作词 : 大喜/Dee/李子豪(HtFR)
+                                            
+                                            [00:00]作曲 : 李子豪(HtFR)/大喜
+                                            
+                                            [00:00]编曲 : 李子豪(HtFR)
+                                            
+                                            [00:01]和声编写: 李子豪(HtFR)
+                                            
+                                            [00:02]和声: 李子豪(HtFR)
+                                            
+                                            [00:03]吉他: 李子豪(HtFR)
+                                            
+                                            [00:04]录音: 李子豪(HtFR) 张懿铭
+                                            
+                                            [00:06]编曲: 李子豪(HtFR) 张懿铭
+                                            
+                                            [00:07]混音: 李子豪(HtFR) 张懿铭
+                                            
+                                            [00:08]母带: 李子豪(HtFR) 张懿铭
+                                            
+                                            [00:09]专辑封面: 李子豪(HtFR)
+                                            
+                                            [00:11]制作人: 李子豪(HtFR)
+                                            
+                                            [00:13]李子豪(HtFR) :
+                                            
+                                            [00:14]窗外是下雨天
+                                            
+                                            [00:17]你讨厌下雨天
+                                            
+                                            [00:21]你害怕大雨
+                                            
+                                            [00:23]我却无法在你身边
+                                            
+                                            [00:28]滴答下落的雨
+                                            
+                                            [00:32]已看不到的你
+                                            
+                                            [00:35]说过的誓言
+                                            
+                                        </div>
                                     </div>
                                     
                                 </div>
@@ -689,6 +790,51 @@
                                     
                                     <tr>
                                         <td>
+                                            <strong>Program Manager</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>R - Roselia</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>main.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>DiffView - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>桌面歌词</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
                                             <strong>Windows Input Experience</strong>
                                         </td>
                                         <td>
@@ -732,51 +878,6 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>妄想色心跳 - 三Z-STUDIO/HOYO-MiX</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>music.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">explorer.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>rifle - key vs. locket</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>main.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -786,7 +887,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T09:45:07.413022</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T09:48:06.488117</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -794,7 +895,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const LAST_UPDATE_ISO = '2026-05-19T09:45:07.413022';
+        const LAST_UPDATE_ISO = '2026-05-19T09:48:06.488117';
         let lastUpdateTime;
 
         try {
@@ -917,17 +1018,11 @@
 
         const metricsCtx = document.getElementById('metricsChart');
         if (metricsCtx) {
-            const metricsLabels = ["09:32:57", "09:36:43", "09:38:42", "09:41:01", "09:45:07"];
+            const metricsLabels = ["09:38:42", "09:41:01", "09:45:07", "09:47:02", "09:48:06"];
             const cpuData = [];
             const memoryData = [];
 
             
-            
-            cpuData.push(16.444444444444443);
-            memoryData.push(45.5);
-            
-            cpuData.push(29.166666666666668);
-            memoryData.push(46.8);
             
             cpuData.push(21.466666666666665);
             memoryData.push(45.2);
@@ -937,6 +1032,12 @@
             
             cpuData.push(10.577777777777778);
             memoryData.push(45.8);
+            
+            cpuData.push(39.21666666666667);
+            memoryData.push(46.9);
+            
+            cpuData.push(7.438888888888889);
+            memoryData.push(46.9);
             
             
 
@@ -992,7 +1093,8 @@
         console.log('Last update:', LAST_UPDATE_ISO);
         console.log('Current time:', new Date().toISOString());
 
-        const parsedLyrics = [];
+        const parsedLyrics = [{"text": "\u4f5c\u8bcd : \u5927\u559c/Dee/\u674e\u5b50\u8c6a(HtFR)", "time": 0.0, "translation": null}, {"text": "\u4f5c\u66f2 : \u674e\u5b50\u8c6a(HtFR)/\u5927\u559c", "time": 0.479, "translation": null}, {"text": "\u7f16\u66f2 : \u674e\u5b50\u8c6a(HtFR)", "time": 0.958, "translation": null}, {"text": "\u548c\u58f0\u7f16\u5199: \u674e\u5b50\u8c6a(HtFR)", "time": 1.438, "translation": null}, {"text": "\u548c\u58f0: \u674e\u5b50\u8c6a(HtFR)", "time": 2.435, "translation": null}, {"text": "\u5409\u4ed6: \u674e\u5b50\u8c6a(HtFR)", "time": 3.689, "translation": null}, {"text": "\u5f55\u97f3: \u674e\u5b50\u8c6a(HtFR) \u5f20\u61ff\u94ed", "time": 4.933, "translation": null}, {"text": "\u7f16\u66f2: \u674e\u5b50\u8c6a(HtFR) \u5f20\u61ff\u94ed", "time": 6.185, "translation": null}, {"text": "\u6df7\u97f3: \u674e\u5b50\u8c6a(HtFR) \u5f20\u61ff\u94ed", "time": 7.44, "translation": null}, {"text": "\u6bcd\u5e26: \u674e\u5b50\u8c6a(HtFR) \u5f20\u61ff\u94ed", "time": 8.938, "translation": null}, {"text": "\u4e13\u8f91\u5c01\u9762: \u674e\u5b50\u8c6a(HtFR)", "time": 9.936, "translation": null}, {"text": "\u5236\u4f5c\u4eba: \u674e\u5b50\u8c6a(HtFR)", "time": 11.188, "translation": null}, {"text": "\u674e\u5b50\u8c6a(HtFR) :", "time": 13.185, "translation": null}, {"text": "\u7a97\u5916\u662f\u4e0b\u96e8\u5929", "time": 14.124, "translation": null}, {"text": "\u4f60\u8ba8\u538c\u4e0b\u96e8\u5929", "time": 17.872, "translation": null}, {"text": "\u4f60\u5bb3\u6015\u5927\u96e8", "time": 21.124, "translation": null}, {"text": "\u6211\u5374\u65e0\u6cd5\u5728\u4f60\u8eab\u8fb9", "time": 23.121, "translation": null}, {"text": "\u6ef4\u7b54\u4e0b\u843d\u7684\u96e8", "time": 28.624, "translation": null}, {"text": "\u5df2\u770b\u4e0d\u5230\u7684\u4f60", "time": 32.119, "translation": null}, {"text": "\u8bf4\u8fc7\u7684\u8a93\u8a00", "time": 35.625, "translation": null}, {"text": "\u4f3c\u4e4e\u90fd\u5df2\u8d25\u7ed9\u4e86\u65f6\u95f4", "time": 37.622, "translation": null}, {"text": "\u60f3\u8981\u5fd8\u8bb0", "time": 43.367, "translation": null}, {"text": "\u5374\u65e0\u80fd\u4e3a\u529b", "time": 45.376, "translation": null}, {"text": "\u503e\u5c3d\u6240\u6709", "time": 50.626, "translation": null}, {"text": "\u5374\u4e0d\u80fd\u4e3a\u4f60", "time": 52.377, "translation": null}, {"text": "\u5176\u5b9e\u6ca1\u6709\u5bf9\u4e0e\u9519", "time": 57.626, "translation": null}, {"text": "\u4e0d\u518d\u6323\u624e\u8fd9\u7ed3\u679c", "time": 61.121, "translation": null}, {"text": "\"\u5df2\u6210\u4e3a\u6211\u552f\u4e00\"", "time": 64.627, "translation": null}, {"text": "\u81f3\u5c11\u4e5f\u542c\u8fc7", "time": 66.878, "translation": null}, {"text": "\u7a97\u5916\u662f\u4e0b\u96e8\u5929", "time": 71.87, "translation": null}, {"text": "\u4f60\u8ba8\u538c\u4e0b\u96e8\u5929", "time": 75.621, "translation": null}, {"text": "\u4f60\u5bb3\u6015\u5927\u96e8", "time": 79.127, "translation": null}, {"text": "\u6211\u5374\u65e0\u6cd5\u5728\u4f60\u8eab\u8fb9", "time": 80.867, "translation": null}, {"text": "\u6ef4\u7b54\u4e0b\u843d\u7684\u96e8", "time": 86.128, "translation": null}, {"text": "\u5df2\u770b\u4e0d\u5230\u7684\u4f60", "time": 89.876, "translation": null}, {"text": "\u8bf4\u8fc7\u7684\u8a93\u8a00", "time": 93.616, "translation": null}, {"text": "\u4f3c\u4e4e\u90fd\u5df2\u8d25\u7ed9\u4e86\u65f6\u95f4", "time": 95.126, "translation": null}, {"text": "\u5927\u559c \u0026 \u674e\u5b50\u8c6a(HtFR) :", "time": 99.374, "translation": null}, {"text": "\u4e5f\u5728\u7b49\u5f85\u8327\u7834", "time": 100.973, "translation": null}, {"text": "\u4e5f\u5728\u7b49\u4f60\u5148\u8bf4", "time": 104.439, "translation": null}, {"text": "\u8fd8\u80fd\u5269\u4e0b\u4ec0\u4e48", "time": 108.035, "translation": null}, {"text": "\u6323\u624e\u89e3\u8131", "time": 109.958, "translation": null}, {"text": "\u7ee7\u7eed\u4e66\u5199\u7740", "time": 111.255, "translation": null}, {"text": "\u4ece\u4e00\u5f00\u59cb\u4f60\u4e5f\u4e00\u76f4\u90fd\u5728\u7ea0\u7ed3", "time": 115.004, "translation": null}, {"text": "\u53ef\u4e3a\u4ec0\u4e48\u5374\u5931\u7720\u5728\u6bcf\u4e00\u4e2a\u6574\u591c", "time": 118.256, "translation": null}, {"text": "\u6beb\u65e0\u4fdd\u7559\u7ed9\u4f60\u7231\u4e5f\u4ece\u672a\u505c\u6b47", "time": 122.004, "translation": null}, {"text": "\u597d\u50cf\u5728\u7535\u5f71\u4e2d\u7684\u53d1\u5c55\u6bcf\u4e2a\u60c5\u8282", "time": 125.256, "translation": null}, {"text": "\u6211\u6700\u540e\u518d\u8bf4\u51e0\u53e5", "time": 129.005, "translation": null}, {"text": "\u8ba9\u7434\u58f0\u5583\u5583\u4f4e\u8bed", "time": 131.001, "translation": null}, {"text": "\u8fd9\u4e00\u5207\u5df2\u7ecf\u4e0e\u4f60\u6ca1\u6709\u4efb\u4f55\u5173\u7cfb", "time": 132.753, "translation": null}, {"text": "\u8fd8\u80fd\u6dfb\u4e0a\u51e0\u7b14", "time": 136.674, "translation": null}, {"text": "\u6211\u4e0d\u518d\u62b1\u6709\u671f\u8bb8", "time": 138.25, "translation": null}, {"text": "\u518d\u4e5f\u4e0d\u613f\u63d0\u8d77", "time": 140.263, "translation": null}, {"text": "\u4f60", "time": 142.207, "translation": null}, {"text": "\u674e\u5b50\u8c6a(HtFR) :", "time": 142.96, "translation": null}, {"text": "\u7a97\u5916\u662f\u4e0b\u96e8\u5929", "time": 143.824, "translation": null}, {"text": "\u4f60\u8ba8\u538c\u4e0b\u96e8\u5929", "time": 147.573, "translation": null}, {"text": "\u4f60\u5bb3\u6015\u5927\u96e8", "time": 151.325, "translation": null}, {"text": "\u6211\u5374\u65e0\u6cd5\u5728\u4f60\u8eab\u8fb9", "time": 153.14, "translation": null}, {"text": "\u6ef4\u7b54\u4e0b\u843d\u7684\u96e8", "time": 158.643, "translation": null}, {"text": "\u5df2\u770b\u4e0d\u5230\u7684\u4f60", "time": 161.852, "translation": null}, {"text": "\u8bf4\u8fc7\u7684\u8a93\u8a00", "time": 165.652, "translation": null}, {"text": "\u4f3c\u4e4e\u90fd\u5df2\u8d25\u7ed9\u4e86\u65f6\u95f4", "time": 167.395, "translation": null}];
+        const currentSong = "R";
         let currentLyricIndex = 0;
         let playbackStartTime = null;
         let playbackOffset = 0;
@@ -1003,13 +1105,47 @@
             return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
         }
 
+        function getCachedPlaybackPosition(songName) {
+            try {
+                const cache = localStorage.getItem('music_playback_cache');
+                if (cache) {
+                    const data = JSON.parse(cache);
+                    if (data[songName] && data[songName].timestamp > Date.now() - 300000) {
+                        return data[songName].position;
+                    }
+                }
+            } catch(e) {
+                console.warn('Failed to read playback cache:', e);
+            }
+            return null;
+        }
+
+        function savePlaybackPosition(songName, position) {
+            try {
+                const cache = localStorage.getItem('music_playback_cache');
+                const data = cache ? JSON.parse(cache) : {};
+                data[songName] = {
+                    position: position,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('music_playback_cache', JSON.stringify(data));
+            } catch(e) {
+                console.warn('Failed to save playback cache:', e);
+            }
+        }
+
         function updateLyricDisplay() {
             if (!parsedLyrics || parsedLyrics.length === 0) return;
 
             const now = Date.now();
             if (playbackStartTime === null) {
                 playbackStartTime = now;
-                playbackOffset = 0;
+                const cachedPosition = getCachedPlaybackPosition(currentSong);
+                if (cachedPosition !== null) {
+                    playbackOffset = cachedPosition;
+                } else {
+                    playbackOffset = 0;
+                }
             }
 
             const elapsedSeconds = (now - playbackStartTime) / 1000 + playbackOffset;
@@ -1069,6 +1205,9 @@
                 const totalSeconds = 0;
                 playbackTime.textContent = formatTime(elapsedSeconds) + ' / ' + formatTime(totalSeconds);
             }
+
+            // Save playback position to cache
+            savePlaybackPosition(currentSong, elapsedSeconds);
         }
 
         if (parsedLyrics && parsedLyrics.length > 0) {
