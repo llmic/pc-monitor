@@ -77,6 +77,13 @@
         .bilibili-card {
             border: 2px solid #f06595;
             background: linear-gradient(135deg, rgba(240, 101, 149, 0.05), rgba(181, 78, 136, 0.05));
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .bilibili-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
+            border-color: #ff6b9d;
         }
         .browser-card {
             border-left: 4px solid #007bff;
@@ -364,29 +371,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">26%</div>
+                                    <div class="stats-number">15%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" style="width: 26%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 15%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">54%</div>
+                                    <div class="stats-number">52%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" style="width: 54%"></div>
+                                        <div class="progress-fill progress-memory" style="width: 52%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">17.17 / 31.47 GB</div>
+                                    <div class="stats-number">16.60 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 60.51 B<br>
-                                        Received: 264.64 B
+                                        Sent: 65.81 B<br>
+                                        Received: 329.27 B
                                     </div>
                                 </div>
                             </div>
@@ -409,7 +416,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details (9 cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (5 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -417,36 +424,26 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">57.6%</div>
+                                    <div class="text-primary font-size-lg">56.2%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 57.6%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 56.2%"></div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">40.6%</div>
+                                    <div class="font-weight-bold">Core 6</div>
+                                    <div class="text-primary font-size-lg">9.7%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 40.6%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 9.7%"></div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">51.5%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 51.5%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 4</div>
+                                    <div class="font-weight-bold">Core 10</div>
                                     <div class="text-primary font-size-lg">65.6%</div>
                                     <div class="progress-bar-custom mt-1">
                                         <div class="progress-fill progress-cpu" style="width: 65.6%"></div>
@@ -456,27 +453,7 @@
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">30.0%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 30.0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 6</div>
-                                    <div class="text-primary font-size-lg">37.5%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 37.5%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 10</div>
+                                    <div class="font-weight-bold">Core 12</div>
                                     <div class="text-primary font-size-lg">59.4%</div>
                                     <div class="progress-bar-custom mt-1">
                                         <div class="progress-fill progress-cpu" style="width: 59.4%"></div>
@@ -486,20 +463,10 @@
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 12</div>
-                                    <div class="text-primary font-size-lg">60.6%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 60.6%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
                                     <div class="font-weight-bold">Core 14</div>
-                                    <div class="text-primary font-size-lg">66.7%</div>
+                                    <div class="text-primary font-size-lg">87.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: 66.7%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 87.5%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -517,38 +484,69 @@
         
         <div class="row">
             <div class="col-12">
-                <div class="card bilibili-card" style="cursor: pointer;">
-                    <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d, #c44569); color: white;">
-                        <i class="bi bi-play-circle"></i> Watching Bilibili
-                        
-                        <span class="badge bg-white text-dark ms-2">BV1PtL36mE2c</span>
-                        
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                
-                                <h4 class="mb-2">数学史（311）我们有一种几何，一种代数，一种分析，却有四种拓扑</h4>
-                                
-                                
-                                <p class="text-muted small">视频ID: BV1PtL36mE2c</p>
-                                
-                            </div>
-                            <div class="col-md-4 text-center">
-                                
-                                <a href="https://www.bilibili.com/video/BV1PtL36mE2c/" target="_blank" rel="noopener noreferrer">
-                                    <img src="https://i2.hdslb.com/bfs/archive/d6e0a55ead6659bbabbf1c540ef1cf77f5d78453.jpg" alt="Video Cover" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s;"/>
-                                </a>
-                                
-                                <div class="mt-2 text-muted small">
-                                    <i class="bi bi-clock"></i> 06:49
+                <a href="https://www.bilibili.com/video/BV1PtL36mE2c/" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <div class="card bilibili-card hover-float" style="cursor: pointer;">
+                        <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d, #c44569); color: white; padding: 12px 16px;">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-play-circle-fill" style="font-size: 1.25rem;"></i>
+                                    <span style="font-weight: 600; font-size: 1.1rem;">Watching Bilibili</span>
                                 </div>
                                 
+                                <span class="badge bg-white text-dark px-3 py-1" style="font-weight: 600; font-size: 0.85rem;">
+                                    <i class="bi bi-hashtag me-1"></i>BV1PtL36mE2c
+                                </span>
                                 
                             </div>
                         </div>
+                        <div class="card-body p-0" style="background: linear-gradient(135deg, rgba(255,107,157,0.03), rgba(196,69,105,0.03));">
+                            <div class="row no-gutters">
+                                <!-- 封面大图 -->
+                                <div class="col-md-5">
+                                    <div class="relative overflow-hidden" style="border-radius: 0 0 0 12px;">
+                                        
+                                        <img src="https://i2.hdslb.com/bfs/archive/d6e0a55ead6659bbabbf1c540ef1cf77f5d78453.jpg" alt="Video Cover" class="img-fluid" style="width: 100%; min-height: 180px; object-fit: cover;">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                                        <div class="absolute bottom-3 left-3 right-3">
+                                            
+                                            <span class="badge bg-black/60 text-white px-2 py-1" style="font-size: 0.85rem;">
+                                                <i class="bi bi-clock me-1"></i>06:49
+                                            </span>
+                                            
+                                        </div>
+                                        <!-- 播放按钮覆盖层 -->
+                                        <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300" style="background: rgba(0,0,0,0.2);">
+                                            <i class="bi bi-play-circle-fill text-white" style="font-size: 48px;"></i>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- 视频信息 -->
+                                <div class="col-md-7 p-4">
+                                    
+                                    <h4 class="mb-3 font-weight-bold" style="color: #212529; line-height: 1.4;">数学史（311）我们有一种几何，一种代数，一种分析，却有四种拓扑</h4>
+                                    
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        
+                                        <span class="d-inline-flex items-center gap-1 px-2 py-1 rounded-full" style="background: rgba(255,107,157,0.1); color: #c44569; font-size: 0.85rem;">
+                                            <i class="bi bi-hashtag"></i> BV1PtL36mE2c
+                                        </span>
+                                        
+                                        
+                                        <span class="d-inline-flex items-center gap-1 px-2 py-1 rounded-full" style="background: rgba(0,0,0,0.05); color: #6c757d; font-size: 0.85rem;">
+                                            <i class="bi bi-clock"></i> 06:49
+                                        </span>
+                                        
+                                    </div>
+                                    <div class="d-flex items-center gap-2 text-muted" style="font-size: 0.9rem;">
+                                        <i class="bi bi-link-45deg"></i>
+                                        <span class="truncate">bilibili.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         
@@ -559,11 +557,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260519_140521.png</span>
+                        <span class="badge bg-primary float-end">screenshot_20260519_141133.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260519_140521.png?raw=true" alt="Active Window Screenshot" class="img-fluid" onerror="this.src='screenshots/screenshot_20260519_140521.png'">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260519_141133.png?raw=true" alt="Active Window Screenshot" class="img-fluid" onerror="this.src='screenshots/screenshot_20260519_141133.png'">
                         </div>
                     </div>
                 </div>
@@ -595,6 +593,34 @@
                                 </div>
                                 
                                 <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Settings</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> SystemSettings.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1848
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Settings</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
+                                    </div>
+                                    
+                                </div>
                                 
                             </div>
                         </div>
@@ -680,7 +706,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser (2)
+                        <i class="bi bi-globe"></i> Currently Open Browser (3)
                         
                     </div>
                     <div class="card-body scroll-container">
@@ -688,10 +714,10 @@
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>数学史（311）我们有一种几何，一种代数，一种分析，却有四种拓扑_哔哩哔哩_bilibili and 1 more page - Personal - Micr...</strong>
+                                    <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1829x1172
+                                        <i class="bi bi-aspect-ratio"></i> 1332x1857
                                     </div>
                                     
                                 </div>
@@ -702,10 +728,32 @@
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
+                                    <strong>github.com - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1332x1857
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> github.com
+                                        </a>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>数学史（311）我们有一种几何，一种代数，一种分析，却有四种拓扑_哔哩哔哩_bilibili and 1 more page - Personal - Micr...</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
                                     </div>
                                     
                                 </div>
@@ -738,6 +786,69 @@
                                     
                                     <tr>
                                         <td>
+                                            <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Program Manager</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>github.com - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Windows Input Experience</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">TextInputHost.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Sticky Notes</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Settings</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">SystemSettings.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>QQ</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">QQ.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
                                             <strong>数学史（311）我们有一种几何，一种代数，一种分析，却有四种拓扑_哔哩哔哩_bilibili and 1 more page - Personal - Micr...</strong>
                                         </td>
                                         <td>
@@ -763,69 +874,6 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>main.py - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>桌面歌词</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">explorer.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Windows Input Experience</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">TextInputHost.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Sticky Notes</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>【参考信息第602期】取消科长否决权；更新访华美企天团_哔哩哔哩_bilibili - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -835,7 +883,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T14:05:23.070700</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T14:11:33.967637</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -843,7 +891,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const LAST_UPDATE_ISO = '2026-05-19T14:05:23.070700';
+        const LAST_UPDATE_ISO = '2026-05-19T14:11:33.967637';
         let lastUpdateTime;
 
         try {
@@ -966,17 +1014,11 @@
 
         const metricsCtx = document.getElementById('metricsChart');
         if (metricsCtx) {
-            const metricsLabels = ["10:39:21", "10:40:11", "13:58:51", "13:59:57", "14:05:23"];
+            const metricsLabels = ["13:58:51", "13:59:57", "14:05:23", "14:10:52", "14:11:33"];
             const cpuData = [];
             const memoryData = [];
 
             
-            
-            cpuData.push(10.566666666666666);
-            memoryData.push(49.8);
-            
-            cpuData.push(20.499999999999996);
-            memoryData.push(50.7);
             
             cpuData.push(27.011111111111106);
             memoryData.push(32.2);
@@ -986,6 +1028,12 @@
             
             cpuData.push(26.08333333333333);
             memoryData.push(54.6);
+            
+            cpuData.push(4.166666666666667);
+            memoryData.push(52.9);
+            
+            cpuData.push(15.466666666666665);
+            memoryData.push(52.8);
             
             
 
