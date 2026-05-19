@@ -1,150 +1,210 @@
-# PC Monitor - Real-time Computer Monitoring System
+# PC Monitor - 实时计算机监控系统
 
-A unified Python application that combines monitoring, data collection, and Git deployment into a single easy-to-use script.
+> 一个集成监控与自动部署功能的Python脚本，用于实时收集和展示计算机系统状态信息。
 
-![Demo](https://img.shields.io/badge/Demo-Online-green)
-![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-blue)
+---
 
-**Live Demo:** [https://llmic.github.io/pc-monitor/](https://llmic.github.io/pc-monitor/)
+## 项目概述
 
-## Features
+PC Monitor 是一款基于Python的计算机监控系统，能够实时收集系统运行数据并生成可视化的监控面板。系统支持自动部署到GitHub Pages，实现远程访问监控数据。
 
-### Core Features
-- ✅ **System Monitoring**: CPU, memory, disk, network metrics with history trends
-- ✅ **Window Tracking**: Real-time active window and all open windows
-- ✅ **Browser Integration**: Display web page titles and clickable URLs
-- ✅ **Screenshot Capture**: Auto-capture active window at intervals
-- ✅ **White Theme Interface**: Clean, minimal white background design
-- ✅ **Auto-Deployment**: Built-in Git push to GitHub Pages
+## 核心功能
 
-### Extended Features
-- ✅ **Bilibili Integration**: Auto-detect Bilibili video playing and display video info (title, cover, duration, author, views, danmaku count)
-- ✅ **Music Integration**: Display currently playing NetEase Cloud Music with lyrics
-- ✅ **Privacy Protection**: Skip screenshot for privacy windows (WeChat, QQ, Teams, Zoom, etc.)
-- ✅ **Performance Trend**: Chart showing last 5 updates of system metrics
-- ✅ **Screenshot Management**: Auto-cleanup old screenshots (keep latest 2 of 10)
+- **系统指标监控**
+  - CPU 使用率实时追踪
+  - 内存使用情况监控
+  - 磁盘空间状态检测
+  - 网络活动监控
 
-## Installation
+- **窗口与浏览器监控**
+  - 活动窗口标题记录
+  - 浏览器标签页监控
+  - 应用使用时长统计
 
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+- **多媒体监控**
+  - 当前播放音乐信息展示
+  - 歌词同步显示
+  - Bilibili 直播状态监控
 
-2. Configure your Git repository (if not already configured):
-   ```bash
-   git init
-   git remote add origin https://github.com/your-username/your-repo.git
-   ```
+- **自动部署**
+  - 定时自动生成监控面板
+  - 自动推送到GitHub Pages
+  - 截图自动上传与管理
 
-3. Enable GitHub Pages in your repository settings (branch: `gh-pages`)
+- **可视化界面**
+  - 简洁的白色主题设计
+  - 实时状态指示灯
+  - 系统指标图表展示
+  - 响应式布局设计
 
-## Usage
+## 技术栈
 
-### Simple Mode (Recommended)
+| 分类 | 技术 |
+|------|------|
+| 编程语言 | Python 3.8+ |
+| 前端框架 | Bootstrap 5 |
+| 图表库 | Chart.js |
+| 部署方式 | GitHub Pages |
+| 自动化 | GitHub Actions |
 
-Just run the unified script:
+## 环境要求
+
+### 操作系统
+- Windows 10/11（推荐）
+- Linux（部分功能受限）
+- macOS（部分功能受限）
+
+### Python 版本
+- Python 3.8 或更高版本
+
+### 依赖库
+```plaintext
+psutil>=5.9.0
+pywin32>=306 (Windows)
+Pillow>=9.0.0
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+```
+
+## 安装指南
+
+### 1. 克隆项目
+```bash
+git clone https://github.com/llmic/pc-monitor.git
+cd pc-monitor
+```
+
+### 2. 安装依赖
+```bash
+pip install -r requirements.txt
+```
+
+### 3. 配置Git（可选）
+如果需要自动部署功能，请配置Git：
+```bash
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+```
+
+### 4. 配置GitHub Pages（可选）
+在GitHub仓库设置中：
+- 进入 Settings → Pages
+- 选择 gh-pages 分支作为源
+- 保存配置
+
+## 使用说明
+
+### 基本运行
 
 ```bash
 python main.py
 ```
 
-This will:
-- Start monitoring your system
-- Automatically push updates to GitHub every 90 seconds
-- Display the monitoring dashboard in your browser
+### 配置参数
 
-### Custom Configuration
+在 `main.py` 中可修改以下配置：
 
-Edit `main.py` to customize:
-- `COLLECTION_INTERVAL = 90`: Change the update interval (seconds)
-- `GIT_PUSH_ENABLED = True`: Enable/disable auto-deployment
-- `SCREENSHOT_CDN_URL`: Custom screenshot CDN URL
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| COLLECTION_INTERVAL | 数据收集间隔（秒） | 180 |
+| OUTPUT_FILE | 输出HTML文件名 | index.html |
+| GIT_PUSH_ENABLED | 是否启用自动推送 | True |
+| DATA_DIR | 数据文件目录 | data |
+| SCREENSHOT_DIR | 截图保存目录 | screenshots |
 
-## Access the Dashboard
+### 手动生成监控面板
 
-Your monitoring dashboard will be available at:
-
+```bash
+# 仅生成HTML，不推送
+python main.py --no-push
 ```
-https://your-username.github.io/your-repo/
+
+### 访问监控面板
+
+部署成功后，通过以下地址访问：
+```
+https://your-username.github.io/pc-monitor/
+示例：https://llmic.github.io/pc-monitor/
 ```
 
-## Dashboard Features
-
-### 1. Status Card
-- **Indicator Light**: Green (normal) → Orange (warning > 2min) → Red (danger > 5min)
-- **Last Updated**: Timestamp of last system update
-- **Current Time**: Real-time clock (updates every second)
-- **Auto-shutdown Warning**: Alert overlay if no update for 10 minutes
-
-### 2. System Metrics
-- CPU usage percentage
-- Memory usage with available amount
-- Disk usage with total/free space
-- Network upload/download speed
-
-### 3. Performance Trend Chart
-- Line chart showing CPU and memory usage over last 5 updates
-- Visual trend analysis
-
-### 4. Active Window
-- Current active window title
-- Window screenshot (with privacy protection)
-- Privacy notice for protected apps (WeChat, QQ, etc.)
-
-### 5. Now Playing (Music)
-- Song title and artist
-- Album cover image
-- Real-time lyrics display
-- Lyrics translation support
-- Song progress indicator
-
-### 6. Watching Bilibili
-- Video title
-- Video cover image
-- Duration, author, BV ID
-- View count, danmaku count, publish date
-- Clickable link to video
-
-### 7. All Windows
-- Complete list of currently open windows
-- Browser tabs with clickable URLs
-- Bilibili video windows marked specially
-
-## Privacy Protection
-
-The system automatically skips screenshot capture for the following privacy-sensitive applications:
-- WeChat, QQ, WeCom
-- Tencent Meeting, WeMeet
-- Microsoft Teams, Zoom, Skype
-- DingTalk, Feishu (Lark)
-
-When a privacy window is active, a privacy notice is displayed instead of the screenshot.
-
-## Project Structure
+## 项目结构
 
 ```
 pc-monitor/
-├── main.py              # Main entry point
-├── collector.py         # System data collection
-├── generator.py         # HTML template generation
-├── metrics.py           # Performance metrics tracking
-├── bilibili.py          # Bilibili API integration
-├── music.py             # NetEase Cloud Music integration
-├── history.py           # Window history management
-├── requirements.txt     # Python dependencies
-├── screenshots/         # Screenshot storage
-└── index.html           # Generated dashboard
+├── main.py              # 主入口脚本
+├── collector.py         # 数据收集模块
+├── generator.py         # HTML生成模块
+├── metrics.py           # 指标历史管理
+├── history.py           # 历史记录管理
+├── music.py             # 音乐监控模块
+├── bilibili.py          # Bilibili监控模块
+├── requirements.txt     # 依赖列表
+├── index.html           # 生成的监控面板
+├── screenshots/         # 截图存储目录
+├── data/                # 数据文件目录
+└── .github/
+    └── workflows/
+        └── deploy.yml   # GitHub Actions部署配置
 ```
 
-## Troubleshooting
+## 常见问题
 
-- **Git Push Failures**: Ensure your Git is properly configured and you have push access
-- **Screenshot Issues**: Check that `Pillow` is installed (`pip install Pillow`)
-- **Permission Errors**: Run the script with appropriate system permissions
-- **Bilibili Info Not Showing**: Ensure network access to Bilibili API
-- **Music Info Not Showing**: Ensure NetEase Cloud Music is running
+### Q: 监控面板无法显示实时时间？
 
-## License
+A: 请检查浏览器控制台是否有JavaScript错误。确保`currentTimeDisplay`元素存在且`updateStatus`函数正常执行。
 
-MIT License - Feel free to use and modify!
+### Q: 自动部署失败？
+
+A: 请检查：
+1. GitHub仓库的Actions权限是否开启
+2. `gh-pages`分支是否存在
+3. 部署工作流日志中的具体错误信息
+
+### Q: 截图无法显示？
+
+A: 请检查截图目录是否存在，以及CDN配置是否正确。可在`main.py`中修改`SCREENSHOT_CDN_URL`。
+
+### Q: 音乐信息不显示？
+
+A: 该功能依赖特定的音乐播放器API，目前支持部分主流播放器。请确保音乐播放器正在运行。
+
+## 注意事项
+
+1. **隐私保护**：本系统仅在本地收集数据，不会上传敏感信息。但生成的HTML页面可能包含窗口标题等信息，请谨慎分享。
+
+2. **系统资源**：建议将数据收集间隔设置为180秒以上，避免过度占用系统资源。
+
+3. **网络访问**：首次运行需要网络连接以获取头像和其他资源。
+
+4. **管理员权限**：部分系统指标可能需要管理员权限才能获取完整信息。
+
+## 开发说明
+
+### 添加新的监控模块
+
+1. 在项目目录下创建新的模块文件
+2. 实现数据收集逻辑
+3. 在 `collector.py` 中集成新模块
+4. 在 `generator.py` 中添加展示逻辑
+
+### 自定义界面样式
+
+修改 `generator.py` 中的HTML模板部分，可自定义：
+- 颜色主题
+- 布局结构
+- 显示内容
+
+## 许可证
+
+本项目采用 MIT 许可证，详见 LICENSE 文件。
+
+## 联系方式
+
+如有问题或建议，欢迎通过以下方式联系：
+
+- 项目地址：https://github.com/llmic/pc-monitor
+- 提交Issue：https://github.com/llmic/pc-monitor/issues
+
+---
+
+*项目持续更新中，欢迎贡献代码！*
