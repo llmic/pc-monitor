@@ -131,7 +131,12 @@ def fetch_bilibili_video_detail(bv_id):
                 if cover and cover.startswith('//'):
                     cover = 'https:' + cover
                 
-                duration = video.get('duration', 0)
+                # Get duration - for multi-part videos, use first part duration
+                pages = video.get('pages', [])
+                if pages:
+                    duration = pages[0].get('duration', video.get('duration', 0))
+                else:
+                    duration = video.get('duration', 0)
                 # Convert duration to MM:SS format
                 if isinstance(duration, int):
                     duration = format_duration(duration)
@@ -139,9 +144,11 @@ def fetch_bilibili_video_detail(bv_id):
                 # Get author information
                 author = video.get('owner', {}).get('name', '')
                 
-                # Get view count, danmaku count, and publish date
-                view_count = video.get('view', 0)
-                danmaku_count = video.get('danmaku', 0)
+                # Get stat information (view count, danmaku, like, etc.)
+                stat = video.get('stat', {})
+                view_count = stat.get('view', 0)
+                danmaku_count = stat.get('danmaku', 0)
+                like_count = stat.get('like', 0)
                 pubdate = video.get('pubdate', 0)
                 
                 return {
@@ -156,8 +163,8 @@ def fetch_bilibili_video_detail(bv_id):
                     'danmaku_count': danmaku_count,
                     'danmaku_count_formatted': format_number(danmaku_count),
                     'pubdate': format_date(pubdate),
-                    'like_count': video.get('like', 0),
-                    'like_count_formatted': format_number(video.get('like', 0))
+                    'like_count': like_count,
+                    'like_count_formatted': format_number(like_count)
                 }
     except Exception:
         pass
@@ -166,17 +173,31 @@ def fetch_bilibili_video_detail(bv_id):
 def format_duration(duration):
     """Convert duration to MM:SS format."""
     if isinstance(duration, int):
-        mins = duration // 60
+        # duration is in seconds
+        hours = duration // 3600
+        mins = (duration % 3600) // 60
         secs = duration % 60
+        if hours > 0:
+            return f"{hours:02d}:{mins:02d}:{secs:02d}"
         return f"{mins:02d}:{secs:02d}"
     elif isinstance(duration, str):
-        # Handle format like "17:0" -> "17:00"
+        # Already in format like "HH:MM:SS" or "MM:SS"
         parts = duration.split(':')
-        if len(parts) == 2:
+        if len(parts) == 3:
+            # HH:MM:SS - already formatted
+            return duration
+        elif len(parts) == 2:
+            # MM:SS - ensure leading zeros
             mins = int(parts[0])
             secs = int(parts[1])
             return f"{mins:02d}:{secs:02d}"
-    return duration
+        elif len(parts) == 1:
+            # Just seconds
+            secs = int(parts[0])
+            mins = secs // 60
+            secs = secs % 60
+            return f"{mins:02d}:{secs:02d}"
+    return str(duration)
 
 def fetch_bilibili_title(bv_id):
     """Fetch video title by BV ID - compatible with main.py."""

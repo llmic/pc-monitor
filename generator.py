@@ -373,7 +373,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             <span id="statusText" class="fs-5"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay"></span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay">{{ timestamp|strftime('%Y-%m-%d %H:%M:%S') }}</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay"></span>
@@ -550,7 +550,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             <div class="card-body p-0" style="padding: 0 !important; margin: 0;">
                                 <div style="height: 130px; position: relative;">
                                     {% if bilibili_info.cover %}
-                                    <img src="{{ bilibili_info.cover }}" alt="Video Cover" class="w-100 h-100" style="object-fit: cover;">
+                                    <div class="bilibili-cover-placeholder" style="width: 100%; height: 100%; background: linear-gradient(135deg, #4a90d9 0%, #2d5aa0 100%); display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-play-circle text-white opacity-50" style="font-size: 32px;"></i>
+                                    </div>
+                                    <img src="" alt="Video Cover" class="w-100 h-100 bilibili-cover-image" style="object-fit: cover; position: absolute; top: 0; left: 0; display: none;" data-src="{{ bilibili_info.cover }}">
                                     <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);"></div>
                                     <!-- 播放按钮 -->
                                     <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0';">
@@ -618,7 +621,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="{{ screenshot_url if screenshot_url else screenshot|replace('\\\\', '/') }}" alt="Active Window Screenshot" class="img-fluid" onerror="this.src='{{ screenshot|replace('\\\\', '/') }}'">
+                            <img src="{{ screenshot_url }}" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="{{ screenshot_url }}">
                         </div>
                     </div>
                 </div>
@@ -988,11 +991,86 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             location.reload();
         }, 90000);
 
-        // 确保DOM完全加载后再执行updateStatus
+        // 图片缓存对象
+        const imageCache = {};
+        
+        // 加载图片并缓存
+        function loadImageWithCache(imgElement, src) {
+            if (imageCache[src]) {
+                // 使用缓存
+                imgElement.src = imageCache[src];
+                return;
+            }
+            
+            const tempImg = new Image();
+            tempImg.onload = function() {
+                imageCache[src] = src;
+                imgElement.src = src;
+            };
+            tempImg.onerror = function() {
+                console.warn('Failed to load image:', src);
+            };
+            tempImg.src = src;
+        }
+        
+        // 延迟加载Bilibili封面图片
+        function lazyLoadBilibiliCovers() {
+            const coverImages = document.querySelectorAll('.bilibili-cover-image');
+            coverImages.forEach(function(img) {
+                const src = img.getAttribute('data-src');
+                if (src) {
+                    loadImageWithCache(img, src);
+                    // 图片加载后显示
+                    const tempImg = new Image();
+                    tempImg.onload = function() {
+                        img.style.display = 'block';
+                        const placeholder = img.parentElement.querySelector('.bilibili-cover-placeholder');
+                        if (placeholder) {
+                            placeholder.style.display = 'none';
+                        }
+                    };
+                    tempImg.src = src;
+                }
+            });
+        }
+        
+        // 延迟加载截图
+        function lazyLoadScreenshots() {
+            const screenshots = document.querySelectorAll('.lazy-load-image');
+            screenshots.forEach(function(img) {
+                const src = img.getAttribute('data-src');
+                if (src) {
+                    loadImageWithCache(img, src);
+                }
+            });
+        }
+        
+        // 确保DOM完全加载后再执行updateStatus和图片加载
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded fired');
+            console.log('lastUpdateTime:', lastUpdateTime);
+            console.log('lastUpdatedDisplay element:', document.getElementById('lastUpdatedDisplay'));
+            
             updateStatus();
             setInterval(updateStatus, 1000);
+            
+            // 延迟加载图片
+            setTimeout(function() {
+                lazyLoadBilibiliCovers();
+                lazyLoadScreenshots();
+            }, 100);
         });
+        
+        // 备用方案：确保updateStatus在页面加载后执行
+        window.addEventListener('load', function() {
+            console.log('window.load fired');
+            updateStatus();
+        });
+        
+        // 添加立即执行的调试信息
+        console.log('PC Monitor initialized');
+        console.log('Last update:', LAST_UPDATE_ISO);
+        console.log('Current time:', new Date().toISOString());
 
         const metricsCtx = document.getElementById('metricsChart');
         if (metricsCtx) {
@@ -1052,12 +1130,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 });
             }
         }
-
-        updateStatus();
-
-        console.log('PC Monitor initialized');
-        console.log('Last update:', LAST_UPDATE_ISO);
-        console.log('Current time:', new Date().toISOString());
 
         const parsedLyrics = {{ current_music.parsed_lyrics|tojson if current_music and current_music.parsed_lyrics else '[]' }};
         const currentSong = "{{ current_music.song if current_music else '' }}";
@@ -1270,6 +1342,15 @@ def truncate_filter(s, length):
         return s
 
 
+def strftime_filter(dt_str, format_str):
+    """Jinja2 filter to format ISO datetime string."""
+    from datetime import datetime
+    try:
+        dt = datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+        return dt.strftime(format_str)
+    except:
+        return dt_str
+
 class HTMLGenerator:
     def __init__(self):
         from jinja2 import Environment
@@ -1278,6 +1359,7 @@ class HTMLGenerator:
         env.filters['filename'] = filename_filter
         env.filters['truncate'] = truncate_filter
         env.filters['format_time'] = format_time
+        env.filters['strftime'] = strftime_filter
         self.template = env.from_string(HTML_TEMPLATE)
 
     def generate(self, data):
