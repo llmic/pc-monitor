@@ -32,8 +32,29 @@ jobs:
           
           # 创建临时目录存放要部署的文件
           mkdir -p deploy
-          cp index.html deploy/
-          cp -r screenshots deploy/ 2>/dev/null || true
+          
+          # 复制 index.html（必须存在）
+          if [ -f "index.html" ]; then
+            cp index.html deploy/
+            echo "✅ Copied index.html"
+          else
+            echo "❌ index.html not found!"
+            exit 1
+          fi
+          
+          # 复制 screenshots（如果存在）
+          if [ -d "screenshots" ]; then
+            cp -r screenshots deploy/
+            echo "✅ Copied screenshots"
+          else
+            echo "⚠ screenshots directory not found, skipping"
+          fi
+          
+          # 检查 deploy 目录是否有文件
+          if [ -z "$(ls -A deploy)" ]; then
+            echo "❌ No files to deploy!"
+            exit 1
+          fi
           
           # 切换到 gh-pages 分支
           git checkout -b gh-pages 2>/dev/null || git checkout gh-pages
