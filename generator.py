@@ -65,7 +65,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin-right: 8px;
         }
         .status-normal { background-color: #28a745; }
-        .status-warning { background-color: #dc3545; animation: blink 1s infinite; }
+        .status-warning { background-color: #ffc107; animation: blink 1s infinite; }
+        .status-danger { background-color: #dc3545; animation: blink 0.5s infinite; }
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
@@ -79,8 +80,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-left: 4px solid transparent;
         }
         .bilibili-card {
-            border: 2px solid #f06595;
-            background: linear-gradient(135deg, rgba(240, 101, 149, 0.05), rgba(181, 78, 136, 0.05));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bilibili-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(255, 107, 157, 0.25);
+        }
+        .bilibili-card .card-header {
+            position: relative;
+            overflow: hidden;
+        }
+        .bilibili-card .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-200%); }
+            100% { transform: translateX(200%); }
         }
         .browser-card {
             border-left: 4px solid #007bff;
@@ -400,10 +422,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             </div>
                         </div>
 
-                        {% if max_metrics_history and metrics_history and metrics_history|length > 0 %}
+                        {% if metrics_history and metrics_history|length > 0 %}
                         <div class="row mt-4">
                             <div class="col-12">
-                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ max_metrics_history }} updates)</h6>
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ max_metrics_history|default(5) }} updates)</h6>
                                 <canvas id="metricsChart" height="80"></canvas>
                             </div>
                         </div>
@@ -438,115 +460,153 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </div>
         </div>
 
-        {% if current_music %}
-        <div class="row">
-            <div class="col-12">
-                <a href="{{ current_music.song_url if current_music.song_url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                    <div class="card music-card hover-float" style="cursor: pointer;">
-                        <div class="card-header" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white;{% endif %}">
-                            <i class="bi bi-music-note"></i> Now Playing - 网易云音乐
-                            {% if current_music.desktop_lyrics_active %}
-                            <span class="badge bg-warning text-dark ms-2">
-                                <i class="bi bi-chat-left-text"></i> Desktop Lyrics Active
-                            </span>
-                            {% endif %}
-                        </div>
-                        <div class="card-body" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background-color: #fad0c4; color: #212529;{% endif %}">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <h4 class="mb-2">
-                                        <i class="bi bi-disc"></i> {{ current_music.song }}
-                                    </h4>
-                                    <p class="mb-3" style="opacity: 0.85; font-size: 1.1em;">
-                                        <i class="bi bi-person"></i> {{ current_music.artist if current_music.artist else '未知歌手' }}
-                                    </p>
-
-                                    {% if current_music.song_ended %}
-                                    <div class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 80px; display: flex; align-items: center; justify-content: center;">
-                                        <span style="font-size: 1.2em; text-align: center; opacity: 0.6;">🎵 播放已结束</span>
+        {% set all_windows = windows + browser_windows %}
+        {% set bilibili_windows = all_windows | selectattr('bilibili') | list %}
+        {% set has_music = current_music and current_music.song %}
+        {% set has_bilibili = bilibili_windows|length > 0 %}
+        
+        {% if has_music or has_bilibili %}
+        <div class="row mb-6">
+            <div class="d-flex gap-4" style="width: 100%;">
+                {% if has_music %}
+                <div style="flex: 1; min-width: 300px;">
+                    <a href="{{ current_music.song_url if current_music.song_url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="card music-card hover-float" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 71, 87, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 71, 87, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 71, 87, 0.15)';">
+                            <!-- 头部 -->
+                            <div class="card-header" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background: linear-gradient(135deg, #1db954 0%, #1ed760 100%); color: white;{% endif %} padding: 10px 14px; margin: 0;">
+                                <div class="d-flex align-items-center justify-between">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-music-note" style="font-size: 14px;"></i>
+                                        </div>
+                                        <span style="font-weight: 600; font-size: 0.85rem;">Now Playing</span>
                                     </div>
-                                    {% elif current_music.parsed_lyrics %}
-                                    <div id="lyrics-display" class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                        <div id="current-lyric-line" style="font-size: 1.2em; text-align: center;"></div>
-                                        <div id="current-lyric-translation" style="font-size: 0.8em; opacity: 0.7; text-align: center; margin-top: 8px; display: none;"></div>
-                                    </div>
-                                    {% elif current_music.current_lyric %}
-                                    <div class="lyrics-display mt-3 p-3" style="background: rgba(0,0,0,0.2); border-radius: 10px; min-height: 60px; display: flex; align-items: center; justify-content: center;">
-                                        <span style="font-size: 1.1em; text-align: center;">{{ current_music.current_lyric }}</span>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if current_music.total_time_str and not current_music.song_ended %}
-                                    <div id="playback-time-container" class="mt-3 text-center" style="opacity: 0.8; transition: all 0.3s ease;">
-                                        <span id="playback-time">{{ current_music.current_time_str if current_music.current_time_str else '00:00' }} / {{ current_music.total_time_str }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-md-4 text-center">
-                                    {% if current_music.cover_url %}
-                                    <div class="music-cover" id="music-cover" {% if not current_music.song_ended %}style="animation: spin 8s linear infinite;"{% endif %}>
-                                        <img src="{{ current_music.cover_url }}" alt="Music Cover">
-                                    </div>
-                                    {% else %}
-                                    <div class="music-cover" {% if not current_music.song_ended %}style="animation: spin 8s linear infinite; background: linear-gradient(135deg, #434343 0%, #000000 100%);"{% else %}style="background: linear-gradient(135deg, #434343 0%, #000000 100%);"{% endif %} display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-music-note text-white" style="font-size: 48px;"></i>
-                                    </div>
+                                    {% if current_music.platform %}
+                                    <span style="font-size: 0.7rem; opacity: 0.8;">{{ current_music.platform }}</span>
                                     {% endif %}
                                 </div>
                             </div>
+                            <!-- 主体 -->
+                            <div class="card-body p-4" style="background: #ffffff; color: #1f2937; margin: 0;">
+                                <div class="row align-items-center">
+                                    <!-- 封面 -->
+                                    <div class="col-auto">
+                                        {% if current_music.cover_url %}
+                                        <div style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" {% if not current_music.song_ended %}class="music-spin"{% endif %}>
+                                            <img src="{{ current_music.cover_url }}" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
+                                        </div>
+                                        {% else %}
+                                        <div style="width: 64px; height: 64px; border-radius: 12px; background: linear-gradient(135deg, #374151 0%, #1f2937 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                                            <i class="bi bi-music-note text-white" style="font-size: 20px;"></i>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!-- 信息 -->
+                                    <div class="col" style="padding-left: 12px;">
+                                        <h5 class="font-weight-bold mb-1" style="line-height: 1.3; font-size: 0.9rem;">
+                                            {{ current_music.song }}
+                                        </h5>
+                                        <p class="text-muted mb-0" style="font-size: 0.75rem;">
+                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> {{ current_music.artist if current_music.artist else '未知歌手' }}
+                                        </p>
+                                        {% if current_music.total_time_str %}
+                                        <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 4px;">
+                                            <span id="music-progress">{{ current_music.current_time_str if current_music.current_time_str else '00:00' }}</span> / {{ current_music.total_time_str }}
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!-- 歌词显示 -->
+                                <div class="mt-3 pt-3 border-top" style="border-color: rgba(0,0,0,0.1);">
+                                    <div id="lyrics-container">
+                                        <p id="lyric-line" style="font-size: 0.85rem; text-align: center; font-weight: 500; opacity: 0.9; margin-bottom: 4px;">
+                                            <i class="bi bi-music"></i> <span id="lyric-text">加载歌词中...</span>
+                                        </p>
+                                        <p id="lyric-translation" style="font-size: 0.75rem; text-align: center; opacity: 0.6; margin: 0;"></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if has_bilibili %}
+                {% for win in bilibili_windows %}
+                {% set bilibili_info = win.bilibili %}
+                <div style="flex: 1; min-width: 300px;">
+                    <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                        <div class="card bilibili-card" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 107, 157, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 107, 157, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 107, 157, 0.15)';">
+                            <!-- 头部 -->
+                            <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); color: white; padding: 10px 14px; margin: 0;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-play-circle-fill" style="font-size: 14px;"></i>
+                                    </div>
+                                    <span style="font-weight: 600; font-size: 0.85rem;">Watching Bilibili</span>
+                                </div>
+                            </div>
+                            <!-- 主体 -->
+                            <div class="card-body p-0" style="padding: 0 !important; margin: 0;">
+                                <div style="height: 130px; position: relative;">
+                                    {% if bilibili_info.cover %}
+                                    <img src="{{ bilibili_info.cover }}" alt="Video Cover" class="w-100 h-100" style="object-fit: cover;">
+                                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);"></div>
+                                    <!-- 播放按钮 -->
+                                    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0';">
+                                        <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
+                                            <i class="bi bi-play-fill text-dark" style="font-size: 20px; margin-left: 3px;"></i>
+                                        </div>
+                                    </div>
+                                    <!-- 时长 -->
+                                    {% if bilibili_info.duration %}
+                                    <div style="position: absolute; bottom: 8px; right: 8px;">
+                                        <span style="background: rgba(0,0,0,0.7); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem;">{{ bilibili_info.duration }}</span>
+                                    </div>
+                                    {% endif %}
+                                    {% else %}
+                                    <div style="width: 100%; height: 130px; background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-play-fill text-white" style="font-size: 32px;"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <!-- 信息区域 -->
+                                <div style="padding: 12px; background: white;">
+                                    <h5 class="font-weight-bold mb-1" style="color: #1a1a1a; line-height: 1.3; font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
+                                        {{ bilibili_info.title if bilibili_info.title else '未知名' }}
+                                    </h5>
+                                    {% if bilibili_info.author %}
+                                    <p class="text-muted mb-2" style="font-size: 0.75rem;">
+                                        <i class="bi bi-user-fill" style="font-size: 10px;"></i> {{ bilibili_info.author }}
+                                    </p>
+                                    {% endif %}
+                                    <div class="d-flex flex-wrap gap-1.5" style="font-size: 0.65rem;">
+                                        {% if bilibili_info.pubdate %}
+                                        <span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px;">
+                                            <i class="bi bi-calendar" style="font-size: 9px;"></i> {{ bilibili_info.pubdate }}
+                                        </span>
+                                        {% endif %}
+                                        {% if bilibili_info.view_count_formatted %}
+                                        <span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px;">
+                                            <i class="bi bi-eye" style="font-size: 9px;"></i> {{ bilibili_info.view_count_formatted }}
+                                        </span>
+                                        {% endif %}
+                                        {% if bilibili_info.danmaku_count_formatted %}
+                                        <span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px;">
+                                            <i class="bi bi-chat-dots" style="font-size: 9px;"></i> {{ bilibili_info.danmaku_count_formatted }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
         {% endif %}
-
-        {% set all_windows = windows + browser_windows %}
-        {% for win in all_windows if win.get('bilibili') %}
-        {% set bilibili_info = win.bilibili %}
-        <div class="row">
-            <div class="col-12">
-                <div class="card bilibili-card" style="cursor: pointer;">
-                    <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d, #c44569); color: white;">
-                        <i class="bi bi-play-circle"></i> Watching Bilibili
-                        {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
-                        <span class="badge bg-white text-dark ms-2">{{ bilibili_info.bv_id }}</span>
-                        {% endif %}
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                {% if bilibili_info.title %}
-                                <h4 class="mb-2">{{ bilibili_info.title }}</h4>
-                                {% endif %}
-                                {% if bilibili_info.bv_id and bilibili_info.bv_id != 'bilibili' %}
-                                <p class="text-muted small">视频ID: {{ bilibili_info.bv_id }}</p>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4 text-center">
-                                {% if bilibili_info.cover %}
-                                <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer">
-                                    <img src="{{ bilibili_info.cover }}" alt="Video Cover" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s;"/>
-                                </a>
-                                {% if bilibili_info.duration %}
-                                <div class="mt-2 text-muted small">
-                                    <i class="bi bi-clock"></i> {{ bilibili_info.duration }}
-                                </div>
-                                {% endif %}
-                                {% else %}
-                                <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer">
-                                    <div style="width: 120px; height: 68px; background: linear-gradient(135deg, #ff6b9d, #c44569); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                                        <i class="bi bi-play-fill text-white" style="font-size: 28px;"></i>
-                                    </div>
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
 
         {% if screenshot %}
         <div class="row">
@@ -568,17 +628,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                        <i class="bi bi-shield-check"></i> Privacy Protection
+                    <div class="card-header">
+                        <i class="bi bi-camera"></i> Current Active Window Screenshot
                     </div>
                     <div class="card-body">
                         <div class="text-center py-8">
                             <i class="bi bi-eye-slash" style="font-size: 48px; color: #6c757d; margin-bottom: 16px;"></i>
                             <p class="text-muted" style="font-size: 1.1em;">
-                                {{ screenshot_message }}
-                            </p>
-                            <p class="text-sm text-muted mt-2">
-                                为保护您的隐私安全，以下应用的窗口不会被截图：微信、QQ、企业微信、腾讯会议、Teams、Zoom等通讯软件
+                                窗口已设置隐私保护，跳过截图
                             </p>
                         </div>
                     </div>
@@ -812,66 +869,130 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             const alertContainer = document.getElementById('alertContainer');
             const shutdownOverlay = document.getElementById('shutdownOverlay');
             const shutdownTime = document.getElementById('shutdownTime');
+            const lastUpdatedDisplay = document.getElementById('lastUpdatedDisplay');
+            const currentTimeDisplay = document.getElementById('currentTimeDisplay');
 
             const timezone = getTimezoneOffset();
-            document.getElementById('lastUpdatedDisplay').textContent = formatDate(lastUpdateTime) + ' (UTC' + timezone + ')';
-            document.getElementById('currentTimeDisplay').textContent = formatDate(now) + ' (UTC' + timezone + ')';
+            
+            // 更新时间显示
+            if (lastUpdatedDisplay) {
+                lastUpdatedDisplay.textContent = formatDate(lastUpdateTime) + ' (UTC' + timezone + ')';
+            }
+            if (currentTimeDisplay) {
+                currentTimeDisplay.textContent = formatDate(now) + ' (UTC' + timezone + ')';
+            }
 
+            // 检查是否超过关机时间
             if (diffSeconds > 600) {
-                shutdownOverlay.classList.add('show');
-                shutdownTime.textContent = '最后更新：' + formatDate(lastUpdateTime) + '（已过去 ' + formatDuration(diffSeconds) + '）';
+                if (shutdownOverlay) shutdownOverlay.classList.add('show');
+                if (shutdownTime) shutdownTime.textContent = '最后更新：' + formatDate(lastUpdateTime) + '（已过去 ' + formatDuration(diffSeconds) + '）';
                 return;
             } else {
-                shutdownOverlay.classList.remove('show');
+                if (shutdownOverlay) shutdownOverlay.classList.remove('show');
             }
 
             let statusHTML = '';
-            let alertHTML = '';
 
-            if (diffSeconds > 180) {
-                statusLight.className = 'status-indicator status-warning';
+            if (diffSeconds > 300) {
+                if (statusLight) statusLight.className = 'status-indicator status-danger';
                 statusHTML = '<i class="bi bi-exclamation-circle"></i> Long Time No Update! (' + diffSeconds + ' sec)';
-                statusCard.style.borderLeft = '4px solid #dc3545';
-
-                alertHTML = '<div class="alert-danger-custom">' +
-                    '<h6><i class="bi bi-exclamation-triangle"></i> Possible Issues:</h6>' +
-                    '<ul class="mb-0 mt-2">' +
-                    '<li>Computer has been turned off or is in sleep mode</li>' +
-                    '<li>Monitor program has been stopped</li>' +
-                    '<li>Long-term network connection issues</li>' +
-                    '</ul>' +
-                    '</div>';
+                if (statusCard) statusCard.style.borderLeft = '4px solid #dc3545';
 
             } else if (diffSeconds > 120) {
-                statusLight.className = 'status-indicator status-warning';
+                if (statusLight) statusLight.className = 'status-indicator status-warning';
                 statusHTML = '<i class="bi bi-exclamation-triangle"></i> Over 2 minutes without update! (' + diffSeconds + ' sec)';
-                statusCard.style.borderLeft = '4px solid #ffc107';
-
-                alertHTML = '<div class="alert-warning-custom">' +
-                    '<h6><i class="bi bi-exclamation-triangle"></i> Possible Issues:</h6>' +
-                    '<ul class="mb-0 mt-2">' +
-                    '<li>Monitor program may have stopped</li>' +
-                    '<li>Network connection issues</li>' +
-                    '<li>Permission problems with Python script</li>' +
-                    '</ul>' +
-                    '</div>';
+                if (statusCard) statusCard.style.borderLeft = '4px solid #ffc107';
 
             } else {
-                statusLight.className = 'status-indicator status-normal';
+                if (statusLight) statusLight.className = 'status-indicator status-normal';
                 statusHTML = '<i class="bi bi-check-circle"></i> Normal - Updating';
-                statusCard.style.borderLeft = '4px solid #28a745';
-                alertHTML = '';
+                if (statusCard) statusCard.style.borderLeft = '4px solid #28a745';
             }
 
-            statusText.innerHTML = statusHTML;
-            alertContainer.innerHTML = alertHTML;
+            if (statusText) statusText.innerHTML = statusHTML;
+            if (alertContainer) alertContainer.innerHTML = '';
+        }
+
+        // 歌词更新逻辑
+        const parsedLyrics = {{ current_music.parsed_lyrics|tojson if current_music.parsed_lyrics else '[]' }};
+        const totalDuration = {{ current_music.total_duration|tojson if current_music.total_duration else 'null' }};
+        const songEnded = {{ 'true' if current_music.song_ended else 'false' }};
+        const initialCurrentTime = '{{ current_music.current_time_str if current_music.current_time_str else '00:00' }}';
+        
+        function timeToSeconds(timeStr) {
+            const parts = timeStr.split(':');
+            if (parts.length === 2) {
+                return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            }
+            return 0;
+        }
+        
+        function updateLyrics() {
+            const lyricText = document.getElementById('lyric-text');
+            const lyricTranslation = document.getElementById('lyric-translation');
+            const musicProgress = document.getElementById('music-progress');
+            
+            if (!lyricText) return;
+            
+            // 检查歌曲是否结束
+            if (songEnded || (totalDuration && timeToSeconds(initialCurrentTime) >= totalDuration - 2)) {
+                lyricText.textContent = '歌曲已播放完';
+                lyricText.style.opacity = '0.6';
+                if (lyricTranslation) lyricTranslation.textContent = '';
+                return;
+            }
+            
+            // 如果没有歌词数据，显示当前歌词
+            if (!parsedLyrics || parsedLyrics.length === 0) {
+                const currentLyric = '{{ current_music.lyrics if current_music.lyrics else "" }}';
+                if (currentLyric && currentLyric !== '桌面歌词') {
+                    lyricText.textContent = currentLyric;
+                } else {
+                    lyricText.textContent = '暂无歌词';
+                }
+                return;
+            }
+            
+            // 根据当前时间查找对应的歌词
+            const currentTime = timeToSeconds(initialCurrentTime);
+            let currentLyricLine = null;
+            
+            for (let i = 0; i < parsedLyrics.length; i++) {
+                if (parsedLyrics[i].time <= currentTime) {
+                    currentLyricLine = parsedLyrics[i];
+                } else {
+                    break;
+                }
+            }
+            
+            if (currentLyricLine) {
+                lyricText.textContent = currentLyricLine.text;
+                lyricText.style.opacity = '0.9';
+                if (lyricTranslation && currentLyricLine.translation) {
+                    lyricTranslation.textContent = currentLyricLine.translation;
+                } else if (lyricTranslation) {
+                    lyricTranslation.textContent = '';
+                }
+            } else {
+                lyricText.textContent = '♪';
+                if (lyricTranslation) lyricTranslation.textContent = '';
+            }
+        }
+        
+        // 初始化歌词
+        if (document.getElementById('lyrics-container')) {
+            updateLyrics();
         }
 
         setTimeout(function() {
             location.reload();
         }, 90000);
 
-        setInterval(updateStatus, 1000);
+        // 确保DOM完全加载后再执行updateStatus
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            setInterval(updateStatus, 1000);
+        });
 
         const metricsCtx = document.getElementById('metricsChart');
         if (metricsCtx) {
@@ -1299,7 +1420,8 @@ class HTMLGenerator:
             'max_history': data.get('max_history', 10),
             'max_metrics_history': data.get('max_metrics_history', 5),
             'max_usage': max_usage,
-            'avatar': avatar_path
+            'avatar': avatar_path,
+            'timestamp': data.get('timestamp', datetime.now().isoformat())
         }
 
         return self.template.render(context)

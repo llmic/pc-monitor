@@ -39,12 +39,14 @@ from generator import HTMLGenerator
 from metrics import MetricsHistory
 
 # Configuration
-COLLECTION_INTERVAL = 300          # Update interval in seconds
+COLLECTION_INTERVAL = 200          # Update interval in seconds
 OUTPUT_FILE = 'index.html'         # Output HTML file name
 GIT_PUSH_ENABLED = True            # Enable/disable auto Git push
 GIT_COMMIT_MESSAGE = "Auto update: {timestamp}"  # Git commit message template
 DATA_DIR = 'data'                  # Directory for data files
 SCREENSHOT_DIR = 'screenshots'     # Directory for screenshot files
+SCREENSHOT_CDN_URL = "https://raw.githubusercontent.com/seesee-land/seesee-land.github.io/main/screenshots/"  # Screenshot CDN/accelerate URL
+#https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260519_151511.png?raw=true
 
 # History Settings
 HISTORY_FILE = 'data/history_windows.json'  # History data file
@@ -221,6 +223,12 @@ def run_monitor_cycle(collector, history_manager, generator, metrics_history):
         data['max_history'] = MAX_HISTORY
         data['max_metrics_history'] = MAX_METRICS_HISTORY
         data['browser_tabs'] = data.get('browser_tabs', [])
+        data['timestamp'] = datetime.now().isoformat()
+        
+        # Generate screenshot CDN URL
+        if data.get('screenshot'):
+            screenshot_name = os.path.basename(data['screenshot'])
+            data['screenshot_url'] = SCREENSHOT_CDN_URL + screenshot_name
         
         # Generate and save HTML
         html = generator.generate(data)

@@ -18,6 +18,9 @@ def save_bv_cache(cache):
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
 def extract_bv_info(title):
+    """Extract BV ID from title or URL, handling ? and other parameters."""
+    # Pattern to match BV followed by exactly 10 characters (letters and digits)
+    # Match BV followed by 10 chars, optionally followed by ? or other chars
     bv_pattern = r'BV([0-9A-Za-z]{10})'
     match = re.search(bv_pattern, title)
     if match:
@@ -64,19 +67,54 @@ def search_bilibili_video(keyword):
                                 # Convert duration to MM:SS format
                                 duration = format_duration(duration)
                                 
+                                # Get author information
+                                author = video.get('author', '')
+                                
+                                # Get view count, danmaku count, and publish date
+                                view_count = video.get('play', 0)
+                                danmaku_count = video.get('video_review', 0)
+                                pubdate = video.get('pubdate', 0)
+                                
                                 return {
                                     'bv_id': bv_id,
                                     'url': f'https://www.bilibili.com/video/{bv_id}/',
                                     'title': clean_html_tags(video.get('title', '')),
                                     'cover': cover,
-                                    'duration': duration
+                                    'duration': duration,
+                                    'author': author,
+                                    'view_count': view_count,
+                                    'view_count_formatted': format_number(view_count),
+                                    'danmaku_count': danmaku_count,
+                                    'danmaku_count_formatted': format_number(danmaku_count),
+                                    'pubdate': format_date(pubdate),
+                                    'like_count': video.get('like', 0),
+                                    'like_count_formatted': format_number(video.get('like', 0))
                                 }
     except Exception:
         pass
     return None
 
+def format_number(num):
+    """Format numbers to readable format (e.g., 123456 -> 12.3万)."""
+    if num >= 100000000:
+        return f"{num / 100000000:.2f}亿"
+    elif num >= 10000:
+        return f"{num / 10000:.1f}万"
+    else:
+        return str(num)
+
+def format_date(timestamp):
+    """Convert Unix timestamp to readable date format."""
+    try:
+        from datetime import datetime
+        if isinstance(timestamp, int):
+            return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
+    except Exception:
+        pass
+    return ''
+
 def fetch_bilibili_video_detail(bv_id):
-    """Fetch detailed video information including duration."""
+    """Fetch detailed video information including duration, author, view count, danmaku, and publish date."""
     try:
         url = f'https://api.bilibili.com/x/web-interface/view?bvid={bv_id}'
         headers = {
@@ -98,14 +136,28 @@ def fetch_bilibili_video_detail(bv_id):
                 if isinstance(duration, int):
                     duration = format_duration(duration)
                 
+                # Get author information
+                author = video.get('owner', {}).get('name', '')
+                
+                # Get view count, danmaku count, and publish date
+                view_count = video.get('view', 0)
+                danmaku_count = video.get('danmaku', 0)
+                pubdate = video.get('pubdate', 0)
+                
                 return {
                     'bv_id': bv_id,
                     'url': f'https://www.bilibili.com/video/{bv_id}/',
                     'title': video.get('title', ''),
                     'cover': cover,
                     'duration': duration,
-                    'view_count': video.get('view', 0),
-                    'like_count': video.get('like', 0)
+                    'author': author,
+                    'view_count': view_count,
+                    'view_count_formatted': format_number(view_count),
+                    'danmaku_count': danmaku_count,
+                    'danmaku_count_formatted': format_number(danmaku_count),
+                    'pubdate': format_date(pubdate),
+                    'like_count': video.get('like', 0),
+                    'like_count_formatted': format_number(video.get('like', 0))
                 }
     except Exception:
         pass

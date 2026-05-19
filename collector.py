@@ -286,12 +286,18 @@ def get_browser_tabs_via_cdp():
 PRIVACY_PROCESSES = {
     'qq.exe',
     'wechat.exe',
+    'weixin.exe',        # 微信实际进程名
     'wxwork.exe',
     'wemeetapp.exe',
+    'wemeet.exe',
     'tencentmeeting.exe',
+    'meeting.exe',
     'teams.exe',
     'zoom.exe',
-    'skype.exe'
+    'skype.exe',
+    'dingtalk.exe',
+    'feishu.exe',
+    'lark.exe'
 }
 
 # VPN processes - windows that should not be uploaded to GitHub
@@ -348,6 +354,32 @@ VPN_PROCESSES = {
 
 SCREENSHOT_DIR = 'screenshots'
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
+
+MAX_SCREENSHOTS = 10  # 最多保留10张截图
+KEEP_SCREENSHOTS = 2  # 保留最新的2张
+
+def cleanup_old_screenshots():
+    """清理旧截图，保留最新的KEEP_SCREENSHOTS张"""
+    try:
+        screenshots = []
+        for f in os.listdir(SCREENSHOT_DIR):
+            if f.startswith('screenshot_') and f.endswith('.png'):
+                full_path = os.path.join(SCREENSHOT_DIR, f)
+                if os.path.isfile(full_path):
+                    screenshots.append((full_path, os.path.getmtime(full_path)))
+        
+        # 按修改时间排序（最新的在后面）
+        screenshots.sort(key=lambda x: x[1])
+        
+        # 如果超过MAX_SCREENSHOTS张，删除旧的（保留最新的KEEP_SCREENSHOTS张）
+        if len(screenshots) > MAX_SCREENSHOTS:
+            to_delete = screenshots[:-KEEP_SCREENSHOTS]
+            print(f"Cleaning up {len(to_delete)} old screenshots...")
+            for path, _ in to_delete:
+                os.remove(path)
+                print(f"Deleted: {path}")
+    except Exception as e:
+        print(f"Cleanup error: {e}")
 
 def get_browser_url_from_title(title, proc_name):
     proc_lower = proc_name.lower()
@@ -517,11 +549,14 @@ def bring_window_to_front(hwnd):
     except Exception:
         pass
 
-def capture_active_window():
-    """捕获活动窗口的完整截图，仅保存至screenshots文件夹"""
+def capture_active_window(target_hwnd=None):
+    """
+    捕获活动窗口的完整截图，仅保存至screenshots文件夹
+    :param target_hwnd: 可选参数，指定要截图的窗口句柄。如果为None，则获取前台窗口
+    """
     try:
-        # 改用原生win32API获取前台窗口，比pygetwindow更稳定
-        hwnd = win32gui.GetForegroundWindow()
+        # 如果指定了目标窗口句柄，使用它；否则获取前台窗口
+        hwnd = target_hwnd if target_hwnd else win32gui.GetForegroundWindow()
         if not hwnd:
             print("No active window found")
             return {'path': None, 'reason': 'no_window', 'message': '未找到活动窗口'}
@@ -540,6 +575,9 @@ def capture_active_window():
                 print(f"[WARNING] 检测到隐私保护窗口 ({proc_name})，跳过截图")
                 return {'path': None, 'reason': 'privacy_protection', 'message': f'{proc_name} 窗口已设置隐私保护，跳过截图'}
             
+        # 获取窗口标题用于日志
+        window_title = win32gui.GetWindowText(hwnd)
+        
         # 前置并恢复窗口
         bring_window_to_front(hwnd)
         
@@ -557,6 +595,8 @@ def capture_active_window():
             return {'path': None, 'reason': 'too_small', 'message': '窗口太小，跳过截图'}
         
         print(f"Capturing full window (with shadow/border): {left},{top} - {right},{bottom}")
+        print(f"Window title: {window_title}")
+        print(f"Process name: {proc_name}")
         
         # 捕获完整窗口截图
         screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
@@ -566,6 +606,9 @@ def capture_active_window():
         screenshot_path = os.path.join(SCREENSHOT_DIR, f'screenshot_{timestamp}.png')
         screenshot.save(screenshot_path, 'PNG', optimize=True)
         print(f"Saved full screenshot to: {screenshot_path}")
+        
+        # 清理旧截图
+        cleanup_old_screenshots()
         
         return {'path': screenshot_path, 'reason': None, 'message': None}
         
@@ -595,17 +638,28 @@ class DataCollector:
         return self.browser_tabs
 
     def get_active_window(self):
+        """获取活动窗口信息，使用win32gui API保持与截图函数一致"""
         try:
-            window = gw.getActiveWindow()
-            if window:
-                return {
-                    'title': window.title,
-                    'left': window.left,
-                    'top': window.top,
-                    'width': window.width,
-                    'height': window.height,
-                    'is_active': True
-                }
+            hwnd = win32gui.GetForegroundWindow()
+            if not hwnd:
+                return None
+            
+            title = win32gui.GetWindowText(hwnd)
+            if not title or title.strip() == '':
+                return None
+            
+            rect = win32gui.GetWindowRect(hwnd)
+            left, top, right, bottom = rect
+            
+            return {
+                'title': title,
+                'left': left,
+                'top': top,
+                'width': right - left,
+                'height': bottom - top,
+                'is_active': True,
+                'hwnd': hwnd
+            }
         except Exception:
             pass
         return None
@@ -734,7 +788,18 @@ class DataCollector:
     def collect_all(self):
         self.collect_windows()
         self.collect_browser_tabs()
-        screenshot_result = capture_active_window()
+        
+        # 获取活动窗口信息（使用统一的win32gui API）
+        active_window = self.get_active_window()
+        if active_window:
+            self.active_window_title = active_window['title']
+            active_hwnd = active_window.get('hwnd')
+        else:
+            self.active_window_title = None
+            active_hwnd = None
+        
+        # 使用活动窗口句柄进行截图，确保截图和活动窗口检测一致
+        screenshot_result = capture_active_window(target_hwnd=active_hwnd)
 
         return {
             'windows': self.windows_data,
