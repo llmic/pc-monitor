@@ -357,3 +357,26 @@ body {
     padding: 10px 14px;
     margin: 0;
 }
+        /* 超时遮罩层按钮样式 */
+        .shutdown-overlay .btn {
+            min-width: 150px;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .shutdown-overlay .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .shutdown-overlay .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        .shutdown-overlay .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #333;
+        }
+        .shutdown-overlay .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        }

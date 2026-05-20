@@ -366,6 +366,29 @@
     padding: 10px 14px;
     margin: 0;
 }
+        /* 超时遮罩层按钮样式 */
+        .shutdown-overlay .btn {
+            min-width: 150px;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .shutdown-overlay .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .shutdown-overlay .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        .shutdown-overlay .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #333;
+        }
+        .shutdown-overlay .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        }
     </style>
 </head>
 <body>
@@ -376,6 +399,26 @@
         <div class="shutdown-title">Liuli 的电脑 已关机</div>
         <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
         <div class="shutdown-time" id="shutdownTime"></div>
+    </div>
+    <!-- Running Time 超时遮罩 -->
+    <div class="shutdown-overlay" id="timeoutOverlay">
+        <div class="shutdown-icon">
+            <i class="bi bi-clock-history"></i>
+        </div>
+        <div class="shutdown-title">运行时间已超时</div>
+        <div class="shutdown-subtitle">已运行 <span id="timeoutRunningTime">00:00</span>（超过10分钟）</div>
+        <div class="shutdown-time">请选择操作</div>
+        <div class="mt-4 d-flex gap-3">
+            <button class="btn btn-danger btn-lg" id="shutdownBtn">
+                <i class="bi bi-power me-2"></i>关机
+            </button>
+            <button class="btn btn-warning btn-lg" id="restartBtn">
+                <i class="bi bi-arrow-repeat me-2"></i>重启
+            </button>
+            <button class="btn btn-success btn-lg" id="cancelBtn">
+                <i class="bi bi-x-circle me-2"></i>取消
+            </button>
+        </div>
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -396,7 +439,7 @@
                             <span id="statusText" class="fs-5 status-text"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 16:59:48</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 19:25:28</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay" class="current-time-display"></span>
@@ -420,29 +463,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">15%</div>
+                                    <div class="stats-number">12%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" data-width="15%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="12%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">55%</div>
+                                    <div class="stats-number">52%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" data-width="55%"></div>
+                                        <div class="progress-fill progress-memory" data-width="52%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">17.56 / 31.47 GB</div>
+                                    <div class="stats-number">16.63 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 74.41 B<br>
-                                        Received: 346.81 B
+                                        Sent: 57.46 B<br>
+                                        Received: 290.71 B
                                     </div>
                                 </div>
                             </div>
@@ -467,7 +510,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details (8 cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (6 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -475,46 +518,6 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">34.4%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="34.4%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">18.8%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="18.8%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">9.4%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="9.4%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 6</div>
-                                    <div class="text-primary font-size-lg">68.8%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="68.8%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 7</div>
                                     <div class="text-primary font-size-lg">46.9%</div>
                                     <div class="progress-bar-custom mt-1">
                                         <div class="progress-fill progress-cpu" data-width="46.9%"></div>
@@ -524,7 +527,27 @@
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 8</div>
+                                    <div class="font-weight-bold">Core 2</div>
+                                    <div class="text-primary font-size-lg">65.5%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="65.5%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 6</div>
+                                    <div class="text-primary font-size-lg">3.3%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="3.3%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 10</div>
                                     <div class="text-primary font-size-lg">40.6%</div>
                                     <div class="progress-bar-custom mt-1">
                                         <div class="progress-fill progress-cpu" data-width="40.6%"></div>
@@ -534,10 +557,10 @@
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 9</div>
-                                    <div class="text-primary font-size-lg">6.2%</div>
+                                    <div class="font-weight-bold">Core 12</div>
+                                    <div class="text-primary font-size-lg">30.3%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="6.2%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="30.3%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -545,9 +568,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 14</div>
-                                    <div class="text-primary font-size-lg">46.9%</div>
+                                    <div class="text-primary font-size-lg">40.6%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="46.9%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="40.6%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -563,79 +586,6 @@
         
         
         
-        
-        <div class="row mb-6">
-            <div class="d-flex gap-4" style="width: 100%;">
-                
-                <div style="flex: 1; min-width: 300px;">
-                    <a href="https://music.163.com/#/song?id=150422" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                        <div class="card music-card" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 71, 87, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 71, 87, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 71, 87, 0.15)';">
-                            <!-- 头部 -->
-                            <div class="card-header music-card-header" data-bg-color="#ffffff">
-                                <div class="d-flex align-items-center justify-between">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div style="width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                            <i class="bi bi-music-note" style="font-size: 14px;"></i>
-                                        </div>
-                                        <span style="font-weight: 600; font-size: 0.85rem;">Now Playing</span>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <!-- 主体 -->
-                            <div class="card-body p-4" style="background: #ffffff; color: #1f2937; margin: 0;">
-                                <div class="row align-items-center">
-                                    <!-- 封面 -->
-                                    <div class="col-auto">
-                                        
-                                        <div id="music-cover-1" class="music-cover music-spin" style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                                            <img src="https://p2.music.126.net/Fq9QNt2SYKvPEL3ipfVc9g==/109951166916020363.jpg" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
-                                        </div>
-                                        
-                                    </div>
-                                    <!-- 信息 -->
-                                    <div class="col" style="padding-left: 12px;">
-                                        <h5 class="font-weight-bold mb-1" style="line-height: 1.3; font-size: 0.9rem;">
-                                            今天你要嫁给我
-                                        </h5>
-                                        <p class="text-muted mb-0" style="font-size: 0.75rem;">
-                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> 蔡依林, 陶喆
-                                        </p>
-                                        
-                                        <div id="music-playback-time-container-1" class="music-playback-time-container" style="margin-top: 4px;">
-                                            <span id="music-playback-time-1" class="music-playback-time" style="font-size: 0.7rem; opacity: 0.6;">
-                                                00:00 / 04:32
-                                            </span>
-                                            <!-- 新增进度条（数学计算进度） -->
-                                            <div class="progress-bar-custom mt-1" style="height: 4px;">
-                                                <div id="music-progress-bar-1" class="progress-fill"
-                                                     data-width="0%"
-                                                     data-color="#ffffff">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                <!-- 歌词显示 -->
-                                <div class="mt-3 pt-3 border-top" style="border-color: rgba(0,0,0,0.1);">
-                                    <div id="lyrics-container">
-                                        <div id="lyrics-display" class="lyrics-display">
-                                            <p id="current-lyric-line" style="font-size: 0.85rem; text-align: center; font-weight: 500; opacity: 0.9; margin-bottom: 4px;">
-                                                <i class="bi bi-music"></i> <span>加载歌词中...</span>
-                                            </p>
-                                            <p id="current-lyric-translation" style="font-size: 0.75rem; text-align: center; opacity: 0.6; margin: 0; display: none;"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                
-                
-            </div>
-        </div>
         
 
         
@@ -644,11 +594,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260520_165948.png</span>
+                        <span class="badge bg-primary float-end">screenshot_20260520_192527.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_165948.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_165948.png?raw=true">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_192527.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_192527.png?raw=true">
                         </div>
                     </div>
                 </div>
@@ -669,10 +619,10 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>桌面歌词</strong>
+                                    <strong>Stata/MP 18.0 - D:\Desktop\计量经济学课件\lin_1992.dta</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> cloudmusic.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 971x252
+                                        <i class="bi bi-app"></i> StataMP-64.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1876x1300
                                     </div>
                                     
                                 </div>
@@ -683,7 +633,21 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>Do-file Editor - paneldata.do</strong>
+                                    <strong>豆包</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Doubao.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1553x1196
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Do-file Editor - Untitled*</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> StataMP-64.exe |
                                         <i class="bi bi-aspect-ratio"></i> 1200x1266
@@ -697,10 +661,10 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>面板数据分析_3.pdf - WPS Office</strong>
+                                    <strong>Graph - Graph</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> wps.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1703x1275
+                                        <i class="bi bi-app"></i> StataMP-64.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1295x944
                                     </div>
                                     
                                 </div>
@@ -767,44 +731,9 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>今天你要嫁给我 - 蔡依林/陶喆</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> cloudmusic.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
-                                    </div>
-                                    
-                                    <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
-                                        <div class="text-white font-bold">
-                                            <i class="bi bi-music-note"></i> 今天你要嫁给我
-                                        </div>
-                                        <div class="text-white-80 text-sm">蔡依林, 陶喆</div>
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
                                     <strong>main.py - pc-monitor - Visual Studio Code</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> Code.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>豆包</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Doubao.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
                                     </div>
                                     
@@ -838,44 +767,26 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser (2)
-                        
-                        <span class="badge bg-danger float-end">Active: 视奸 Liuli 的电脑 and 1 more page - Personal ...</span>
+                        <i class="bi bi-globe"></i> Currently Open Browser (1)
                         
                     </div>
                     <div class="card-body scroll-container">
                         
-                        <div class="window-item window-active browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1772x1139
-                                    </div>
-                                    
-                                    <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain=llmic.github.io&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="https://llmic.github.io/pc-monitor/" target="_blank" rel="noopener noreferrer"
-                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> llmic.github.io
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                                
-                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
-                                
-                            </div>
-                        </div>
-                        
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>kaosh.pdf and 1 more page - Personal - Microsoft​ Edge</strong>
+                                    <strong>蜚蠊_百度百科 and 2 more pages - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1770x1136
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain=baike.baidu.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://baike.baidu.com/item/蜚蠊/4062816?fromtitle=甴曱&fromid=399598" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> baike.baidu.com
+                                        </a>
                                     </div>
                                     
                                 </div>
@@ -905,6 +816,51 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Program Manager</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>蜚蠊_百度百科 and 2 more pages - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Graph - Graph</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">StataMP-64.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Do-file Editor - Untitled*</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">StataMP-64.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Stata/MP 18.0 - D:\Desktop\计量经济学课件\lin_1992.dta</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">StataMP-64.exe</span>
+                                        </td>
+                                    </tr>
                                     
                                     <tr>
                                         <td>
@@ -951,51 +907,6 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>Sticky Notes</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Do-file Editor - paneldata.do</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">StataMP-64.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>桌面歌词</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">explorer.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -1005,7 +916,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T16:59:48.877272</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T19:25:28.480111</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -1015,21 +926,21 @@
     <script>
         // 全局数据变量（由后端生成）
         window.PCMONITOR_DATA = {
-            timestamp: '2026-05-20T16:59:48.877272',
-            startTime: '2026-05-20T16:59:22.100165',
+            timestamp: '2026-05-20T19:25:28.480111',
+            startTime: '2026-05-20T19:25:15.926745',
             bilibiliCoverCache: {},
-            hasMusic: true,
-            metricsHistory: [{"cpu": 19.216666666666665, "memory": 56.2}, {"cpu": 16.294444444444444, "memory": 60.6}, {"cpu": 12.5, "memory": 59.6}, {"cpu": 18.405555555555555, "memory": 61.1}, {"cpu": 15.11111111111111, "memory": 55.8}],
-            cpuPercent: 15,
-            memoryPercent: 55,
+            hasMusic: false,
+            metricsHistory: [{"cpu": 16.294444444444444, "memory": 60.6}, {"cpu": 12.5, "memory": 59.6}, {"cpu": 18.405555555555555, "memory": 61.1}, {"cpu": 15.11111111111111, "memory": 55.8}, {"cpu": 12.622222222222224, "memory": 52.9}],
+            cpuPercent: 12,
+            memoryPercent: 52,
             musicData: {
                 currentSeconds: 0,
-                totalSeconds: 272.066,
+                totalSeconds: 0,
                 songEnded: false,
-                parsedLyrics: [{"text": "\u4f5c\u8bcd : \u9676\u5586/\u5a03\u5a03", "time": 0.0, "translation": null}, {"text": "\u4f5c\u66f2 : \u9676\u5586", "time": 1.0, "translation": null}, {"text": "\u7f16\u66f2 : \u9676\u5586", "time": 2.0, "translation": null}, {"text": "\u5236\u4f5c\u4eba : \u9676\u5586", "time": 3.0, "translation": null}, {"text": "\u7537 :", "time": 21.08, "translation": null}, {"text": "\u6625\u6696\u7684\u82b1\u5f00", "time": 22.092, "translation": null}, {"text": "\u5e26\u8d70\u51ac\u5929\u7684\u611f\u4f24", "time": 24.093, "translation": null}, {"text": "\u5fae\u98ce\u5439\u6765\u6d6a\u6f2b\u7684\u6c14\u606f", "time": 28.03, "translation": null}, {"text": "\u6bcf\u4e00\u9996\u60c5\u6b4c\u5ffd\u7136", "time": 33.072, "translation": null}, {"text": "\u5145\u6ee1\u610f\u4e49", "time": 35.094, "translation": null}, {"text": "\u6211\u5c31\u5728\u6b64\u523b\u7a81\u7136\u89c1\u5230\u4f60", "time": 38.05, "translation": null}, {"text": "Take it way", "time": 43.017, "translation": null}, {"text": "\u5973 :", "time": 43.082, "translation": null}, {"text": "\u6625\u6696\u7684\u82b1\u9999", "time": 44.029, "translation": null}, {"text": "\u5e26\u8d70\u51ac\u5929\u7684\u51c4\u5bd2", "time": 46.015, "translation": null}, {"text": "\u5fae\u98ce\u5439\u6765\u610f\u5916\u7684\u7231\u60c5", "time": 49.045, "translation": null}, {"text": "\u7537 :", "time": 52.032, "translation": null}, {"text": "It\u0027s love", "time": 52.087, "translation": null}, {"text": "\u5973 :", "time": 54.01, "translation": null}, {"text": "\u9e1f\u513f\u7684\u9ad8\u6b4c\u62c9\u8fd1", "time": 54.068, "translation": null}, {"text": "\u6211\u4eec\u8ddd\u79bb", "time": 56.09, "translation": null}, {"text": "\u6211\u5c31\u5728\u6b64\u523b\u7a81\u7136\u7231\u4e0a\u4f60", "time": 59.056, "translation": null}, {"text": "\u5408 :", "time": 63.022, "translation": null}, {"text": "\u542c\u6211\u8bf4", "time": 63.077, "translation": null}, {"text": "\u624b\u7275\u624b \u8ddf\u6211\u4e00\u8d77\u8d70", "time": 65.015, "translation": null}, {"text": "\u521b\u9020\u5e78\u798f\u7684\u751f\u6d3b", "time": 69.085, "translation": null}, {"text": "\u6628\u5929\u5df2\u6765\u4e0d\u53ca", "time": 75.081, "translation": null}, {"text": "\u660e\u5929\u5c31\u4f1a\u53ef\u60dc", "time": 78.043, "translation": null}, {"text": "\u4eca\u5929\u5ac1\u7ed9\u6211\u597d\u5417", "time": 81.008, "translation": null}, {"text": "\u7537 :", "time": 83.072, "translation": null}, {"text": "Here we go", "time": 84.014, "translation": null}, {"text": "Jolin in the house", "time": 86.08, "translation": null}, {"text": "\u5973 :", "time": 88.005, "translation": null}, {"text": "Dt in the house", "time": 89.031, "translation": null}, {"text": "\u7537 :", "time": 90.072, "translation": null}, {"text": "Jolin in the house", "time": 91.099, "translation": null}, {"text": "\u5973 :", "time": 93.037, "translation": null}, {"text": "Dt in the house", "time": 94.077, "translation": null}, {"text": "\u7537 :", "time": 95.084, "translation": null}, {"text": "Come on jolin in the house", "time": 96.026, "translation": null}, {"text": "\u5973 :", "time": 98.069, "translation": null}, {"text": "Dt in the house", "time": 99.097, "translation": null}, {"text": "\u5408 :", "time": 101.001, "translation": null}, {"text": "Our love in the house", "time": 102.045, "translation": null}, {"text": "\u7537 :", "time": 103.084, "translation": null}, {"text": "Sweet sweet love", "time": 104.062, "translation": null}, {"text": "\u590f\u65e5\u7684\u70ed\u60c5", "time": 107.054, "translation": null}, {"text": "\u6253\u52a8\u6625\u5929\u7684\u61d2\u6563", "time": 109.037, "translation": null}, {"text": "\u9633\u5149\u7167\u8000\u7f8e\u6ee1\u7684\u5bb6\u5ead", "time": 112.074, "translation": null}, {"text": "\u6bcf\u4e00\u9996\u60c5\u6b4c\u90fd\u4f1a\u52fe\u8d77\u56de\u5fc6", "time": 117.097, "translation": null}, {"text": "\u60f3\u5f53\u5e74\u6211\u662f\u600e\u4e48\u8ba4\u8bc6\u4f60", "time": 122.093, "translation": null}, {"text": "Back to you now", "time": 127.048, "translation": null}, {"text": "\u5973 :", "time": 128.016, "translation": null}, {"text": "\u51ac\u5929\u7684\u5fe7\u4f24", "time": 128.058, "translation": null}, {"text": "\u7ed3\u675f\u79cb\u5929\u7684\u5b64\u5355", "time": 130.049, "translation": null}, {"text": "\u5fae\u98ce\u5439\u6765\u82e6\u4e50\u7684\u601d\u5ff5", "time": 133.087, "translation": null}, {"text": "\u7537 :", "time": 136.079, "translation": null}, {"text": "I\u0027m missing you", "time": 137.029, "translation": null}, {"text": "\u5973 :", "time": 138.044, "translation": null}, {"text": "\u9e1f\u513f\u7684\u9ad8\u6b4c\u5531\u7740\u4e0d\u8981\u522b\u79bb", "time": 139.009, "translation": null}, {"text": "\u5408 :", "time": 143.043, "translation": null}, {"text": "\u6b64\u523b\u6211\u591a\u4e48\u60f3\u8981\u62e5\u62b1\u4f60", "time": 144.011, "translation": null}, {"text": "\u542c\u6211\u8bf4", "time": 148.005, "translation": null}, {"text": "\u624b\u7275\u624b \u8ddf\u6211\u4e00\u8d77\u8d70", "time": 149.077, "translation": null}, {"text": "\u8fc7\u7740\u5b89\u5b9a\u7684\u751f\u6d3b", "time": 154.037, "translation": null}, {"text": "\u6628\u5929\u5df2\u6765\u4e0d\u53ca", "time": 160.022, "translation": null}, {"text": "\u660e\u5929\u5c31\u4f1a\u53ef\u60dc", "time": 162.086, "translation": null}, {"text": "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211", "time": 165.05, "translation": null}, {"text": "\u542c\u6211\u8bf4", "time": 168.097, "translation": null}, {"text": "\u624b\u7275\u624b \u6211\u4eec\u4e00\u8d77\u8d70", "time": 170.072, "translation": null}, {"text": "\u628a\u4f60\u4e00\u751f\u4ea4\u7ed9\u6211", "time": 175.04, "translation": null}, {"text": "\u6628\u5929\u4e0d\u8981\u56de\u5934", "time": 181.03, "translation": null}, {"text": "\u660e\u5929\u8981\u5230\u767d\u9996", "time": 183.089, "translation": null}, {"text": "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211", "time": 186.048, "translation": null}, {"text": "\u7537 :", "time": 189.046, "translation": null}, {"text": "Hey hey uh uh", "time": 189.064, "translation": null}, {"text": "\u53ee\u5f53\u542c\u7740\u793c\u5802\u7684\u949f\u58f0", "time": 192.015, "translation": null}, {"text": "\u6211\u4eec\u5728\u4e0a\u5e1d", "time": 194.077, "translation": null}, {"text": "\u548c\u4eb2\u53cb\u9762\u524d\u89c1\u8bc1", "time": 195.066, "translation": null}, {"text": "\u8fd9\u5bf9\u7537\u5973", "time": 197.035, "translation": null}, {"text": "\u73b0\u5728\u5c31\u8981\u7ed3\u4e3a\u592b\u59bb", "time": 198.016, "translation": null}, {"text": "\u4e0d\u8981\u5fd8\u4e86\u8fd9\u4e00\u5207", "time": 199.089, "translation": null}, {"text": "\u662f\u591a\u4e48\u7684\u795e\u5723", "time": 201.022, "translation": null}, {"text": "\u4f60\u613f\u610f\u751f\u6b7b\u82e6\u4e50", "time": 202.054, "translation": null}, {"text": "\u6c38\u8fdc\u548c\u5979\u5728\u4e00\u8d77", "time": 203.071, "translation": null}, {"text": "\u7231\u60dc\u5979\u5c0a\u91cd\u5979", "time": 204.094, "translation": null}, {"text": "\u5b89\u6170\u5979\u4fdd\u62a4\u7740\u5979", "time": 206.03, "translation": null}, {"text": "\u4fe9\u4eba\u540c\u5fc3\u5efa\u7acb\u8d77", "time": 207.076, "translation": null}, {"text": "\u7f8e\u6ee1\u7684\u5bb6\u5ead", "time": 209.03, "translation": null}, {"text": "\u4f60\u613f\u610f\u8fd9\u6837\u505a\u5417", "time": 210.04, "translation": null}, {"text": "Yes I do", "time": 211.093, "translation": null}, {"text": "\u5408 :", "time": 212.095, "translation": null}, {"text": "\u542c\u6211\u8bf4", "time": 213.089, "translation": null}, {"text": "\u624b\u7275\u624b \u4e00\u8def\u5230\u5c3d\u5934", "time": 215.048, "translation": null}, {"text": "\u628a\u4f60\u4e00\u751f\u4ea4\u7ed9\u6211", "time": 220.016, "translation": null}, {"text": "\u6628\u5929\u5df2\u662f\u8fc7\u53bb", "time": 226.014, "translation": null}, {"text": "\u660e\u5929\u66f4\u591a\u56de\u5fc6", "time": 228.075, "translation": null}, {"text": "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211", "time": 231.043, "translation": null}, {"text": "\u7537 :", "time": 233.084, "translation": null}, {"text": "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211", "time": 234.025, "translation": null}, {"text": "\u5408 :", "time": 236.026, "translation": null}, {"text": "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211", "time": 236.068, "translation": null}, {"text": "\u7537 :", "time": 238.082, "translation": null}, {"text": "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211", "time": 239.032, "translation": null}, {"text": "\u5408 :", "time": 241.02, "translation": null}, {"text": "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211", "time": 241.08, "translation": null}, {"text": "\u7537 :", "time": 244.018, "translation": null}, {"text": "Oh", "time": 244.073, "translation": null}, {"text": "OP : New\u00a0Chinese\u00a0Songs\u00a0Publishing\u00a0Ltd.\u00a0(Warner/Chappell\u00a0Music/Hong\u00a0Kong\u00a0Limited)", "time": 267.006, "translation": null}, {"text": "\u548c\u58f0\u7f16\u5199 : \u9676\u5586", "time": 268.006, "translation": null}, {"text": "SP : Warner/Chappell\u00a0Music\u00a0Publishing\u00a0Agency\u00a0(Beijing)\u00a0Ltd.", "time": 269.006, "translation": null}, {"text": "\u548c\u58f0 : \u9676\u5586", "time": 270.006, "translation": null}],
-                rawLyrics: "[00:00.00] \u4f5c\u8bcd : \u9676\u5586/\u5a03\u5a03\n[00:01.00] \u4f5c\u66f2 : \u9676\u5586\n[00:02.00] \u7f16\u66f2 : \u9676\u5586\n[00:03.00] \u5236\u4f5c\u4eba : \u9676\u5586\n[00:21.80]\u7537 :\n[00:22.92]\u6625\u6696\u7684\u82b1\u5f00\n[00:24.93]\u5e26\u8d70\u51ac\u5929\u7684\u611f\u4f24\n[00:28.30]\u5fae\u98ce\u5439\u6765\u6d6a\u6f2b\u7684\u6c14\u606f\n[00:33.72]\u6bcf\u4e00\u9996\u60c5\u6b4c\u5ffd\u7136\n[00:35.94]\u5145\u6ee1\u610f\u4e49\n[00:38.50]\u6211\u5c31\u5728\u6b64\u523b\u7a81\u7136\u89c1\u5230\u4f60\n[00:43.17]Take it way\n[00:43.82]\u5973 :\n[00:44.29]\u6625\u6696\u7684\u82b1\u9999\n[00:46.15]\u5e26\u8d70\u51ac\u5929\u7684\u51c4\u5bd2\n[00:49.45]\u5fae\u98ce\u5439\u6765\u610f\u5916\u7684\u7231\u60c5\n[00:52.32]\u7537 :\n[00:52.87]It\u0027s love\n[00:54.10]\u5973 :\n[00:54.68]\u9e1f\u513f\u7684\u9ad8\u6b4c\u62c9\u8fd1\n[00:56.90]\u6211\u4eec\u8ddd\u79bb\n[00:59.56]\u6211\u5c31\u5728\u6b64\u523b\u7a81\u7136\u7231\u4e0a\u4f60\n[01:03.22]\u5408 :\n[01:03.77]\u542c\u6211\u8bf4\n[01:05.15]\u624b\u7275\u624b \u8ddf\u6211\u4e00\u8d77\u8d70\n[01:09.85]\u521b\u9020\u5e78\u798f\u7684\u751f\u6d3b\n[01:15.81]\u6628\u5929\u5df2\u6765\u4e0d\u53ca\n[01:18.43]\u660e\u5929\u5c31\u4f1a\u53ef\u60dc\n[01:21.08]\u4eca\u5929\u5ac1\u7ed9\u6211\u597d\u5417\n[01:23.72]\u7537 :\n[01:24.14]Here we go\n[01:26.80]Jolin in the house\n[01:28.05]\u5973 :\n[01:29.31]Dt in the house\n[01:30.72]\u7537 :\n[01:31.99]Jolin in the house\n[01:33.37]\u5973 :\n[01:34.77]Dt in the house\n[01:35.84]\u7537 :\n[01:36.26]Come on jolin in the house\n[01:38.69]\u5973 :\n[01:39.97]Dt in the house\n[01:41.01]\u5408 :\n[01:42.45]Our love in the house\n[01:43.84]\u7537 :\n[01:44.62]Sweet sweet love\n[01:47.54]\u590f\u65e5\u7684\u70ed\u60c5\n[01:49.37]\u6253\u52a8\u6625\u5929\u7684\u61d2\u6563\n[01:52.74]\u9633\u5149\u7167\u8000\u7f8e\u6ee1\u7684\u5bb6\u5ead\n[01:57.97]\u6bcf\u4e00\u9996\u60c5\u6b4c\u90fd\u4f1a\u52fe\u8d77\u56de\u5fc6\n[02:02.93]\u60f3\u5f53\u5e74\u6211\u662f\u600e\u4e48\u8ba4\u8bc6\u4f60\n[02:07.48]Back to you now\n[02:08.16]\u5973 :\n[02:08.58]\u51ac\u5929\u7684\u5fe7\u4f24\n[02:10.49]\u7ed3\u675f\u79cb\u5929\u7684\u5b64\u5355\n[02:13.87]\u5fae\u98ce\u5439\u6765\u82e6\u4e50\u7684\u601d\u5ff5\n[02:16.79]\u7537 :\n[02:17.29]I\u0027m missing you\n[02:18.44]\u5973 :\n[02:19.09]\u9e1f\u513f\u7684\u9ad8\u6b4c\u5531\u7740\u4e0d\u8981\u522b\u79bb\n[02:23.43]\u5408 :\n[02:24.11]\u6b64\u523b\u6211\u591a\u4e48\u60f3\u8981\u62e5\u62b1\u4f60\n[02:28.05]\u542c\u6211\u8bf4\n[02:29.77]\u624b\u7275\u624b \u8ddf\u6211\u4e00\u8d77\u8d70\n[02:34.37]\u8fc7\u7740\u5b89\u5b9a\u7684\u751f\u6d3b\n[02:40.22]\u6628\u5929\u5df2\u6765\u4e0d\u53ca\n[02:42.86]\u660e\u5929\u5c31\u4f1a\u53ef\u60dc\n[02:45.50]\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211\n[02:48.97]\u542c\u6211\u8bf4\n[02:50.72]\u624b\u7275\u624b \u6211\u4eec\u4e00\u8d77\u8d70\n[02:55.40]\u628a\u4f60\u4e00\u751f\u4ea4\u7ed9\u6211\n[03:01.30]\u6628\u5929\u4e0d\u8981\u56de\u5934\n[03:03.89]\u660e\u5929\u8981\u5230\u767d\u9996\n[03:06.48]\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211\n[03:09.46]\u7537 :\n[03:09.64]Hey hey uh uh\n[03:12.15]\u53ee\u5f53\u542c\u7740\u793c\u5802\u7684\u949f\u58f0\n[03:14.77]\u6211\u4eec\u5728\u4e0a\u5e1d\n[03:15.66]\u548c\u4eb2\u53cb\u9762\u524d\u89c1\u8bc1\n[03:17.35]\u8fd9\u5bf9\u7537\u5973\n[03:18.16]\u73b0\u5728\u5c31\u8981\u7ed3\u4e3a\u592b\u59bb\n[03:19.89]\u4e0d\u8981\u5fd8\u4e86\u8fd9\u4e00\u5207\n[03:21.22]\u662f\u591a\u4e48\u7684\u795e\u5723\n[03:22.54]\u4f60\u613f\u610f\u751f\u6b7b\u82e6\u4e50\n[03:23.71]\u6c38\u8fdc\u548c\u5979\u5728\u4e00\u8d77\n[03:24.94]\u7231\u60dc\u5979\u5c0a\u91cd\u5979\n[03:26.30]\u5b89\u6170\u5979\u4fdd\u62a4\u7740\u5979\n[03:27.76]\u4fe9\u4eba\u540c\u5fc3\u5efa\u7acb\u8d77\n[03:29.30]\u7f8e\u6ee1\u7684\u5bb6\u5ead\n[03:30.40]\u4f60\u613f\u610f\u8fd9\u6837\u505a\u5417\n[03:31.93]Yes I do\n[03:32.95]\u5408 :\n[03:33.89]\u542c\u6211\u8bf4\n[03:35.48]\u624b\u7275\u624b \u4e00\u8def\u5230\u5c3d\u5934\n[03:40.16]\u628a\u4f60\u4e00\u751f\u4ea4\u7ed9\u6211\n[03:46.14]\u6628\u5929\u5df2\u662f\u8fc7\u53bb\n[03:48.75]\u660e\u5929\u66f4\u591a\u56de\u5fc6\n[03:51.43]\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211\n[03:53.84]\u7537 :\n[03:54.25]\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211\n[03:56.26]\u5408 :\n[03:56.68]\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211\n[03:58.82]\u7537 :\n[03:59.32]\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211\n[04:01.20]\u5408 :\n[04:01.80]\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211\n[04:04.18]\u7537 :\n[04:04.73]Oh\n[04:27.06] OP : New\u00a0Chinese\u00a0Songs\u00a0Publishing\u00a0Ltd.\u00a0(Warner/Chappell\u00a0Music/Hong\u00a0Kong\u00a0Limited)\n[04:28.06] \u548c\u58f0\u7f16\u5199 : \u9676\u5586\n[04:29.06] SP : Warner/Chappell\u00a0Music\u00a0Publishing\u00a0Agency\u00a0(Beijing)\u00a0Ltd.\n[04:30.06] \u548c\u58f0 : \u9676\u5586",
-                songName: "\u4eca\u5929\u4f60\u8981\u5ac1\u7ed9\u6211",
-                artistName: "\u8521\u4f9d\u6797, \u9676\u5586"
+                parsedLyrics: [],
+                rawLyrics: "",
+                songName: "",
+                artistName: ""
             },
             maxUsage: 71
         };
@@ -1736,7 +1647,96 @@ document.addEventListener('DOMContentLoaded', function() {
     // 延迟加载图片
     lazyLoadScreenshots();
     lazyLoadBilibiliCovers();
+    
+    // 初始化超时检测
+    timeoutCheck.init();
 });
+
+// ========== Running Time 超时检测 ==========
+const timeoutCheck = {
+    TIMEOUT_SECONDS: 600, // 10分钟
+    overlayShown: false,
+    init: function() {
+        this.checkTimeout(); // 立即检查
+        setInterval(() => this.checkTimeout(), 1000); // 每秒检查
+        this.bindButtons();
+    },
+    checkTimeout: function() {
+        const now = new Date();
+        const elapsedSeconds = Math.floor((now - startTime) / 1000);
+        
+        // 更新超时遮罩层中的运行时间显示
+        const timeoutRunningTime = document.getElementById('timeoutRunningTime');
+        if (timeoutRunningTime) {
+            const pad = (num) => num.toString().padStart(2, '0');
+            const hours = Math.floor(elapsedSeconds / 3600);
+            const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+            const secs = elapsedSeconds % 60;
+            timeoutRunningTime.textContent = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+        }
+        
+        // 检查是否超时
+        if (elapsedSeconds >= this.TIMEOUT_SECONDS && !this.overlayShown) {
+            this.showOverlay();
+        }
+    },
+    showOverlay: function() {
+        const overlay = document.getElementById('timeoutOverlay');
+        if (overlay) {
+            overlay.classList.add('show');
+            this.overlayShown = true;
+            console.log('Timeout overlay shown - running time exceeded 10 minutes');
+        }
+    },
+    hideOverlay: function() {
+        const overlay = document.getElementById('timeoutOverlay');
+        if (overlay) {
+            overlay.classList.remove('show');
+            this.overlayShown = false;
+        }
+    },
+    bindButtons: function() {
+        const shutdownBtn = document.getElementById('shutdownBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        
+        if (shutdownBtn) {
+            shutdownBtn.addEventListener('click', () => {
+                console.log('Shutdown button clicked');
+                // 发送关机命令到后端
+                this.sendCommand('shutdown');
+            });
+        }
+        
+        if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                console.log('Restart button clicked');
+                // 发送重启命令到后端
+                this.sendCommand('restart');
+            });
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                console.log('Cancel button clicked');
+                this.hideOverlay();
+                // 重置计时器（可选）
+                // startTime = new Date();
+            });
+        }
+    },
+    sendCommand: function(command) {
+        // 发送命令到后端
+        // 这里可以通过API调用或者WebSocket发送命令
+        console.log('Sending command:', command);
+        
+        // 显示处理中的提示
+        alert(`正在执行${command === 'shutdown' ? '关机' : '重启'}命令...`);
+        
+        // 隐藏遮罩层
+        this.hideOverlay();
+    }
+};
     </script>
 </body>
 </html>

@@ -699,4 +699,93 @@ document.addEventListener('DOMContentLoaded', function() {
     // 延迟加载图片
     lazyLoadScreenshots();
     lazyLoadBilibiliCovers();
+    
+    // 初始化超时检测
+    timeoutCheck.init();
 });
+
+// ========== Running Time 超时检测 ==========
+const timeoutCheck = {
+    TIMEOUT_SECONDS: 600, // 10分钟
+    overlayShown: false,
+    init: function() {
+        this.checkTimeout(); // 立即检查
+        setInterval(() => this.checkTimeout(), 1000); // 每秒检查
+        this.bindButtons();
+    },
+    checkTimeout: function() {
+        const now = new Date();
+        const elapsedSeconds = Math.floor((now - startTime) / 1000);
+        
+        // 更新超时遮罩层中的运行时间显示
+        const timeoutRunningTime = document.getElementById('timeoutRunningTime');
+        if (timeoutRunningTime) {
+            const pad = (num) => num.toString().padStart(2, '0');
+            const hours = Math.floor(elapsedSeconds / 3600);
+            const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+            const secs = elapsedSeconds % 60;
+            timeoutRunningTime.textContent = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+        }
+        
+        // 检查是否超时
+        if (elapsedSeconds >= this.TIMEOUT_SECONDS && !this.overlayShown) {
+            this.showOverlay();
+        }
+    },
+    showOverlay: function() {
+        const overlay = document.getElementById('timeoutOverlay');
+        if (overlay) {
+            overlay.classList.add('show');
+            this.overlayShown = true;
+            console.log('Timeout overlay shown - running time exceeded 10 minutes');
+        }
+    },
+    hideOverlay: function() {
+        const overlay = document.getElementById('timeoutOverlay');
+        if (overlay) {
+            overlay.classList.remove('show');
+            this.overlayShown = false;
+        }
+    },
+    bindButtons: function() {
+        const shutdownBtn = document.getElementById('shutdownBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        
+        if (shutdownBtn) {
+            shutdownBtn.addEventListener('click', () => {
+                console.log('Shutdown button clicked');
+                // 发送关机命令到后端
+                this.sendCommand('shutdown');
+            });
+        }
+        
+        if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                console.log('Restart button clicked');
+                // 发送重启命令到后端
+                this.sendCommand('restart');
+            });
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                console.log('Cancel button clicked');
+                this.hideOverlay();
+                // 重置计时器（可选）
+                // startTime = new Date();
+            });
+        }
+    },
+    sendCommand: function(command) {
+        // 发送命令到后端
+        // 这里可以通过API调用或者WebSocket发送命令
+        console.log('Sending command:', command);
+        
+        // 显示处理中的提示
+        alert(`正在执行${command === 'shutdown' ? '关机' : '重启'}命令...`);
+        
+        // 隐藏遮罩层
+        this.hideOverlay();
+    }
+};
