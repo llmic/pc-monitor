@@ -584,7 +584,7 @@ def get_extended_window_rect(hwnd):
     except Exception:
         return None
 
-def get_window_rect_with_buffer(hwnd, buffer_pixels=5):
+def get_window_rect_with_buffer(hwnd, buffer_pixels=1):
     """获取窗口矩形并添加15像素边界缓冲，确保包含所有视觉元素"""
     rect = get_extended_window_rect(hwnd)
     if not rect:
@@ -609,7 +609,7 @@ def bring_window_to_front(hwnd):
         # 强制前置窗口
         win32gui.SetForegroundWindow(hwnd)
         # 延长前置等待时间到0.3秒，确保窗口渲染完成
-        time.sleep(0.3)
+        time.sleep(0.1)
     except Exception:
         pass
 
@@ -645,8 +645,8 @@ def capture_active_window(target_hwnd=None):
         # 前置并恢复窗口
         bring_window_to_front(hwnd)
         
-        # 获取带15像素缓冲的完整窗口区域
-        rect = get_window_rect_with_buffer(hwnd, buffer_pixels=15)
+        # 获取带5像素缓冲的完整窗口区域
+        rect = get_window_rect_with_buffer(hwnd, buffer_pixels=1)
         if not rect:
             print("Could not get window rectangle")
             return {'path': None, 'reason': 'no_rect', 'message': '无法获取窗口区域'}

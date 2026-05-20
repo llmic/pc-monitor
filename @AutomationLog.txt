@@ -195,3 +195,15 @@
 2026-05-20 19:29:34.472 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
 2026-05-20 19:33:03.843 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
 2026-05-20 19:33:04.894 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:45:41.694 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:45:42.764 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:47:32.940 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:47:34.006 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:51:10.842 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:51:11.911 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:54:40.419 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 19:54:41.481 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 20:19:07.422 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 20:19:08.653 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 20:26:37.846 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 20:26:38.889 collector.py[50] get_browser_url -> Find Control Timeout(1s): {AccessKey: 'Address', ControlType: EditControl}
