@@ -1,0 +1,359 @@
+body {
+            background-color: #FFFFFF;
+            color: #333333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        }
+        .user-avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        .card-body {
+            padding: 15px 20px;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-normal { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; animation: blink 1s infinite; }
+        .status-danger { background-color: #dc3545; animation: blink 0.5s infinite; }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .window-active {
+            background-color: rgba(220, 53, 69, 0.08);
+            border-left: 4px solid #dc3545;
+        }
+        .window-normal {
+            background-color: #fafafa;
+            border-left: 4px solid transparent;
+        }
+        .bilibili-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bilibili-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(255, 107, 157, 0.25);
+        }
+        .bilibili-card .card-header {
+            position: relative;
+            overflow: hidden;
+        }
+        .bilibili-card .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-200%); }
+            100% { transform: translateX(200%); }
+        }
+        .browser-card {
+            border-left: 4px solid #007bff;
+            background: linear-gradient(90deg, rgba(0, 123, 255, 0.08), transparent);
+        }
+        .window-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .window-item:hover {
+            transform: translateX(4px);
+        }
+        .website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 123, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .website-link:hover {
+            background: rgba(0, 123, 255, 0.2);
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .window-title-link {
+            color: #007bff;
+            text-decoration: underline;
+            word-break: break-all;
+            transition: all 0.2s;
+        }
+        .window-title-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .btn-bilibili {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-bilibili:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 101, 149, 0.4);
+            color: white;
+        }
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #007bff;
+        }
+        .stats-label {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .progress-bar-custom {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .progress-cpu { background-color: #28a745; }
+        .progress-memory { background-color: #17a2b8; }
+        .progress-disk { background-color: #ffc107; }
+        .screenshot-container {
+            max-width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .screenshot-container img {
+            width: 100%;
+            height: auto;
+        }
+        .alert-danger-custom {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .alert-warning-custom {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .scroll-container {
+            max-height: none;
+            overflow-y: visible;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #333333;
+        }
+        .text-muted-custom {
+            color: #666666;
+        }
+        .timestamp {
+            color: #888888;
+            font-size: 0.85rem;
+        }
+        footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+        .h-100 {
+            height: 100% !important;
+        }
+        .row-eq-height {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .row-eq-height > [class*="col-"] {
+            display: flex;
+            flex-direction: column;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .hover-float {
+            transition: transform 0.3s ease-in-out;
+        }
+        .hover-float:hover {
+            animation: float 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+        }
+        .lyrics-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lyrics-box::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .lyrics-box::-webkit-scrollbar-thumb {
+            background: #ff4757;
+            border-radius: 4px;
+        }
+        .shutdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+        .shutdown-overlay.show {
+            display: flex;
+        }
+        .shutdown-icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .shutdown-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .shutdown-subtitle {
+            font-size: 18px;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+        }
+        .shutdown-time {
+            font-size: 16px;
+            color: #888888;
+        }
+        .music-cover {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .music-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .lyrics-display {
+            font-style: italic;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-gradient-music {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        /* 状态卡片层级优先，避免被覆盖 */
+        .status-card-root {
+            position: relative;
+            z-index: 10;
+        }
+        /* 音乐卡片隔离，增加间距 */
+        .music-card {
+            margin-top: 20px !important;
+            position: relative;
+            z-index: 5;
+        }
+        /* 音乐旋转动画隔离，不影响其他元素 */
+        .music-spin {
+            animation: spin 8s linear infinite !important;
+        }
+        /* 音乐进度条样式隔离 */
+        .music-playback-time-container .progress-bar-custom {
+            margin-top: 4px !important;
+            height: 4px !important;
+        }
+        /* 修复滚动容器，避免溢出覆盖 */
+        .scroll-container {
+            max-height: 500px !important;
+            overflow-y: auto !important;
+        }
+        .music-card-header {
+            background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
+            color: white;
+            padding: 10px 14px;
+            margin: 0;
+        }
