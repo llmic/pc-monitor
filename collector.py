@@ -20,6 +20,8 @@ from ctypes.wintypes import RECT, HWND, DWORD
 try:
     import uiautomation as auto
     UIAUTOMATION_AVAILABLE = True
+    # 设置uiautomation查找控件的超时时间为1秒
+    auto.SetGlobalSearchTimeout(1)
 except ImportError:
     UIAUTOMATION_AVAILABLE = False
 

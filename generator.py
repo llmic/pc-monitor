@@ -83,10 +83,16 @@ class HTMLGenerator:
         active_window = data.get('active_window', {})
 
         current_music = None
-        for win in windows:
-            if win.get('music'):
-                current_music = win['music']
-                break
+        
+        # 优先使用data中直接设置的current_music
+        if data.get('current_music'):
+            current_music = data['current_music']
+        else:
+            # 如果没有直接设置，从窗口列表中提取
+            for win in windows:
+                if win.get('music'):
+                    current_music = win['music']
+                    break
 
         browser_windows = [win for win in windows if win.get('browser')]
 
@@ -193,19 +199,40 @@ class HTMLGenerator:
                 active_normal_window_title = win.get('title', '')
                 break
 
-        # 准备 metrics history 用于模板
+        # 准备 metrics history 用于模板（转换为前端期望的格式）
         metrics_history = data.get('metrics_history', {})
         chart_data = []
         max_usage = 100  # 默认最大值
-        if metrics_history and 'cpu' in metrics_history and 'memory' in metrics_history:
-            for i, (cpu, mem) in enumerate(zip(metrics_history['cpu'], metrics_history['memory'])):
-                chart_data.append({'cpu': cpu, 'memory': mem})
+        
+        # 确保metrics_history是正确的格式
+        if isinstance(metrics_history, dict) and 'cpu' in metrics_history and 'memory' in metrics_history:
+            cpu_list = metrics_history.get('cpu', [])
+            memory_list = metrics_history.get('memory', [])
+            # 确保两个列表长度一致
+            min_len = min(len(cpu_list), len(memory_list))
+            for i in range(min_len):
+                chart_data.append({'cpu': cpu_list[i], 'memory': memory_list[i]})
+            
             # 计算历史最大值，取整并加一点余量
-            all_values = metrics_history['cpu'] + metrics_history['memory']
+            all_values = cpu_list + memory_list
             if all_values:
                 max_usage = int(max(all_values)) + 10
                 # 确保至少为 20（避免 y 轴范围太小）
                 max_usage = max(max_usage, 20)
+        elif isinstance(metrics_history, list):
+            # 如果已经是列表格式，直接使用
+            chart_data = metrics_history
+            if chart_data:
+                all_values = []
+                for item in chart_data:
+                    if isinstance(item, dict):
+                        if 'cpu' in item:
+                            all_values.append(item['cpu'])
+                        if 'memory' in item:
+                            all_values.append(item['memory'])
+                if all_values:
+                    max_usage = int(max(all_values)) + 10
+                    max_usage = max(max_usage, 20)
 
         # 获取头像路径（使用缓存的）
         avatar_path = data.get('cached_avatar') or data.get('avatar')
