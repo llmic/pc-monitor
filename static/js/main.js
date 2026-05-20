@@ -131,14 +131,14 @@ const statusCard = {
         const now = new Date();
         const pad = (num) => num.toString().padStart(2, '0'); // 补零公式
         const formatted = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-        
+
         const currentTimeDisplay = document.getElementById('currentTimeDisplay');
         if (currentTimeDisplay) {
             currentTimeDisplay.textContent = formatted;
         }
-        
-        // 同时更新运行时长显示
-        const elapsedSeconds = Math.floor((now - startTime) / 1000);
+
+        // 运行时间 = 当前时间 - 上次上传时间（每次打开网页重新计算）
+        const elapsedSeconds = Math.floor((now - lastUpdateTime) / 1000);
         const elapsedEl = document.getElementById('elapsedTimeDisplay');
         if (elapsedEl) {
             const hours = Math.floor(elapsedSeconds / 3600);
@@ -214,11 +214,11 @@ const musicCard = {
         
         // 初始化播放时间显示（包含运行时间）
         if (playbackEl) {
-            // 计算运行时间（从监控开始到现在）
+            // 计算运行时间 = 当前时间 - 上次上传时间（每次打开网页重新计算）
             const now = new Date();
-            const runningSeconds = Math.floor((now - startTime) / 1000);
+            const runningSeconds = Math.floor((now - lastUpdateTime) / 1000);
             const runningTimeStr = this.formatTime(runningSeconds);
-            
+
             // 显示格式：运行时间 | 当前播放时间 / 总时间
             if (this.musicData.totalSeconds > 0) {
                 playbackEl.textContent = `${runningTimeStr} | ${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
@@ -238,24 +238,24 @@ const musicCard = {
         const playbackEl = document.getElementById(`music-playback-time-${this.musicData.musicId}`);
         const progressEl = document.getElementById(`music-progress-bar-${this.musicData.musicId}`);
         const initialSeconds = this.musicData.currentSeconds; // 记录初始播放位置
-        
+
         this.updatePlaybackTime(playbackEl, progressEl); // 立即更新
-        
+
         if (!this.musicData.songEnded) {
             const self = this;
             this.playbackTimer = setInterval(function() {
-                // 数学计算：基于页面运行时间更新播放进度
+                // 数学计算：运行时间 = 当前时间 - 上次上传时间
                 const now = new Date();
-                const elapsedSeconds = Math.floor((now - startTime) / 1000);
+                const elapsedSeconds = Math.floor((now - lastUpdateTime) / 1000);
                 self.musicData.currentSeconds = initialSeconds + elapsedSeconds;
-                
+
                 if (self.musicData.currentSeconds >= self.musicData.totalSeconds) {
                     self.musicData.currentSeconds = self.musicData.totalSeconds;
                     self.musicData.songEnded = true;
                     self.stopCoverSpin();
                     clearInterval(self.playbackTimer);
                 }
-                
+
                 self.updatePlaybackTime(playbackEl, progressEl);
                 self.updateLyrics(); // 同步更新歌词
             }, 1000);
@@ -263,9 +263,9 @@ const musicCard = {
     },
     updatePlaybackTime: function(playbackEl, progressEl) {
         if (playbackEl) {
-            // 计算运行时间（从监控开始到现在）
+            // 计算运行时间 = 当前时间 - 上次上传时间（每次打开网页重新计算）
             const now = new Date();
-            const runningSeconds = Math.floor((now - startTime) / 1000);
+            const runningSeconds = Math.floor((now - lastUpdateTime) / 1000);
             const runningTimeStr = this.formatTime(runningSeconds);
             
             // 显示格式：运行时间 | 当前播放时间 / 总时间
@@ -715,8 +715,8 @@ const timeoutCheck = {
     },
     checkTimeout: function() {
         const now = new Date();
-        const elapsedSeconds = Math.floor((now - startTime) / 1000);
-        
+        const elapsedSeconds = Math.floor((now - lastUpdateTime) / 1000);
+
         // 更新超时遮罩层中的运行时间显示
         const timeoutRunningTime = document.getElementById('timeoutRunningTime');
         if (timeoutRunningTime) {
@@ -726,7 +726,7 @@ const timeoutCheck = {
             const secs = elapsedSeconds % 60;
             timeoutRunningTime.textContent = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
         }
-        
+
         // 检查是否超时
         if (elapsedSeconds >= this.TIMEOUT_SECONDS && !this.overlayShown) {
             this.showOverlay();

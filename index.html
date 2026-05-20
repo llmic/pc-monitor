@@ -392,13 +392,13 @@
     </style>
 </head>
 <body>
-    <div class="shutdown-overlay" id="shutdownOverlay">
-        <div class="shutdown-icon">
+    <div class="timeout-overlay" id="timeoutOverlay">
+        <div class="timeout-icon">
             <i class="bi bi-power"></i>
         </div>
-        <div class="shutdown-title">Liuli 的电脑 已关机</div>
-        <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
-        <div class="shutdown-time" id="shutdownTime"></div>
+        <div class="timeout-title">Liuli 的电脑 已关机</div>
+        <div class="timeout-subtitle">PC Monitor 已停止更新</div>
+        <div class="timeout-time" id="timeoutTime"></div>
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -419,7 +419,7 @@
                             <span id="statusText" class="fs-5 status-text"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 20:12:16</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 20:26:46</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay" class="current-time-display"></span>
@@ -443,29 +443,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">8%</div>
+                                    <div class="stats-number">11%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" data-width="8%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="11%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">50%</div>
+                                    <div class="stats-number">51%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" data-width="50%"></div>
+                                        <div class="progress-fill progress-memory" data-width="51%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">15.81 / 31.47 GB</div>
+                                    <div class="stats-number">16.17 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 88.25 B<br>
-                                        Received: 349.13 B
+                                        Sent: 122.95 B<br>
+                                        Received: 425.53 B
                                     </div>
                                 </div>
                             </div>
@@ -497,30 +497,20 @@
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">16.1%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="16.1%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
                                     <div class="font-weight-bold">Core 10</div>
-                                    <div class="text-primary font-size-lg">6.2%</div>
+                                    <div class="text-primary font-size-lg">72.7%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="6.2%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="72.7%"></div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 13</div>
-                                    <div class="text-primary font-size-lg">46.9%</div>
+                                    <div class="font-weight-bold">Core 12</div>
+                                    <div class="text-primary font-size-lg">84.8%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="46.9%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="84.8%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -528,9 +518,19 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 14</div>
-                                    <div class="text-primary font-size-lg">82.4%</div>
+                                    <div class="text-primary font-size-lg">38.7%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="82.4%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="38.7%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 16</div>
+                                    <div class="text-primary font-size-lg">5.9%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="5.9%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -554,11 +554,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260520_201215.png</span>
+                        <span class="badge bg-primary float-end">screenshot_20260520_202645.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_201215.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_201215.png?raw=true">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_202645.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_202645.png?raw=true">
                         </div>
                     </div>
                 </div>
@@ -573,7 +573,7 @@
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> Currently Open Windows
                         
-                        <span class="badge bg-danger float-end">Active: 基础英语4雅思英语普通班第四次口语练习题目.docx - Word</span>
+                        <span class="badge bg-danger float-end">Active: main.py - pc-monitor - Trae CN</span>
                         
                     </div>
                     <div class="card-body scroll-container">
@@ -581,43 +581,15 @@
                         <div class="window-item window-active">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>基础英语4雅思英语普通班第四次口语练习题目.docx - Word</strong>
+                                    <strong>main.py - pc-monitor - Trae CN</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> WINWORD.EXE |
-                                        <i class="bi bi-aspect-ratio"></i> 1492x1115
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 2220x1524
                                     </div>
                                     
                                 </div>
                                 
                                 <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Sound Recorder</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1416x762
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>豆包</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Doubao.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1556x1098
-                                    </div>
-                                    
-                                </div>
                                 
                             </div>
                         </div>
@@ -667,9 +639,9 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>collector.py - pc-monitor - Visual Studio Code</strong>
+                                    <strong>QQ</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Code.exe |
+                                        <i class="bi bi-app"></i> QQ.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
                                     </div>
                                     
@@ -703,10 +675,32 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser (3)
+                        <i class="bi bi-globe"></i> Currently Open Browser (2)
                         
                     </div>
                     <div class="card-body scroll-container">
+                        
+                        <div class="window-item window-normal browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1782x1148
+                                    </div>
+                                    
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain=llmic.github.io&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://llmic.github.io/pc-monitor/" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> llmic.github.io
+                                        </a>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
                         
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
@@ -722,50 +716,6 @@
                                         <a href="https://itestcloud.unipus.cn/utest/itest/s/train" target="_blank" rel="noopener noreferrer"
                                            style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
                                             <i class="bi bi-box-arrow-up-right"></i> itestcloud.unipus.cn
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>llmic/pc-monitor - Personal - Microsoft​ Edge</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
-                                    </div>
-                                    
-                                    <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="https://github.com/llmic/pc-monitor" target="_blank" rel="noopener noreferrer"
-                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> github.com
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>WE Learn and 1 more page - Personal - Microsoft​ Edge</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
-                                    </div>
-                                    
-                                    <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain=welearn.sflep.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="https://welearn.sflep.com/student/TaskNormal.aspx?taskid=200220565&cid=148" target="_blank" rel="noopener noreferrer"
-                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> welearn.sflep.com
                                         </a>
                                     </div>
                                     
@@ -799,6 +749,24 @@
                                     
                                     <tr>
                                         <td>
+                                            <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>main.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
                                             <strong>Windows Input Experience</strong>
                                         </td>
                                         <td>
@@ -817,10 +785,10 @@
                                     
                                     <tr>
                                         <td>
-                                            <strong>WE Learn and 1 more page - Personal - Microsoft​ Edge</strong>
+                                            <strong>基础英语4雅思英语普通班第四次口语练习题目.docx - Word</strong>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
+                                            <span class="badge bg-secondary">WINWORD.EXE</span>
                                         </td>
                                     </tr>
                                     
@@ -835,19 +803,28 @@
                                     
                                     <tr>
                                         <td>
-                                            <strong>基础英语4雅思英语普通班第四次口语练习题目.docx - Word</strong>
+                                            <strong>Sound Recordings - File Explorer</strong>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">WINWORD.EXE</span>
+                                            <span class="badge bg-secondary">explorer.exe</span>
                                         </td>
                                     </tr>
                                     
                                     <tr>
                                         <td>
-                                            <strong>PopupHost</strong>
+                                            <strong>QQ</strong>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">VoiceRecorder.exe</span>
+                                            <span class="badge bg-secondary">QQ.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>图片查看器</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">QQ.exe</span>
                                         </td>
                                     </tr>
                                     
@@ -860,33 +837,6 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>llmic/pc-monitor - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>collector.py - pc-monitor - Visual Studio Code</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Code.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>豆包</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Doubao.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -896,7 +846,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T20:12:16.575100</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T20:26:46.188403</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -906,13 +856,13 @@
     <script>
         // 全局数据变量（由后端生成）
         window.PCMONITOR_DATA = {
-            timestamp: '2026-05-20T20:12:16.575100',
-            startTime: '2026-05-20T19:47:31.722145',
+            timestamp: '2026-05-20T20:26:46.188403',
+            startTime: '2026-05-20T20:26:35.347582',
             bilibiliCoverCache: {},
             hasMusic: false,
-            metricsHistory: [{"cpu": 10.244444444444445, "memory": 47.2}, {"cpu": 9.822222222222223, "memory": 46.6}, {"cpu": 12.483333333333334, "memory": 49.5}, {"cpu": 5.588888888888889, "memory": 50.3}, {"cpu": 8.422222222222224, "memory": 50.2}],
-            cpuPercent: 8,
-            memoryPercent: 50,
+            metricsHistory: [{"cpu": 5.588888888888889, "memory": 50.3}, {"cpu": 8.422222222222224, "memory": 50.2}, {"cpu": 6.73888888888889, "memory": 49.1}, {"cpu": 9.016666666666667, "memory": 50.4}, {"cpu": 11.227777777777778, "memory": 51.4}],
+            cpuPercent: 11,
+            memoryPercent: 51,
             musicData: {
                 currentSeconds: 0,
                 totalSeconds: 0,
@@ -922,7 +872,7 @@
                 songName: "",
                 artistName: ""
             },
-            maxUsage: 60
+            maxUsage: 61
         };
     </script>
     <script>
@@ -1059,14 +1009,14 @@ const statusCard = {
         const now = new Date();
         const pad = (num) => num.toString().padStart(2, '0'); // 补零公式
         const formatted = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-        
+
         const currentTimeDisplay = document.getElementById('currentTimeDisplay');
         if (currentTimeDisplay) {
             currentTimeDisplay.textContent = formatted;
         }
-        
-        // 同时更新运行时长显示
-        const elapsedSeconds = Math.floor((now - startTime) / 1000);
+
+        // 运行时间 = 当前时间 - 上次上传时间（每次打开网页重新计算）
+        const elapsedSeconds = Math.floor((now - lastUpdateTime) / 1000);
         const elapsedEl = document.getElementById('elapsedTimeDisplay');
         if (elapsedEl) {
             const hours = Math.floor(elapsedSeconds / 3600);
@@ -1142,11 +1092,11 @@ const musicCard = {
         
         // 初始化播放时间显示（包含运行时间）
         if (playbackEl) {
-            // 计算运行时间（从监控开始到现在）
+            // 计算运行时间 = 当前时间 - 上次上传时间（每次打开网页重新计算）
             const now = new Date();
-            const runningSeconds = Math.floor((now - startTime) / 1000);
+            const runningSeconds = Math.floor((now - lastUpdateTime) / 1000);
             const runningTimeStr = this.formatTime(runningSeconds);
-            
+
             // 显示格式：运行时间 | 当前播放时间 / 总时间
             if (this.musicData.totalSeconds > 0) {
                 playbackEl.textContent = `${runningTimeStr} | ${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
@@ -1166,24 +1116,24 @@ const musicCard = {
         const playbackEl = document.getElementById(`music-playback-time-${this.musicData.musicId}`);
         const progressEl = document.getElementById(`music-progress-bar-${this.musicData.musicId}`);
         const initialSeconds = this.musicData.currentSeconds; // 记录初始播放位置
-        
+
         this.updatePlaybackTime(playbackEl, progressEl); // 立即更新
-        
+
         if (!this.musicData.songEnded) {
             const self = this;
             this.playbackTimer = setInterval(function() {
-                // 数学计算：基于页面运行时间更新播放进度
+                // 数学计算：运行时间 = 当前时间 - 上次上传时间
                 const now = new Date();
-                const elapsedSeconds = Math.floor((now - startTime) / 1000);
+                const elapsedSeconds = Math.floor((now - lastUpdateTime) / 1000);
                 self.musicData.currentSeconds = initialSeconds + elapsedSeconds;
-                
+
                 if (self.musicData.currentSeconds >= self.musicData.totalSeconds) {
                     self.musicData.currentSeconds = self.musicData.totalSeconds;
                     self.musicData.songEnded = true;
                     self.stopCoverSpin();
                     clearInterval(self.playbackTimer);
                 }
-                
+
                 self.updatePlaybackTime(playbackEl, progressEl);
                 self.updateLyrics(); // 同步更新歌词
             }, 1000);
@@ -1191,9 +1141,9 @@ const musicCard = {
     },
     updatePlaybackTime: function(playbackEl, progressEl) {
         if (playbackEl) {
-            // 计算运行时间（从监控开始到现在）
+            // 计算运行时间 = 当前时间 - 上次上传时间（每次打开网页重新计算）
             const now = new Date();
-            const runningSeconds = Math.floor((now - startTime) / 1000);
+            const runningSeconds = Math.floor((now - lastUpdateTime) / 1000);
             const runningTimeStr = this.formatTime(runningSeconds);
             
             // 显示格式：运行时间 | 当前播放时间 / 总时间
@@ -1643,8 +1593,8 @@ const timeoutCheck = {
     },
     checkTimeout: function() {
         const now = new Date();
-        const elapsedSeconds = Math.floor((now - startTime) / 1000);
-        
+        const elapsedSeconds = Math.floor((now - lastUpdateTime) / 1000);
+
         // 更新超时遮罩层中的运行时间显示
         const timeoutRunningTime = document.getElementById('timeoutRunningTime');
         if (timeoutRunningTime) {
@@ -1654,7 +1604,7 @@ const timeoutCheck = {
             const secs = elapsedSeconds % 60;
             timeoutRunningTime.textContent = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
         }
-        
+
         // 检查是否超时
         if (elapsedSeconds >= this.TIMEOUT_SECONDS && !this.overlayShown) {
             this.showOverlay();
