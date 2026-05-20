@@ -1,13 +1,9 @@
-from jinja2 import Template
-from datetime import datetime
-import os
-
-HTML_TEMPLATE = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>视奸 {{ computer_name }}</title>
+    <title>视奸 Liuli 的电脑</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -346,7 +342,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div class="shutdown-icon">
             <i class="bi bi-power"></i>
         </div>
-        <div class="shutdown-title">{{ computer_name }} 已关机</div>
+        <div class="shutdown-title">Liuli 的电脑 已关机</div>
         <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
         <div class="shutdown-time" id="shutdownTime"></div>
     </div>
@@ -355,15 +351,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="col-12">
                 <div class="card" id="statusCard">
                     <div class="card-header d-flex align-items-center gap-3">
-                        {% if avatar %}
-                        <img src="{{ avatar }}" alt="User Avatar" class="user-avatar">
-                        {% else %}
-                        <div class="user-avatar-placeholder">
-                            <i class="bi bi-person"></i>
-                        </div>
-                        {% endif %}
+                        
+                        <img src="screenshots/user_avatar.png" alt="User Avatar" class="user-avatar">
+                        
                         <div>
-                            <strong>{{ computer_name }}</strong>
+                            <strong>Liuli 的电脑</strong>
                             <small class="text-muted d-block">Real-time Computer Monitoring System</small>
                         </div>
                     </div>
@@ -373,7 +365,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             <span id="statusText" class="fs-5"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay">{{ timestamp|strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay">2026-05-19 22:53:24</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay"></span>
@@ -394,42 +386,42 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">{{ cpu_percent }}%</div>
+                                    <div class="stats-number">3%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" style="width: {{ cpu_percent }}%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 3%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">{{ memory_percent }}%</div>
+                                    <div class="stats-number">57%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" style="width: {{ memory_percent }}%"></div>
+                                        <div class="progress-fill progress-memory" style="width: 57%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">{{ memory_used_gb }} / {{ memory_total_gb }} GB</div>
+                                    <div class="stats-number">18.00 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: {{ network_sent }}<br>
-                                        Received: {{ network_recv }}
+                                        Sent: 383.75 B<br>
+                                        Received: 2.88 KB
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {% if metrics_history and metrics_history|length > 0 %}
+                        
                         <div class="row mt-4">
                             <div class="col-12">
-                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last {{ max_metrics_history|default(5) }} updates)</h6>
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last 5 updates)</h6>
                                 <canvas id="metricsChart" height="80"></canvas>
                             </div>
                         </div>
-                        {% endif %}
+                        
                     </div>
                 </div>
             </div>
@@ -439,106 +431,62 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details ({{ cpu_cores|length }} cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (3 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            {% for core in cpu_cores %}
+                            
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core {{ core.core_index }}</div>
-                                    <div class="text-primary font-size-lg">{{ core.usage }}%</div>
+                                    <div class="font-weight-bold">Core 0</div>
+                                    <div class="text-primary font-size-lg">31.2%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" style="width: {{ core.usage }}%"></div>
+                                        <div class="progress-fill progress-cpu" style="width: 31.2%"></div>
                                     </div>
                                 </div>
                             </div>
-                            {% endfor %}
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 10</div>
+                                    <div class="text-primary font-size-lg">34.4%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 34.4%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 12</div>
+                                    <div class="text-primary font-size-lg">3.2%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" style="width: 3.2%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {% set all_windows = windows + browser_windows %}
-        {% set bilibili_windows = all_windows | selectattr('bilibili') | list %}
-        {% set has_music = current_music and current_music.song %}
-        {% set has_bilibili = bilibili_windows|length > 0 %}
         
-        {% if has_music or has_bilibili %}
+        
+        
+        
+        
+        
         <div class="row mb-6">
             <div class="d-flex gap-4" style="width: 100%;">
-                {% if has_music %}
+                
+                
+                
+                
+                
                 <div style="flex: 1; min-width: 300px;">
-                    <a href="{{ current_music.song_url if current_music.song_url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                        <div class="card music-card" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 71, 87, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 71, 87, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 71, 87, 0.15)';">
-                            <!-- 头部 -->
-                            <div class="card-header" style="{% if current_music.colors %}background-color: {{ current_music.colors.primary }}; color: {{ current_music.colors.primary|contrasting_color }};{% else %}background: linear-gradient(135deg, #1db954 0%, #1ed760 100%); color: white;{% endif %} padding: 10px 14px; margin: 0;">
-                                <div class="d-flex align-items-center justify-between">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div style="width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                            <i class="bi bi-music-note" style="font-size: 14px;"></i>
-                                        </div>
-                                        <span style="font-weight: 600; font-size: 0.85rem;">Now Playing</span>
-                                    </div>
-                                    {% if current_music.platform %}
-                                    <span style="font-size: 0.7rem; opacity: 0.8;">{{ current_music.platform }}</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <!-- 主体 -->
-                            <div class="card-body p-4" style="background: #ffffff; color: #1f2937; margin: 0;">
-                                <div class="row align-items-center">
-                                    <!-- 封面 -->
-                                    <div class="col-auto">
-                                        {% if current_music.cover_url %}
-                                        <div id="music-cover" style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" {% if not current_music.song_ended %}class="music-spin"{% endif %}>
-                                            <img src="{{ current_music.cover_url }}" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
-                                        </div>
-                                        {% else %}
-                                        <div style="width: 64px; height: 64px; border-radius: 12px; background: linear-gradient(135deg, #374151 0%, #1f2937 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                                            <i class="bi bi-music-note text-white" style="font-size: 20px;"></i>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                    <!-- 信息 -->
-                                    <div class="col" style="padding-left: 12px;">
-                                        <h5 class="font-weight-bold mb-1" style="line-height: 1.3; font-size: 0.9rem;">
-                                            {{ current_music.song }}
-                                        </h5>
-                                        <p class="text-muted mb-0" style="font-size: 0.75rem;">
-                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> {{ current_music.artist if current_music.artist else '未知歌手' }}
-                                        </p>
-                                        {% if current_music.total_time_str %}
-                                        <div id="playback-time-container" style="margin-top: 4px;">
-                                            <span id="playback-time" style="font-size: 0.7rem; opacity: 0.6;">
-                                                {{ current_music.current_time_str if current_music.current_time_str else '00:00' }} / {{ current_music.total_time_str }}
-                                            </span>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <!-- 歌词显示 -->
-                                <div class="mt-3 pt-3 border-top" style="border-color: rgba(0,0,0,0.1);">
-                                    <div id="lyrics-container">
-                                        <div id="lyrics-display" class="lyrics-display">
-                                            <p id="current-lyric-line" style="font-size: 0.85rem; text-align: center; font-weight: 500; opacity: 0.9; margin-bottom: 4px;">
-                                                <i class="bi bi-music"></i> <span>加载歌词中...</span>
-                                            </p>
-                                            <p id="current-lyric-translation" style="font-size: 0.75rem; text-align: center; opacity: 0.6; margin: 0; display: none;"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endif %}
-                {% if has_bilibili %}
-                {% for win in bilibili_windows %}
-                {% set bilibili_info = win.bilibili %}
-                <div style="flex: 1; min-width: 300px;">
-                    <a href="{{ bilibili_info.url if bilibili_info.url else '#' }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <a href="https://www.bilibili.com/video/BV1JPqGBfEZq/" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                         <div class="card bilibili-card" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 107, 157, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 107, 157, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 107, 157, 0.15)';">
                             <!-- 头部 -->
                             <div class="card-header" style="background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); color: white; padding: 10px 14px; margin: 0;">
@@ -552,11 +500,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             <!-- 主体 -->
                             <div class="card-body p-0" style="padding: 0 !important; margin: 0;">
                                 <div style="height: 130px; position: relative;">
-                                    {% if bilibili_info.bv_id %}
+                                    
                                     <div class="bilibili-cover-placeholder" style="width: 100%; height: 100%; background: linear-gradient(135deg, #4a90d9 0%, #2d5aa0 100%); display: flex; align-items: center; justify-content: center;">
                                         <i class="bi bi-play-circle text-white opacity-50" style="font-size: 32px;"></i>
                                     </div>
-                                    <img src="" alt="Video Cover" class="w-100 h-100 bilibili-cover-image" style="object-fit: cover; position: absolute; top: 0; left: 0; display: none;" data-bvid="{{ bilibili_info.bv_id }}">
+                                    <img src="" alt="Video Cover" class="w-100 h-100 bilibili-cover-image" style="object-fit: cover; position: absolute; top: 0; left: 0; display: none;" data-bvid="BV1JPqGBfEZq">
                                     <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);"></div>
                                     <!-- 播放按钮 -->
                                     <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0';">
@@ -565,218 +513,272 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                         </div>
                                     </div>
                                     <!-- 时长 -->
-                                    {% if bilibili_info.duration %}
+                                    
                                     <div style="position: absolute; bottom: 8px; right: 8px;">
-                                        <span style="background: rgba(0,0,0,0.7); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem;">{{ bilibili_info.duration }}</span>
+                                        <span style="background: rgba(0,0,0,0.7); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem;">05:31</span>
                                     </div>
-                                    {% endif %}
-                                    {% else %}
-                                    <div style="width: 100%; height: 130px; background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-play-fill text-white" style="font-size: 32px;"></i>
-                                    </div>
-                                    {% endif %}
+                                    
+                                    
                                 </div>
                                 <!-- 信息区域 -->
                                 <div style="padding: 12px; background: white;">
                                     <h5 class="font-weight-bold mb-1" style="color: #1a1a1a; line-height: 1.3; font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
-                                        {{ bilibili_info.title if bilibili_info.title else '未知名' }}
+                                        (超爽中英!) 2025公认最好的吴恩达【RAG知识图谱】Neo4j大佬亲授教程！附课件代码——DeepLearning.ai
                                     </h5>
-                                    {% if bilibili_info.author %}
+                                    
                                     <p class="text-muted mb-2" style="font-size: 0.75rem;">
-                                        <i class="bi bi-user-fill" style="font-size: 10px;"></i> {{ bilibili_info.author }}
+                                        <i class="bi bi-user-fill" style="font-size: 10px;"></i> 吴恩达机器学习
                                     </p>
-                                    {% endif %}
+                                    
                                     <div class="d-flex flex-wrap gap-1.5" style="font-size: 0.65rem;">
-                                        {% if bilibili_info.pubdate %}
+                                        
                                         <span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px;">
-                                            <i class="bi bi-calendar" style="font-size: 9px;"></i> {{ bilibili_info.pubdate }}
+                                            <i class="bi bi-calendar" style="font-size: 9px;"></i> 2025-12-17
                                         </span>
-                                        {% endif %}
-                                        {% if bilibili_info.view_count_formatted %}
+                                        
+                                        
                                         <span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px;">
-                                            <i class="bi bi-eye" style="font-size: 9px;"></i> {{ bilibili_info.view_count_formatted }}
+                                            <i class="bi bi-eye" style="font-size: 9px;"></i> 3724
                                         </span>
-                                        {% endif %}
-                                        {% if bilibili_info.danmaku_count_formatted %}
+                                        
+                                        
                                         <span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px;">
-                                            <i class="bi bi-chat-dots" style="font-size: 9px;"></i> {{ bilibili_info.danmaku_count_formatted }}
+                                            <i class="bi bi-chat-dots" style="font-size: 9px;"></i> 10
                                         </span>
-                                        {% endif %}
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-                {% endfor %}
-                {% endif %}
+                
+                
             </div>
         </div>
-        {% endif %}
+        
 
-        {% if screenshot %}
+        
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">{{ screenshot|filename }}</span>
+                        <span class="badge bg-primary float-end">screenshot_20260519_225323.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="{{ screenshot_url }}" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="{{ screenshot_url }}">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260519_225323.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260519_225323.png?raw=true">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        {% elif screenshot_message %}
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-camera"></i> Current Active Window Screenshot
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center py-8">
-                            <i class="bi bi-eye-slash" style="font-size: 48px; color: #6c757d; margin-bottom: 16px;"></i>
-                            <p class="text-muted" style="font-size: 1.1em;">
-                                窗口已设置隐私保护，跳过截图
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+        
 
-        {% if windows and windows|length > 0 %}
+        
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> Currently Open Windows
-                        {% if is_normal_window_active and active_normal_window_title %}
-                        <span class="badge bg-danger float-end">Active: {{ active_normal_window_title|truncate(40) }}</span>
-                        {% endif %}
+                        
                     </div>
                     <div class="card-body scroll-container">
-                        {% for window in windows %}
-                        <div class="window-item {% if window.is_active %}window-active{% else %}window-normal{% endif %}">
+                        
+                        <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>{{ window.title|truncate(80) }}</strong>
+                                    <strong>Sticky Notes</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> {{ window.process }} |
-                                        <i class="bi bi-aspect-ratio"></i> {{ window.width }}x{{ window.height }}
+                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 570x1098
                                     </div>
-                                    {% if window.music and window.music.parsed_lyrics %}
-                                    <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
-                                        <div class="text-white font-bold">
-                                            <i class="bi bi-music-note"></i> {{ window.music.song }}
-                                        </div>
-                                        <div class="text-white-80 text-sm">{{ window.music.artist }}</div>
-                                        <div class="text-white-70 text-sm mt-2 font-italic lyrics-box" style="max-height: 100px; overflow-y: auto;">
-                                            {% for lyric in window.music.parsed_lyrics[:20] %}
-                                            [{{ lyric.time|format_time }}]{{ lyric.text }}
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    {% endif %}
+                                    
                                 </div>
-                                {% if window.is_active %}
-                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
-                                {% endif %}
+                                
                             </div>
                         </div>
-                        {% endfor %}
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Settings</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> SystemSettings.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1848
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Settings</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Windows Input Experience</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> TextInputHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Sticky Notes</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Microsoft.Notes.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 548x1086
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Program Manager</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> explorer.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
+        
 
-        {% if browser_tabs and browser_tabs|length > 0 %}
+        
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser ({{ browser_tabs|length }} tabs)
+                        <i class="bi bi-globe"></i> Currently Open Browser (4)
+                        
+                        <span class="badge bg-danger float-end">Active: main.py - pc-monitor - Trae CN</span>
+                        
                     </div>
                     <div class="card-body scroll-container">
-                        {% for tab in browser_tabs %}
+                        
+                        <div class="window-item window-active browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>main.py - pc-monitor - Trae CN</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
+                                    </div>
+                                    
+                                </div>
+                                
+                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                
+                            </div>
+                        </div>
+                        
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    {% if tab.url and tab.url.startswith('http') %}
-                                    <a href="{{ tab.url }}" target="_blank" rel="noopener noreferrer"
-                                       style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all; display: block;">
-                                        <img src="https://www.google.com/s2/favicons?domain={{ tab.domain }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <strong>{{ tab.url }}</strong>
-                                    </a>
-                                    {% elif tab.url %}
-                                    <strong class="text-muted-custom">{{ tab.url }}</strong>
-                                    {% else %}
-                                    <strong>{{ tab.title }}</strong>
-                                    {% endif %}
-                                    <div class="text-muted-custom small mt-1">
-                                        <i class="bi bi-browser-edge"></i> Browser Tab
+                                    <strong>豆包</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Doubao.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1545x1188
                                     </div>
+                                    
                                 </div>
+                                
                             </div>
                         </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% elif browser_windows and browser_windows|length > 0 %}
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser ({{ browser_windows|length }})
-                        {% if is_browser_active and active_browser_title %}
-                        <span class="badge bg-danger float-end">Active: {{ active_browser_title|truncate(40) }}</span>
-                        {% endif %}
-                    </div>
-                    <div class="card-body scroll-container">
-                        {% for window in browser_windows %}
-                        <div class="window-item {% if window.is_active %}window-active{% else %}window-normal{% endif %} browser-card">
+                        
+                        <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>{{ window.title|truncate(80) }}</strong>
+                                    <strong>1-知识图谱基础_哔哩哔哩_bilibili - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> {{ window.process }} |
-                                        <i class="bi bi-aspect-ratio"></i> {{ window.width }}x{{ window.height }}
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
                                     </div>
-                                    {% if window.website and window.website.url and window.website.url.startswith('http') %}
+                                    
                                     <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain={{ window.website.domain }}&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="{{ window.website.url }}" target="_blank" rel="noopener noreferrer"
+                                        <img src="https://www.google.com/s2/favicons?domain=www.bilibili.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://www.bilibili.com/video/BV1JPqGBfEZq?spm_id_from=333.788.videopod.sections&vd_source=6198a7ee5cc7ff8d6da472a64f852034&p=2" target="_blank" rel="noopener noreferrer"
                                            style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> {{ window.website.domain }}
+                                            <i class="bi bi-box-arrow-up-right"></i> www.bilibili.com
                                         </a>
                                     </div>
-                                    {% endif %}
+                                    
                                 </div>
-                                {% if window.is_active %}
-                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
-                                {% endif %}
+                                
                             </div>
                         </div>
-                        {% endfor %}
+                        
+                        <div class="window-item window-normal browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>QQ</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> QQ.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
+        
 
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-clock-history"></i> Historical Window Open Records ({{ history_windows|length }}/{{ max_history }})
+                        <i class="bi bi-clock-history"></i> Historical Window Open Records (10/10)
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -788,16 +790,97 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for window in history_windows %}
+                                    
                                     <tr>
                                         <td>
-                                            <strong>{{ window.title|truncate(80) }}</strong>
+                                            <strong>1-知识图谱基础_哔哩哔哩_bilibili - Personal - Microsoft​ Edge</strong>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">{{ window.process }}</span>
+                                            <span class="badge bg-secondary">msedge.exe</span>
                                         </td>
                                     </tr>
-                                    {% endfor %}
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Sticky Notes</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Microsoft.Notes.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Windows Input Experience</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">TextInputHost.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Settings</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">SystemSettings.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>QQ</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">QQ.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Двери Тамерлана - Мельница</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Program Manager</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Authorization | TRAE - The Real AI Engineer and 2 more pages - Personal - Micros...</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>豆包</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Doubao.exe</span>
+                                        </td>
+                                    </tr>
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -807,7 +890,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: {{ timestamp }}</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-19T22:53:24.069600</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -815,11 +898,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const LAST_UPDATE_ISO = '{{ timestamp }}';
+        const LAST_UPDATE_ISO = '2026-05-19T22:53:24.069600';
         let lastUpdateTime;
         
         // 隐藏的bilibili数据（由后端生成）
-        const bilibiliCoverCache = {{ bilibili_cover_cache|tojson if bilibili_cover_cache else '{}' }};
+        const bilibiliCoverCache = {"BV1JPqGBfEZq": "data/covers\\BV1JPqGBfEZq.jpg"};
 
         try {
             lastUpdateTime = new Date(LAST_UPDATE_ISO);
@@ -934,10 +1017,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
 
         // 歌词更新逻辑
-        const parsedLyrics = {{ current_music.parsed_lyrics|tojson if current_music.parsed_lyrics else '[]' }};
-        const totalDuration = {{ current_music.total_duration|tojson if current_music.total_duration else 'null' }};
-        const songEnded = {{ 'true' if current_music.song_ended else 'false' }};
-        const initialCurrentTime = '{{ current_music.current_time_str if current_music.current_time_str else '00:00' }}';
+        const parsedLyrics = [];
+        const totalDuration = null;
+        const songEnded = false;
+        const initialCurrentTime = '00:00';
         
         function timeToSeconds(timeStr) {
             const parts = timeStr.split(':');
@@ -964,7 +1047,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             
             // 如果没有歌词数据，显示当前歌词
             if (!parsedLyrics || parsedLyrics.length === 0) {
-                const currentLyric = '{{ current_music.lyrics if current_music.lyrics else "" }}';
+                const currentLyric = '';
                 if (currentLyric && currentLyric !== '桌面歌词') {
                     lyricText.textContent = currentLyric;
                 } else {
@@ -1002,165 +1085,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         // 初始化歌词
         if (document.getElementById('lyrics-container')) {
             updateLyrics();
-        }
-
-        // ============ 音乐计时逻辑（参考index copy.html）===========
-        let musicStartTime = null;
-        let musicOffset = 0;
-        let currentLyricIndex = 0;
-        let songHasEnded = songEnded;
-        
-        // 获取初始播放位置（从localStorage缓存）
-        function getCachedPlaybackPosition(songName) {
-            try {
-                const cache = localStorage.getItem('music_playback_cache');
-                if (cache) {
-                    const data = JSON.parse(cache);
-                    if (data[songName] && data[songName].timestamp > Date.now() - 300000) {
-                        return data[songName].position;
-                    }
-                }
-            } catch(e) {
-                console.warn('Failed to read playback cache:', e);
-            }
-            return null;
-        }
-
-        // 保存播放位置到缓存
-        function savePlaybackPosition(songName, position) {
-            try {
-                const cache = localStorage.getItem('music_playback_cache');
-                const data = cache ? JSON.parse(cache) : {};
-                data[songName] = {
-                    position: position,
-                    timestamp: Date.now()
-                };
-                localStorage.setItem('music_playback_cache', JSON.stringify(data));
-            } catch(e) {
-                console.warn('Failed to save playback cache:', e);
-            }
-        }
-
-        // 格式化时间为 MM:SS
-        function formatMusicTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
-        }
-
-        // 停止封面旋转
-        function stopCoverRotation() {
-            const cover = document.getElementById('music-cover');
-            if (cover) {
-                cover.style.animation = 'none';
-            }
-        }
-
-        // 显示歌曲结束
-        function showSongEnded() {
-            const playbackContainer = document.getElementById('playback-time-container');
-            if (playbackContainer) {
-                playbackContainer.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-                playbackContainer.style.opacity = '0';
-                playbackContainer.style.transform = 'translateY(10px)';
-                setTimeout(() => {
-                    playbackContainer.style.display = 'none';
-                }, 500);
-            }
-            
-            const lyricsDisplay = document.getElementById('lyrics-display');
-            if (lyricsDisplay) {
-                lyricsDisplay.style.transition = 'opacity 0.5s ease-out';
-                lyricsDisplay.style.opacity = '0';
-                setTimeout(() => {
-                    lyricsDisplay.innerHTML = '<span style="font-size: 1.2em; text-align: center; opacity: 0.6;">🎵 播放已结束</span>';
-                    lyricsDisplay.style.transition = 'opacity 0.5s ease-in';
-                    lyricsDisplay.style.opacity = '1';
-                }, 500);
-            }
-            
-            stopCoverRotation();
-        }
-
-        // 更新音乐显示（歌词+播放时间）
-        function updateMusicDisplay() {
-            if (songHasEnded) return;
-            
-            const now = Date.now();
-            
-            // 初始化播放开始时间
-            if (musicStartTime === null) {
-                musicStartTime = now;
-                const cachedPosition = getCachedPlaybackPosition('{{ current_music.song if current_music else "" }}');
-                if (cachedPosition !== null) {
-                    musicOffset = cachedPosition;
-                } else {
-                    musicOffset = timeToSeconds(initialCurrentTime);
-                }
-            }
-
-            // 计算当前播放时间（使用数学计算）
-            const elapsedSeconds = (now - musicStartTime) / 1000 + musicOffset;
-            
-            // 检查歌曲是否结束
-            if (totalDuration && elapsedSeconds >= totalDuration - 2) {
-                if (!songHasEnded) {
-                    songHasEnded = true;
-                    showSongEnded();
-                }
-                return;
-            }
-
-            // 更新播放时间显示
-            const playbackTime = document.getElementById('playback-time');
-            if (playbackTime && totalDuration) {
-                playbackTime.textContent = formatMusicTime(elapsedSeconds) + ' / ' + formatMusicTime(totalDuration);
-            }
-
-            // 更新歌词显示
-            if (!parsedLyrics || parsedLyrics.length === 0) return;
-
-            const currentLine = document.getElementById('current-lyric-line');
-            const translationLine = document.getElementById('current-lyric-translation');
-
-            if (!currentLine) return;
-
-            // 二分查找找到当前歌词行
-            let left = 0;
-            let right = parsedLyrics.length - 1;
-            let foundIndex = -1;
-            
-            while (left <= right) {
-                const mid = Math.floor((left + right) / 2);
-                if (parsedLyrics[mid].time <= elapsedSeconds) {
-                    foundIndex = mid;
-                    left = mid + 1;
-                } else {
-                    right = mid - 1;
-                }
-            }
-
-            if (foundIndex !== -1 && currentLyricIndex !== foundIndex) {
-                currentLyricIndex = foundIndex;
-                currentLine.textContent = parsedLyrics[foundIndex].text;
-                
-                if (translationLine) {
-                    if (parsedLyrics[foundIndex].translation) {
-                        translationLine.textContent = parsedLyrics[foundIndex].translation;
-                        translationLine.style.display = 'block';
-                    } else {
-                        translationLine.style.display = 'none';
-                    }
-                }
-            }
-
-            // 保存播放位置
-            savePlaybackPosition('{{ current_music.song if current_music else "" }}', elapsedSeconds);
-        }
-
-        // 定时更新音乐显示（每100ms更新一次）
-        if (document.getElementById('lyrics-container') || document.getElementById('playback-time')) {
-            setInterval(updateMusicDisplay, 100);
         }
 
         setTimeout(function() {
@@ -1262,16 +1186,28 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
         const metricsCtx = document.getElementById('metricsChart');
         if (metricsCtx) {
-            const metricsLabels = {{ metrics_labels|tojson if metrics_labels else '[]' }};
+            const metricsLabels = ["22:40:08", "22:41:50", "22:49:59", "22:51:14", "22:53:24"];
             const cpuData = [];
             const memoryData = [];
 
-            {% if metrics_history %}
-            {% for entry in metrics_history %}
-            cpuData.push({{ entry.cpu }});
-            memoryData.push({{ entry.memory }});
-            {% endfor %}
-            {% endif %}
+            
+            
+            cpuData.push(8.38888888888889);
+            memoryData.push(60.7);
+            
+            cpuData.push(8.855555555555554);
+            memoryData.push(60.4);
+            
+            cpuData.push(17.67222222222222);
+            memoryData.push(58.1);
+            
+            cpuData.push(10.31111111111111);
+            memoryData.push(57.0);
+            
+            cpuData.push(3.822222222222222);
+            memoryData.push(57.2);
+            
+            
 
             if (metricsLabels.length > 0) {
                 new Chart(metricsCtx, {
@@ -1307,7 +1243,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                max: {{ max_usage }},
+                                max: 70,
                                 title: {
                                     display: true,
                                     text: 'Usage %'
@@ -1319,7 +1255,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }
         }
 
-        const currentSong = "{{ current_music.song if current_music else '' }}";
+        const currentSong = "";
         let currentLyricIndex = 0;
         let playbackStartTime = null;
         let playbackOffset = 0;
@@ -1404,7 +1340,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 if (cachedPosition !== null) {
                     playbackOffset = cachedPosition;
                 } else {
-                    playbackOffset = {{ current_music.playback_position if current_music and current_music.playback_position else 0 }};
+                    playbackOffset = 0;
                 }
             }
 
@@ -1485,253 +1421,4 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
     </script>
 </body>
-</html>"""
-
-
-def contrasting_color(hex_color):
-    try:
-        hex_color = hex_color.lstrip('#')
-        if len(hex_color) != 6:
-            return '#ffffff'
-        r = int(hex_color[0:2], 16)
-        g = int(hex_color[2:4], 16)
-        b = int(hex_color[4:6], 16)
-        brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-        return '#000000' if brightness > 0.5 else '#ffffff'
-    except:
-        return '#ffffff'
-
-
-def format_time(seconds):
-    try:
-        mins = int(seconds // 60)
-        secs = int(seconds % 60)
-        return f"{mins:02d}:{secs:02d}"
-    except:
-        return "00:00"
-
-
-def filename_filter(path):
-    try:
-        return path.split('/')[-1].split('\\')[-1]
-    except:
-        return path
-
-
-def truncate_filter(s, length):
-    try:
-        if len(s) > length:
-            return s[:length] + '...'
-        return s
-    except:
-        return s
-
-
-def strftime_filter(dt_str, format_str):
-    """Jinja2 filter to format ISO datetime string."""
-    from datetime import datetime
-    try:
-        dt = datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
-        return dt.strftime(format_str)
-    except:
-        return dt_str
-
-class HTMLGenerator:
-    def __init__(self):
-        from jinja2 import Environment
-        env = Environment()
-        env.filters['contrasting_color'] = contrasting_color
-        env.filters['filename'] = filename_filter
-        env.filters['truncate'] = truncate_filter
-        env.filters['format_time'] = format_time
-        env.filters['strftime'] = strftime_filter
-        self.template = env.from_string(HTML_TEMPLATE)
-
-    def generate(self, data):
-        windows = data.get('windows', [])
-        active_window = data.get('active_window', {})
-
-        current_music = None
-        for win in windows:
-            if win.get('music'):
-                current_music = win['music']
-                break
-
-        browser_windows = [win for win in windows if win.get('browser')]
-
-        system_info = data.get('system_info', {})
-        cpu_percent_list = system_info.get('cpu', [])
-        memory_info = system_info.get('memory', {})
-        disk_info = system_info.get('disk', {})
-        network_info = system_info.get('network', {})
-
-        # 只保留大于0.1%的CPU核心，并保存核心索引
-        active_cpu_cores = []
-        for idx, core in enumerate(cpu_percent_list):
-            if core > 0.1:
-                active_cpu_cores.append({'core_index': idx, 'usage': core})
-
-        cpu_percent = int(sum(cpu_percent_list) / len(cpu_percent_list)) if cpu_percent_list else 0
-
-        memory_total_gb = f"{memory_info.get('total', 0):.2f}"
-        memory_used_gb = f"{memory_info.get('used', 0):.2f}"
-        memory_percent = memory_info.get('percent', 0)
-
-        def format_bytes(bytes_val):
-            if bytes_val < 1024:
-                return f"{bytes_val} B"
-            elif bytes_val < 1024 * 1024:
-                return f"{bytes_val / 1024:.2f} KB"
-            elif bytes_val < 1024 * 1024 * 1024:
-                return f"{bytes_val / 1024 / 1024:.2f} MB"
-            else:
-                return f"{bytes_val / 1024 / 1024 / 1024:.2f} GB"
-
-        def extract_domain(url):
-            """从URL中提取域名"""
-            if not url:
-                return ''
-            try:
-                from urllib.parse import urlparse
-                parsed = urlparse(url)
-                return parsed.netloc or parsed.path.split('/')[0]
-            except:
-                return url.split('/')[2] if '/' in url else url
-
-        def convert_to_github_proxy_url(local_path, repo_url='https://github.com/llmic/pc-monitor'):
-            """将本地screenshot路径转换为GitHub代理加速URL"""
-            if not local_path:
-                return ''
-            filename = os.path.basename(local_path)
-            github_raw_url = f"{repo_url}/blob/master/screenshots/{filename}?raw=true"
-            return f"https://hk.gh-proxy.org/{github_raw_url}"
-
-        active_window_title = 'None'
-        if isinstance(active_window, dict):
-            active_window_title = active_window.get('title', 'None')
-        elif isinstance(active_window, str):
-            active_window_title = active_window
-
-        # 分离普通窗口和浏览器窗口（参考ttb/a.py的浏览器检测逻辑）
-        # 严格判断：只有标记为浏览器且有URL或符合浏览器特征的才认为是浏览器窗口
-        BROWSER_PROCESSES = ['chrome', 'msedge', 'firefox', 'brave', 'opera', '360se', 'liebao', 'sogouexplorer']
-        BROWSER_CLASSES = {'Chrome_WidgetWin_1', 'Edge_WidgetWin_1', 'MozillaWindowClass', '360SEWindowClass'}
-        
-        browser_windows = []
-        normal_windows = []
-        
-        for win in windows:
-            is_browser = False
-            
-            # 判断方式1：窗口已有browser标记
-            if win.get('browser'):
-                is_browser = True
-            
-            # 判断方式2：进程名匹配浏览器
-            proc_name = win.get('process', '').lower()
-            if proc_name and any(browser in proc_name for browser in BROWSER_PROCESSES):
-                is_browser = True
-            
-            # 判断方式3：窗口类名匹配浏览器（如果有class_name字段）
-            class_name = win.get('class_name', '')
-            if class_name in BROWSER_CLASSES:
-                is_browser = True
-            
-            # 判断方式4：有website信息且有URL
-            website = win.get('website', {})
-            if website.get('url'):
-                is_browser = True
-            
-            if is_browser:
-                browser_windows.append(win)
-            else:
-                normal_windows.append(win)
-
-        # 检查是否有浏览器窗口是激活的
-        is_browser_active = False
-        active_browser_title = ''
-        for win in browser_windows:
-            if win.get('is_active'):
-                is_browser_active = True
-                active_browser_title = win.get('title', '')
-                break
-
-        # 检查是否有普通窗口是激活的
-        is_normal_window_active = False
-        active_normal_window_title = ''
-        for win in normal_windows:
-            if win.get('is_active'):
-                is_normal_window_active = True
-                active_normal_window_title = win.get('title', '')
-                break
-
-        # 准备 metrics history 用于模板
-        metrics_history = data.get('metrics_history', {})
-        chart_data = []
-        max_usage = 100  # 默认最大值
-        if metrics_history and 'cpu' in metrics_history and 'memory' in metrics_history:
-            for i, (cpu, mem) in enumerate(zip(metrics_history['cpu'], metrics_history['memory'])):
-                chart_data.append({'cpu': cpu, 'memory': mem})
-            # 计算历史最大值，取整并加一点余量
-            all_values = metrics_history['cpu'] + metrics_history['memory']
-            if all_values:
-                max_usage = int(max(all_values)) + 10
-                # 确保至少为 20（避免 y 轴范围太小）
-                max_usage = max(max_usage, 20)
-
-        # 获取头像路径（使用缓存的）
-        avatar_path = data.get('cached_avatar') or data.get('avatar')
-        if avatar_path:
-            avatar_path = avatar_path.replace('\\', '/')
-
-        # 构建bilibili封面缓存（由后端生成，避免前端CORS问题）
-        bilibili_cover_cache = {}
-        for win in windows:
-            bilibili_info = win.get('bilibili')
-            if bilibili_info and bilibili_info.get('bv_id') and bilibili_info.get('cover'):
-                bilibili_cover_cache[bilibili_info['bv_id']] = bilibili_info['cover']
-
-        context = {
-            'computer_name': data.get('computer_name', 'PC Monitor'),
-            'timestamp': data.get('timestamp', datetime.now().isoformat()),
-            'shutdown': data.get('shutdown', False),
-            'cpu_percent': cpu_percent,
-            'cpu_cores': active_cpu_cores,
-            'memory_percent': int(memory_percent),
-            'memory_used_gb': memory_used_gb,
-            'memory_total_gb': memory_total_gb,
-            'disk_percent': disk_info.get('percent', 0),
-            'disk_used': f"{disk_info.get('used', 0) / 1024 / 1024 / 1024:.2f}",
-            'disk_total': f"{disk_info.get('total', 0) / 1024 / 1024 / 1024:.2f}",
-            'network_sent': format_bytes(network_info.get('bytes_sent', 0)),
-            'network_recv': format_bytes(network_info.get('bytes_recv', 0)),
-            'window_count': len(windows),
-            'active_window': active_window,
-            'active_window_title': active_window_title,
-            'current_music': current_music,
-            'history_windows': data.get('history_windows', []),
-            'browser_windows': browser_windows,
-            'browser_tabs': data.get('browser_tabs', []),
-            'is_browser_active': is_browser_active,
-            'active_browser_title': active_browser_title,
-            'is_normal_window_active': is_normal_window_active,
-            'active_normal_window_title': active_normal_window_title,
-            'windows': normal_windows,
-            'screenshot': data.get('screenshot'),
-            'screenshot_message': data.get('screenshot_message'),
-            'screenshot_url': convert_to_github_proxy_url(data.get('screenshot')),
-            'metrics_history': chart_data,
-            'metrics_labels': data.get('metrics_labels', []),
-            'max_history': data.get('max_history', 10),
-            'max_metrics_history': data.get('max_metrics_history', 5),
-            'max_usage': max_usage,
-            'avatar': avatar_path,
-            'timestamp': data.get('timestamp', datetime.now().isoformat()),
-            'bilibili_cover_cache': bilibili_cover_cache
-        }
-
-        return self.template.render(context)
-
-    def save(self, html, filename):
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(html)
+</html>

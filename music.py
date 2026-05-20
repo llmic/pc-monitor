@@ -485,7 +485,13 @@ def get_cloudmusic_progress():
     if win32gui is None:
         return 0, 0, "00:00", "00:00", "Not Running"
     
-    PLAYER_WINDOW_CLASS = "OrpheusPlayerWidget"
+    # 支持多种网易云音乐窗口类名
+    PLAYER_WINDOW_CLASSES = {
+        "OrpheusPlayerWidget",
+        "OrpheusBrowserHost",
+        "MiniPlayer",
+        "icon"  # 迷你播放器窗口
+    }
     
     progress_info = {
         "current_sec": 0,
@@ -496,8 +502,10 @@ def get_cloudmusic_progress():
     }
     
     def callback(handle, extra):
-        if win32gui.GetClassName(handle) == PLAYER_WINDOW_CLASS:
+        class_name = win32gui.GetClassName(handle)
+        if class_name in PLAYER_WINDOW_CLASSES:
             window_text = win32gui.GetWindowText(handle)
+            # 尝试从标题中提取时间信息
             match = re.search(r'(\d+:\d+)\s*/\s*(\d+:\d+)', window_text)
             if match:
                 current_time = match.group(1)
@@ -511,10 +519,33 @@ def get_cloudmusic_progress():
                     "total_time": total_time,
                     "status": "Playing" if current_sec > 0 else "Paused"
                 })
+            elif "-" in window_text:
+                # 如果标题包含分隔符但没有时间，说明可能正在播放但时间未显示在标题中
+                extra["status"] = "Playing"
         return True
     
     result = {}
     win32gui.EnumWindows(callback, result)
+    
+    # 如果找到网易云音乐窗口但没有获取到时间，尝试通过其他方式获取
+    if result.get("status") == "Playing" and result.get("total_sec") == 0:
+        # 检查是否有正在播放的歌曲（通过解析标题）
+        all_windows = []
+        
+        def enum_all_callback(handle, extra):
+            class_name = win32gui.GetClassName(handle)
+            if class_name in PLAYER_WINDOW_CLASSES:
+                title = win32gui.GetWindowText(handle)
+                if title and "-" in title:
+                    extra.append(title)
+            return True
+        
+        win32gui.EnumWindows(enum_all_callback, all_windows)
+        
+        if all_windows:
+            # 如果有网易云音乐窗口且标题包含分隔符，认为正在播放
+            result["status"] = "Playing"
+    
     return (
         result.get("current_sec", 0),
         result.get("total_sec", 0),
@@ -686,6 +717,12 @@ def get_music_info(title):
             netease_info['current_time_str'] = current_time if current_time else '00:00'
         
         netease_info['playback_status'] = status
+
+        # Calculate playback progress percentage
+        if netease_info['total_duration'] and netease_info['playback_position'] and netease_info['total_duration'] > 0:
+            netease_info['playback_progress'] = min((netease_info['playback_position'] / netease_info['total_duration']) * 100, 100)
+        else:
+            netease_info['playback_progress'] = 0
 
         # Check if song has ended
         if netease_info['total_duration'] and netease_info['playback_position']:

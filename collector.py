@@ -12,10 +12,54 @@ import urllib.request
 import urllib.error
 from datetime import datetime
 from PIL import Image, ImageGrab
-from bilibili import extract_bv_info, get_bilibili_info
+from bilibili import extract_bv_info, get_bilibili_info, download_bilibili_cover
 from music import get_music_info
 from ctypes import windll, c_int, byref, sizeof
 from ctypes.wintypes import RECT, HWND, DWORD
+
+try:
+    import uiautomation as auto
+    UIAUTOMATION_AVAILABLE = True
+except ImportError:
+    UIAUTOMATION_AVAILABLE = False
+
+BROWSER_CLASSES = {
+    "Chrome_WidgetWin_1",    # Google Chrome
+    "Edge_WidgetWin_1",      # Microsoft Edge
+    "MozillaWindowClass",    # Firefox
+    "360SEWindowClass"       # 360浏览器
+}
+
+def get_browser_url(hwnd: int) -> str | None:
+    """获取Chrome/Edge/Firefox浏览器的当前网址 - 参考 ttb/a.py"""
+    if not UIAUTOMATION_AVAILABLE:
+        return None
+    try:
+        window = auto.ControlFromHandle(hwnd)
+        window_class = window.ClassName
+        
+        # 先判断是否为浏览器窗口
+        if window_class not in BROWSER_CLASSES:
+            return None
+            
+        if window_class in ["Chrome_WidgetWin_1", "Edge_WidgetWin_1"]:
+            # Chrome / Edge
+            address_bar = window.EditControl(AccessKey='Address')
+            return address_bar.GetValuePattern().Value.strip()
+        elif window_class == "MozillaWindowClass":
+            # Firefox
+            address_bar = window.EditControl(Name="地址栏")
+            return address_bar.GetValuePattern().Value.strip()
+        elif window_class in ["360SEWindowClass", "BraveWindow", "OperaWindowClass"]:
+            # 其他浏览器尝试通用方式
+            try:
+                address_bar = window.EditControl(AccessKey='Address')
+                return address_bar.GetValuePattern().Value.strip()
+            except:
+                pass
+    except Exception:
+        return None
+    return None
 
 # 开启高DPI感知，解决高分辨率屏幕坐标偏移问题
 windll.user32.SetProcessDPIAware()
@@ -180,7 +224,7 @@ def get_ms_avatar_via_browser(save_path="ms_account_avatar.png"):
                 driver.quit()
                 return save_path
         else:
-            resp = requests.get(avatar_url, timeout=10)
+            resp = requests.get(avatar_url, timeout=1)
             img = Image.open(BytesIO(resp.content))
             img.save(save_path)
             driver.quit()
@@ -224,7 +268,25 @@ def cache_avatar(avatar_source_path, target_dir='screenshots'):
         print(f"缓存头像失败: {e}")
         return None
 
+# 主流浏览器类名（用于识别浏览器窗口）- 参考 ttb/a.py
+BROWSER_CLASSES = {
+    "Chrome_WidgetWin_1",    # Google Chrome
+    "Edge_WidgetWin_1",      # Microsoft Edge
+    "MozillaWindowClass",    # Firefox
+    "360SEWindowClass",      # 360浏览器
+    "BraveWindow",           # Brave
+    "OperaWindowClass"       # Opera
+}
+
 BROWSER_NAMES = {
+    'chrome': 'Google Chrome',
+    'msedge': 'Microsoft Edge',
+    'firefox': 'Firefox',
+    'brave': 'Brave',
+    'opera': 'Opera',
+    '360se': '360安全浏览器',
+    'liebao': '猎豹浏览器',
+    'sogouexplorer': '搜狗浏览器',
     'chrome.exe': 'Google Chrome',
     'msedge.exe': 'Microsoft Edge',
     'firefox.exe': 'Firefox',
@@ -682,7 +744,16 @@ class DataCollector:
                 proc_name = 'Unknown'
 
             proc_lower = proc_name.lower()
-            is_browser = any(b.lower() in proc_lower for b in BROWSER_NAMES)
+            browser_class_name = win32gui.GetClassName(win._hWnd)
+            
+            # 严格的浏览器检测：必须满足以下条件之一
+            # 1. 窗口类名是已知的浏览器类名
+            # 2. 进程名精确匹配浏览器进程（不含.exe的版本）
+            is_browser_by_class = browser_class_name in BROWSER_CLASSES
+            is_browser_by_proc = proc_lower in ['chrome', 'msedge', 'firefox', 'brave', 'opera', '360se', 'liebao', 'sogouexplorer']
+            
+            # 只有满足任一条件才认为是浏览器
+            is_browser = is_browser_by_class or is_browser_by_proc
 
             # Skip VPN processes - do not upload to GitHub
             is_vpn = any(vpn.lower() in proc_lower for vpn in VPN_PROCESSES)
@@ -724,32 +795,50 @@ class DataCollector:
                 'timestamp': datetime.now().isoformat()
             }
 
-            bv_info = extract_bv_info(win.title)
-            if bv_info:
-                full_bv_info = get_bilibili_info(win.title)
-                if full_bv_info:
-                    window_info['bilibili'] = full_bv_info
-                else:
-                    window_info['bilibili'] = bv_info
-            else:
-                # Check if title contains bilibili keywords
-                has_bilibili_keyword = 'bilibili' in win.title.lower() or '哔哩哔哩' in win.title
-                
-                # Also check if URL contains bilibili
-                temp_url = get_browser_url_from_title(win.title, proc_name)
-                has_bilibili_url = temp_url and 'bilibili.com' in temp_url.lower()
-                
-                # Use get_bilibili_info to search for video if we have bilibili content
-                if has_bilibili_keyword or has_bilibili_url:
-                    full_bv_info = get_bilibili_info(win.title)
+            browser_url = None
+            
+            # 参考 ttb/a.py：优先使用窗口类名判断浏览器，然后获取URL
+            # 优先使用 uiautomation 获取真实浏览器URL（参考 ttb/a.py）
+            if is_browser_by_class and UIAUTOMATION_AVAILABLE:
+                browser_url = get_browser_url(win._hWnd)
+            
+            # 如果 uiautomation 失败或不是浏览器类，尝试从进程名判断
+            if not browser_url and is_browser:
+                browser_url = get_browser_url(win._hWnd)
+            
+            # 如果还是失败，回退到从标题提取
+            if not browser_url:
+                browser_url = get_browser_url_from_title(win.title, proc_name)
+
+            # 参考 ttb/a.py：强规则匹配B站窗口
+            # 强规则1：标题/URL包含B站关键词
+            title_lower = win.title.lower()
+            has_bili_keyword = any(key.lower() in title_lower for key in ['bilibili', '哔哩哔哩', 'b站'])
+            has_bili_url = browser_url and 'bilibili.com' in browser_url.lower()
+            
+            if has_bili_keyword or has_bili_url:
+                # 强规则2：提取BV号（优先从URL提取）
+                bv_info = extract_bv_info(win.title, browser_url)
+                if bv_info:
+                    # 强规则3：API校验
+                    full_bv_info = get_bilibili_info(win.title, browser_url)
                     if full_bv_info:
+                        # 下载并缓存封面图片
+                        bv_id = full_bv_info.get('bv_id')
+                        cover_url = full_bv_info.get('cover')
+                        if bv_id and cover_url:
+                            local_cover_path = download_bilibili_cover(bv_id, cover_url)
+                            if local_cover_path:
+                                full_bv_info['cover'] = local_cover_path
                         window_info['bilibili'] = full_bv_info
-                    elif has_bilibili_url:
-                        window_info['bilibili'] = {
-                            'bv_id': 'bilibili',
-                            'url': temp_url,
-                            'title': 'B站内容',
-                            'cover': None
+                    else:
+                        window_info['bilibili'] = bv_info
+                elif has_bili_url:
+                    window_info['bilibili'] = {
+                        'bv_id': 'bilibili',
+                        'url': browser_url,
+                        'title': 'B站内容',
+                        'cover': None
                         }
 
             # Check for NetEase Cloud Music (even when minimized) - only match cloudmusic.exe process
@@ -758,19 +847,16 @@ class DataCollector:
                 if music_info:
                     window_info['music'] = music_info
 
-            browser_url = get_browser_url_from_title(win.title, proc_name)
+            # 使用严格的浏览器检测：只有通过类名或进程名确认是浏览器才标记
             if browser_url:
                 website_info = get_website_info(browser_url)
                 if website_info:
                     window_info['website'] = website_info
                     window_info['browser'] = True
-            else:
-                proc_lower = proc_name.lower() if proc_name else ''
-                for b in BROWSER_NAMES:
-                    if b.lower() in proc_lower or b.lower() in win.title.lower():
-                        window_info['website'] = {'url': None, 'title': win.title}
-                        window_info['browser'] = True
-                        break
+            elif is_browser:
+                # 如果是浏览器窗口但没有URL，也标记为浏览器
+                window_info['website'] = {'url': None, 'title': win.title, 'domain': None}
+                window_info['browser'] = True
 
             windows.append(window_info)
 

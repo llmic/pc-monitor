@@ -17,19 +17,94 @@ def save_bv_cache(cache):
     with open(BV_CACHE_FILE, 'w', encoding='utf-8') as f:
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
-def extract_bv_info(title):
-    """Extract BV ID from title or URL, handling ? and other parameters."""
-    # Pattern to match BV followed by exactly 10 characters (letters and digits)
-    # Match BV followed by 10 chars, optionally followed by ? or other chars
-    bv_pattern = r'BV([0-9A-Za-z]{10})'
-    match = re.search(bv_pattern, title)
+# 强规则：BV号正则 - 参考 ttb/a.py
+BV_REGEX = re.compile(r"BV[0-9a-zA-Z]{10}")
+
+# 强规则：B站关键词 - 参考 ttb/a.py
+BILI_KEYWORDS = {"bilibili", "哔哩哔哩", "B站"}
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Referer": "https://www.bilibili.com/"
+}
+
+def extract_bv_info(title, url=None):
+    """Extract BV ID from title or URL, handling ? and other parameters. - 参考 ttb/a.py"""
+    # 1. 优先从URL提取（最准确）
+    if url:
+        match = BV_REGEX.search(url)
+        if match:
+            bv_id = match.group(0)
+            return {
+                'bv_id': bv_id,
+                'url': f'https://www.bilibili.com/video/{bv_id}/'
+            }
+    
+    # 2. 从标题提取
+    match = BV_REGEX.search(title)
     if match:
         bv_id = match.group(0)
         return {
             'bv_id': bv_id,
             'url': f'https://www.bilibili.com/video/{bv_id}/'
         }
+    
     return None
+
+def get_bilibili_video_info(bv: str) -> dict | None:
+    """获取B站视频信息 - 参考 ttb/a.py"""
+    try:
+        url = f"https://api.bilibili.com/x/web-interface/view?bvid={bv}"
+        resp = requests.get(url, headers=HEADERS, timeout=5)
+        data = resp.json()
+        if data.get("code") == 0:
+            info = data["data"]
+            return {
+                "bv_id": bv,
+                "title": info["title"],
+                "author": info["owner"]["name"],
+                "view_count": info["stat"]["view"],
+                "url": f"https://www.bilibili.com/video/{bv}",
+                "cover": info.get("pic", "")
+            }
+        return None
+    except:
+        return None
+    return None
+
+COVER_CACHE_DIR = 'data/covers'
+
+def download_bilibili_cover(bv_id, cover_url):
+    """下载并缓存B站封面图片"""
+    if not cover_url:
+        return None
+    
+    os.makedirs(COVER_CACHE_DIR, exist_ok=True)
+    
+    # 生成本地文件名
+    local_filename = f"{bv_id}.jpg"
+    local_path = os.path.join(COVER_CACHE_DIR, local_filename)
+    
+    # 如果已缓存，直接返回路径
+    if os.path.exists(local_path):
+        return local_path
+    
+    try:
+        # 下载图片，添加referer绕过防盗链
+        headers = HEADERS.copy()
+        headers['Referer'] = f'https://www.bilibili.com/video/{bv_id}/'
+        
+        response = requests.get(cover_url, headers=headers, timeout=10)
+        response.raise_for_status()
+        
+        # 保存图片
+        with open(local_path, 'wb') as f:
+            f.write(response.content)
+        
+        return local_path
+    except Exception as e:
+        print(f"Failed to download cover for {bv_id}: {e}")
+        return None
 
 def clean_html_tags(text):
     """Remove HTML tags from text."""
@@ -206,10 +281,10 @@ def fetch_bilibili_title(bv_id):
         return detail.get('title', '')
     return None
 
-def get_bilibili_info(title):
-    """Get bilibili video info from window title, with fallback to search."""
-    # First try to extract BV from title
-    bv_info = extract_bv_info(title)
+def get_bilibili_info(title, url=None):
+    """Get bilibili video info from window title and URL, with fallback to search."""
+    # First try to extract BV from URL or title (URL优先)
+    bv_info = extract_bv_info(title, url)
     if bv_info:
         detail = fetch_bilibili_video_detail(bv_info['bv_id'])
         if detail:
@@ -225,7 +300,7 @@ def get_bilibili_info(title):
             clean_title = clean_title[:-len(suffix)].strip()
     
     # Try searching if we have a meaningful title
-    if clean_title and len(clean_title) > 3:
+    if clean_title and len(clean_title) > 1:
         search_result = search_bilibili_video(clean_title)
         if search_result:
             return search_result
