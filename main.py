@@ -106,9 +106,9 @@ def run_git_push():
             return
         
         print(f"[{get_timestamp()}] 1️⃣ 执行 Git Add...")
-        # 添加 index.html 和 screenshots 目录
+        # 添加 index.html、screenshots 目录和 static 目录
         add_result = subprocess.run(
-            ['git', 'add', OUTPUT_FILE, SCREENSHOT_DIR],
+            ['git', 'add', OUTPUT_FILE, SCREENSHOT_DIR, 'static/'],
             capture_output=True,
             text=True
         )
@@ -178,7 +178,7 @@ def git_push_thread():
         time.sleep(COLLECTION_INTERVAL)
 
 
-def run_monitor_cycle(collector, history_manager, generator, metrics_history):
+def run_monitor_cycle(collector, history_manager, generator, metrics_history, start_time_iso):
     """Run one complete monitoring cycle."""
     print(f"\n[{get_timestamp()}] Starting data collection...")
     
@@ -216,10 +216,11 @@ def run_monitor_cycle(collector, history_manager, generator, metrics_history):
         data['metrics_labels'] = metrics_history.get_labels()
         
         # Prepare data for HTML
-        data['history_windows'] = history_windows
+        data['history_windows'] = history_windows 
         data['computer_name'] = COMPUTER_NAME
         data['avatar'] = AVATAR_PATH
         data['cached_avatar'] = data.get('cached_avatar')
+        data['start_time'] = start_time_iso
         data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
         data['max_history'] = MAX_HISTORY
         data['max_metrics_history'] = MAX_METRICS_HISTORY
@@ -257,6 +258,10 @@ def main():
     """Main entry point for the application."""
     init_system()
     
+    # Record start time (ISO format)
+    START_TIME_ISO = datetime.now().isoformat()
+    print(f"[{get_timestamp()}] Start Time: {START_TIME_ISO}")
+    
     # Initialize components
     collector = DataCollector(avatar_path=AVATAR_PATH)
     history_manager = HistoryManager(
@@ -273,7 +278,7 @@ def main():
     
     try:
         # Run first cycle
-        run_monitor_cycle(collector, history_manager, generator, metrics_history)
+        run_monitor_cycle(collector, history_manager, generator, metrics_history, START_TIME_ISO)
         
         # Push to git after first cycle
         if GIT_PUSH_ENABLED:
@@ -286,7 +291,7 @@ def main():
         
         while True:
             time.sleep(COLLECTION_INTERVAL)
-            run_monitor_cycle(collector, history_manager, generator, metrics_history)
+            run_monitor_cycle(collector, history_manager, generator, metrics_history, START_TIME_ISO)
             
     except KeyboardInterrupt:
         print(f"\n\n[{get_timestamp()}] Stopping monitoring...")

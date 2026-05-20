@@ -596,10 +596,24 @@ def fetch_lyrics(song_name, artist_name=None):
                     # Check artist match if provided
                     if artist_name:
                         artist_match = False
+                        # Split artist_name by common separators
+                        artist_parts = re.split(r'[/&,，、]', artist_name)
+                        artist_parts = [a.strip().lower() for a in artist_parts if a.strip()]
+                        
+                        # Check if any part matches any API artist
+                        api_artists = []
                         for artist in song.get('artists', []):
-                            if artist_name.lower() in artist.get('name', '').lower():
-                                artist_match = True
+                            api_artists.append(artist.get('name', '').lower())
+                        
+                        # Check if any part of artist_name matches any API artist
+                        for part in artist_parts:
+                            for api_artist in api_artists:
+                                if part in api_artist or api_artist in part:
+                                    artist_match = True
+                                    break
+                            if artist_match:
                                 break
+                        
                         if not artist_match:
                             continue
                     

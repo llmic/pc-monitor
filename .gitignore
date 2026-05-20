@@ -19,8 +19,14 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+netease-cloudmusic-detector/
+.venv/
+netease-cloudmusic-detector/
+@AutomationLog.txt
+download.htm
+index opy.html
 
-# Virtual environments
+## Virtual environments
 venv/
 ENV/
 env/

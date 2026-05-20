@@ -352,8 +352,8 @@ body {
             overflow-y: auto !important;
         }
         .music-card-header {
-            background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
-            color: white;
-            padding: 10px 14px;
-            margin: 0;
-        }
+    background: linear-gradient(135deg, #e01010 0%, #ff4a4a 100%);
+    color: white;
+    padding: 10px 14px;
+    margin: 0;
+}

@@ -4,6 +4,20 @@ import os
 
 HTML_TEMPLATE = open("templates/index.html", "r", encoding="utf-8").read()
 
+# 读取静态资源文件
+def read_static_file(filepath):
+    """读取静态资源文件内容"""
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return f.read()
+    except Exception as e:
+        print(f"Error reading {filepath}: {e}")
+        return ''
+
+# 预读取静态资源
+STATIC_CSS = read_static_file("static/css/style.css")
+STATIC_JS = read_static_file("static/js/main.js")
+
 
 def contrasting_color(hex_color):
     try:
@@ -140,9 +154,6 @@ class HTMLGenerator:
         for win in windows:
             is_browser = False
             
-            # 判断方式1：窗口已有browser标记
-            if win.get('browser'):
-                is_browser = True
             
             # 判断方式2：进程名匹配浏览器
             proc_name = win.get('process', '').lower()
@@ -227,6 +238,7 @@ class HTMLGenerator:
             'active_window': active_window,
             'active_window_title': active_window_title,
             'current_music': current_music,
+            'has_music': current_music is not None,
             'history_windows': data.get('history_windows', []),
             'browser_windows': browser_windows,
             'browser_tabs': data.get('browser_tabs', []),
@@ -244,7 +256,9 @@ class HTMLGenerator:
             'max_metrics_history': data.get('max_metrics_history', 5),
             'max_usage': max_usage,
             'avatar': avatar_path,
-            'bilibili_cover_cache': bilibili_cover_cache
+            'bilibili_cover_cache': bilibili_cover_cache,
+            'static_css': STATIC_CSS,
+            'static_js': STATIC_JS
         }
 
         return self.template.render(context)
