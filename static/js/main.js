@@ -15,6 +15,8 @@ const BILI_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Referer': 'https://www.bilibili.com/'
 };
+// CORS代理服务 - 用于解决跨域问题
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 
 // 从URL或标题中提取BV号
 function extractBVId(text) {
@@ -23,18 +25,18 @@ function extractBVId(text) {
     return match ? match[0] : null;
 }
 
-// 从B站API获取视频信息
+// 从B站API获取视频信息（使用CORS代理解决跨域问题）
 async function fetchBilibiliVideoInfo(bvId) {
     if (!bvId) return null;
     
     try {
-        const url = `${BILI_API_URL}?bvid=${bvId}`;
-        console.log('Fetching Bilibili video info:', url);
+        const apiUrl = `${BILI_API_URL}?bvid=${bvId}`;
+        // 使用CORS代理来解决跨域问题
+        const proxyUrl = CORS_PROXY + encodeURIComponent(apiUrl);
         
-        const response = await fetch(url, { 
-            headers: BILI_HEADERS,
-            mode: 'cors'
-        });
+        console.log('Fetching Bilibili video info:', proxyUrl);
+        
+        const response = await fetch(proxyUrl);
         
         console.log('Response status:', response.status);
         
