@@ -36,10 +36,13 @@
                             <span id="statusText" class="fs-5 status-text"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 11:24:02</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 11:28:07</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay" class="current-time-display"></span>
+                        </div>
+                        <div class="text-muted-custom">
+                            <strong>Running Time:</strong> <span id="elapsedTimeDisplay" class="elapsed-time-display"></span>
                         </div>
                         <div id="alertContainer" class="mt-3 alert-container"></div>
                     </div>
@@ -57,29 +60,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">44%</div>
+                                    <div class="stats-number">13%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" data-width="44%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="13%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">62%</div>
+                                    <div class="stats-number">63%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" data-width="62%"></div>
+                                        <div class="progress-fill progress-memory" data-width="63%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">19.72 / 31.47 GB</div>
+                                    <div class="stats-number">19.85 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 318.72 B<br>
-                                        Received: 2.01 KB
+                                        Sent: 325.46 B<br>
+                                        Received: 2.12 KB
                                     </div>
                                 </div>
                             </div>
@@ -102,37 +105,17 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details (12 cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (8 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
                             
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
-                                    <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">15.6%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="15.6%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
                                     <div class="font-weight-bold">Core 1</div>
-                                    <div class="text-primary font-size-lg">90.6%</div>
+                                    <div class="text-primary font-size-lg">54.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="90.6%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">69.7%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="69.7%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="54.5%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -140,9 +123,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">71.9%</div>
+                                    <div class="text-primary font-size-lg">6.2%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="71.9%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="6.2%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -150,19 +133,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 4</div>
-                                    <div class="text-primary font-size-lg">78.8%</div>
+                                    <div class="text-primary font-size-lg">6.2%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="78.8%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">59.4%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="59.4%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="6.2%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -170,9 +143,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 6</div>
-                                    <div class="text-primary font-size-lg">71.9%</div>
+                                    <div class="text-primary font-size-lg">33.3%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="71.9%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="33.3%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -180,9 +153,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 7</div>
-                                    <div class="text-primary font-size-lg">79.4%</div>
+                                    <div class="text-primary font-size-lg">50.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="79.4%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="50.0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -190,9 +163,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 8</div>
-                                    <div class="text-primary font-size-lg">63.6%</div>
+                                    <div class="text-primary font-size-lg">18.8%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="63.6%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="18.8%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -200,9 +173,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 9</div>
-                                    <div class="text-primary font-size-lg">85.3%</div>
+                                    <div class="text-primary font-size-lg">18.2%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="85.3%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="18.2%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -210,19 +183,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 14</div>
-                                    <div class="text-primary font-size-lg">96.9%</div>
+                                    <div class="text-primary font-size-lg">52.9%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="96.9%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 15</div>
-                                    <div class="text-primary font-size-lg">15.6%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="15.6%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="52.9%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -243,10 +206,10 @@
             <div class="d-flex gap-4" style="width: 100%;">
                 
                 <div style="flex: 1; min-width: 300px;">
-                    <a href="https://music.163.com/#/song?id=3368469715" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <a href="https://music.163.com/#/song?id=3354587700" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                         <div class="card music-card" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 71, 87, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 71, 87, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 71, 87, 0.15)';">
                             <!-- 头部 -->
-                            <div class="card-header music-card-header" data-bg-color="#f8f9fa">
+                            <div class="card-header music-card-header" data-bg-color="#ffffff">
                                 <div class="d-flex align-items-center justify-between">
                                     <div class="d-flex align-items-center gap-2">
                                         <div style="width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
@@ -264,28 +227,28 @@
                                     <div class="col-auto">
                                         
                                         <div id="music-cover-1" class="music-cover music-spin" style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                                            <img src="https://p2.music.126.net/R0VfO91i9s1SX8k4s8ryog==/109951173023026887.jpg" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
+                                            <img src="https://p2.music.126.net/IqGUKTCNc8uGwE-hxvSi4Q==/109951172482938493.jpg" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
                                         </div>
                                         
                                     </div>
                                     <!-- 信息 -->
                                     <div class="col" style="padding-left: 12px;">
                                         <h5 class="font-weight-bold mb-1" style="line-height: 1.3; font-size: 0.9rem;">
-                                            Sugar Rush
+                                            Frozen Time
                                         </h5>
                                         <p class="text-muted mb-0" style="font-size: 0.75rem;">
-                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> 今井文也
+                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> Life right
                                         </p>
                                         
                                         <div id="music-playback-time-container-1" class="music-playback-time-container" style="margin-top: 4px;">
                                             <span id="music-playback-time-1" class="music-playback-time" style="font-size: 0.7rem; opacity: 0.6;">
-                                                00:00 / 02:58
+                                                00:00 / 05:00
                                             </span>
                                             <!-- 新增进度条（数学计算进度） -->
                                             <div class="progress-bar-custom mt-1" style="height: 4px;">
                                                 <div id="music-progress-bar-1" class="progress-fill"
                                                      data-width="0%"
-                                                     data-color="#f8f9fa">
+                                                     data-color="#ffffff">
                                                 </div>
                                             </div>
                                         </div>
@@ -319,11 +282,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260520_112401.png</span>
+                        <span class="badge bg-primary float-end">screenshot_20260520_112806.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_112401.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_112401.png?raw=true">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_112806.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_112806.png?raw=true">
                         </div>
                     </div>
                 </div>
@@ -340,48 +303,6 @@
                         
                     </div>
                     <div class="card-body scroll-container">
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>桌面歌词</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> cloudmusic.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 971x252
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>excel_info_20260520_112205.xlsx - Excel</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> EXCEL.EXE |
-                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Weixin</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Weixin.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 495x287
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
                         
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
@@ -456,7 +377,7 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>Sugar Rush - 今井文也</strong>
+                                    <strong>Frozen Time - Life right</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> cloudmusic.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
@@ -464,50 +385,50 @@
                                     
                                     <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
                                         <div class="text-white font-bold">
-                                            <i class="bi bi-music-note"></i> Sugar Rush
+                                            <i class="bi bi-music-note"></i> Frozen Time
                                         </div>
-                                        <div class="text-white-80 text-sm">今井文也</div>
+                                        <div class="text-white-80 text-sm">Life right</div>
                                         <div class="text-white-70 text-sm mt-2 font-italic lyrics-box" style="max-height: 100px; overflow-y: auto;">
                                             
-                                            [00:00]作曲 : 小野寺祐輔
+                                            [00:00]作词 : Life right
                                             
-                                            [00:11]3, 2, 1, check it
+                                            [00:01]作曲 : Life right
                                             
-                                            [00:13]コースの開始 グランドデセールのお出まし
+                                            [00:02]编曲 : Life right
                                             
-                                            [00:15]最上級の dessert 最後に出すって凡人の常識 (uh huh)
+                                            [00:16]seasons change their borrowed face
                                             
-                                            [00:19]感情揺さぶる味覚 歓声支配する美学
+                                            [00:17]四季更迭，褪去借来的容颜
                                             
-                                            [00:22]誰の次でもないそれがガナッシュの pride
+                                            [00:24]autumn gold and spring’s new grace
                                             
-                                            [00:25]目眩を覚えるほど
+                                            [01:24]秋染金辉，春添新韵
                                             
-                                            [00:29](So sinfully sweet, I'm gonna spin you like a dream)
+                                            [04:14]yet the root recalls the thirst
                                             
-                                            [00:32]贅沢な甘味 無敵な香りに
+                                            [04:16]可根系仍记得那份渴望
                                             
-                                            [00:35]逆らうことなく溶けろ
+                                            [04:17]from which all blooms are nursed
                                             
-                                            [00:38]クラクラ クラクラ 回れ go crazy now
+                                            [04:18]所有繁花，皆由此滋养
                                             
-                                            [00:41]さあ息を呑む show time お味はどうだい？
+                                            [04:19]we are words that love has spoken
                                             
-                                            [00:44]Good luck good luck good luck
+                                            [04:20]我们是爱曾说出的字句
                                             
-                                            [00:46]我慢せずに溺れて dive 全身駆け巡る sweet sensation
+                                            [04:20]bound in touch
                                             
-                                            [00:51](Yes) お返事は？
+                                            [04:21]以触碰相系
                                             
-                                            [00:52](Yes) それ次第
+                                            [04:25]though flesh be broken
                                             
-                                            [00:54]Sugar rush 感じてみようか
+                                            [04:27]纵使肉身破碎
                                             
-                                            [01:04](Rush) 圧倒的な魅惑に五感が跪く
+                                            [04:32]Every leaving is return
                                             
-                                            [01:07](Rush) ドグマティックな舞台 Sugar, spice, fire, ice まだ未体験の zone
+                                            [04:35]每一次离别，都是归来
                                             
-                                            [01:12]ついてておいで here we go その想定を一口ずつ裏切ってあげよう
+                                            [04:37]To the tide from which we learn
                                             
                                         </div>
                                     </div>
@@ -544,7 +465,7 @@
                     <div class="card-header">
                         <i class="bi bi-globe"></i> Currently Open Browser (4)
                         
-                        <span class="badge bg-danger float-end">Active: 数据血缘关系图 - Search Images and 2 more pages...</span>
+                        <span class="badge bg-danger float-end">Active: main.py - pc-monitor - Trae CN</span>
                         
                     </div>
                     <div class="card-body scroll-container">
@@ -552,18 +473,10 @@
                         <div class="window-item window-active browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>数据血缘关系图 - Search Images and 2 more pages - Personal - Microsoft​ Edge</strong>
+                                    <strong>main.py - pc-monitor - Trae CN</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
-                                    </div>
-                                    
-                                    <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain=cn.bing.com&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="https://cn.bing.com/images/search?view=detailV2&ccid=tu7%2FXhph&id=8174EB0A1F37CE9F1280E2A7C8F66757A8719D47&thid=OIP.tu7_XhphgNhW14YvGdy58QHaEI&mediaurl=https%3A%2F%2Fblog.sqlflow.cn%2Fwp-content%2Fuploads%2F2022%2F09%2F%25E6%258F%2592%25E5%259B%25BE-1-1536x857.png&exph=857&expw=1536&q=数据血缘关系图&form=IRPRST&ck=3291CF1F2FE33C154476B0410837B915&selectedindex=2&itb=0&cw=1042&ch=599&ajaxhist=0&ajaxserp=0&cdnurl=https%3A%2F%2Fts1.tc.mm.bing.net%2Fth%2Fid%2FR-C.b6eeff5e1a6180d856d7862f19dcb9f1%3Frik%3DR51xqFdn9sin4g%26pid%3DImgRaw%26r%3D0&vt=0&sim=11" target="_blank" rel="noopener noreferrer"
-                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> cn.bing.com
-                                        </a>
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 2346x1370
                                     </div>
                                     
                                 </div>
@@ -576,10 +489,10 @@
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>main.js - pc-monitor - Trae CN</strong>
+                                    <strong>test_extract.py - excel2 - Trae CN</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> Trae CN.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 2346x1370
+                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
                                     </div>
                                     
                                 </div>
@@ -604,10 +517,18 @@
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>excel_info_20260520_112205.xlsx - excel2 - Trae CN</strong>
+                                    <strong>视奸 Liuli 的电脑 and 3 more pages - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Trae CN.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1770x1134
+                                    </div>
+                                    
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain=llmic.github.io&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://llmic.github.io/pc-monitor/" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> llmic.github.io
+                                        </a>
                                     </div>
                                     
                                 </div>
@@ -640,6 +561,69 @@
                                     
                                     <tr>
                                         <td>
+                                            <strong>Program Manager</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>视奸 Liuli 的电脑 and 3 more pages - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>豆包</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Doubao.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Frozen Time - Life right</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Windows Input Experience</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">TextInputHost.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>test_extract.py - excel2 - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>main.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
                                             <strong>excel_info_20260520_112205.xlsx - excel2 - Trae CN</strong>
                                         </td>
                                         <td>
@@ -665,69 +649,6 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>Settings</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">SystemSettings.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>main.js - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Weixin</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Weixin.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>excel_info_20260520_112205.xlsx - Excel</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">EXCEL.EXE</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>数据血缘关系图 - Search Images and 2 more pages - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>桌面歌词</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">explorer.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -737,7 +658,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T11:24:02.737658</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T11:28:07.010073</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -747,63 +668,39 @@
     <script>
         // 全局数据变量（由后端生成）
         window.PCMONITOR_DATA = {
-            timestamp: '2026-05-20T11:24:02.737658',
+            timestamp: '2026-05-20T11:28:07.010073',
+            startTime: '2026-05-20T11:28:07.010580',
             bilibiliCoverCache: {},
             hasMusic: true,
-            metricsHistory: [{"cpu": 25.27777777777778, "memory": 61.6}, {"cpu": 16.13888888888889, "memory": 63.6}, {"cpu": 22.71666666666667, "memory": 62.4}, {"cpu": 22.34444444444445, "memory": 59.0}, {"cpu": 44.37222222222222, "memory": 62.7}],
-            cpuPercent: 44,
-            memoryPercent: 62,
+            metricsHistory: [{"cpu": 16.13888888888889, "memory": 63.6}, {"cpu": 22.71666666666667, "memory": 62.4}, {"cpu": 22.34444444444445, "memory": 59.0}, {"cpu": 44.37222222222222, "memory": 62.7}, {"cpu": 13.338888888888889, "memory": 63.1}],
+            cpuPercent: 13,
+            memoryPercent: 63,
             musicData: {
                 currentSeconds: 0,
                 totalSeconds: 0,
                 songEnded: false,
-                parsedLyrics: [{"text": "\u4f5c\u66f2 : \u5c0f\u91ce\u5bfa\u7950\u8f14", "time": 0.0, "translation": null}, {"text": "3, 2, 1, check it", "time": 11.516, "translation": "3\uff0c2\uff0c1\uff0c\u542c\u597d"}, {"text": "\u30b3\u30fc\u30b9\u306e\u958b\u59cb \u30b0\u30e9\u30f3\u30c9\u30c7\u30bb\u30fc\u30eb\u306e\u304a\u51fa\u307e\u3057", "time": 13.118, "translation": "\u76db\u5bb4\u5f00\u542f \u538b\u8f74\u751c\u70b9\u534e\u4e3d\u767b\u573a"}, {"text": "\u6700\u4e0a\u7d1a\u306e dessert \u6700\u5f8c\u306b\u51fa\u3059\u3063\u3066\u51e1\u4eba\u306e\u5e38\u8b58 (uh huh)", "time": 15.757, "translation": "\u9876\u7ea7\u751c\u54c1\u538b\u8f74\u5949\u4e0a \u4e0d\u8fc7\u662f\u5eb8\u4eba\u4e4b\u89c1"}, {"text": "\u611f\u60c5\u63fa\u3055\u3076\u308b\u5473\u899a \u6b53\u58f0\u652f\u914d\u3059\u308b\u7f8e\u5b66", "time": 19.457, "translation": "\u7275\u52a8\u5fc3\u7eea\u7684\u5473\u89c9 \u638c\u63a7\u6b22\u547c\u7684\u7f8e\u5b66"}, {"text": "\u8ab0\u306e\u6b21\u3067\u3082\u306a\u3044\u305d\u308c\u304c\u30ac\u30ca\u30c3\u30b7\u30e5\u306e pride", "time": 22.657, "translation": "\u4e0d\u8ffd\u968f\u4efb\u4f55\u4eba\u7684\u811a\u6b65 \u8fd9\u4fbf\u662f\u7518\u7eb3\u8bb8\u7684\u9a84\u50b2"}, {"text": "\u76ee\u7729\u3092\u899a\u3048\u308b\u307b\u3069", "time": 25.835, "translation": "\u4ee4\u4eba\u76ee\u7729\u795e\u8ff7"}, {"text": "(So sinfully sweet, I\u0027m gonna spin you like a dream)", "time": 29.278, "translation": "\uff08\u8fd9\u822c\u751c\u817b\u7f6a\u6076 \u6211\u8981\u8ba9\u4f60\u5982\u68a6\u822c\u65cb\u8f6c\uff09"}, {"text": "\u8d05\u6ca2\u306a\u7518\u5473 \u7121\u6575\u306a\u9999\u308a\u306b", "time": 32.354, "translation": "\u6c89\u6eba\u4e8e\u6781\u81f4\u7684\u751c\u871c\u4e0e\u65e0\u654c\u7684\u82ac\u82b3"}, {"text": "\u9006\u3089\u3046\u3053\u3068\u306a\u304f\u6eb6\u3051\u308d", "time": 35.451, "translation": "\u65e0\u9700\u6297\u62d2 \u5c31\u6b64\u878d\u5316"}, {"text": "\u30af\u30e9\u30af\u30e9 \u30af\u30e9\u30af\u30e9 \u56de\u308c go crazy now", "time": 38.585, "translation": "\u5934\u6655\u76ee\u7729 \u65cb\u8f6c\u4e0d\u505c \u5c3d\u60c5\u75af\u72c2"}, {"text": "\u3055\u3042\u606f\u3092\u5451\u3080 show time \u304a\u5473\u306f\u3069\u3046\u3060\u3044\uff1f", "time": 41.732, "translation": "\u6765\u5427 \u5c4f\u606f\u4ee5\u5f85\u7684\u8868\u6f14\u65f6\u523b \u6ecb\u5473\u5982\u4f55\uff1f"}, {"text": "Good luck good luck good luck", "time": 44.972, "translation": "\u597d\u8fd0 \u597d\u8fd0 \u597d\u8fd0"}, {"text": "\u6211\u6162\u305b\u305a\u306b\u6eba\u308c\u3066 dive \u5168\u8eab\u99c6\u3051\u5de1\u308b sweet sensation", "time": 46.036, "translation": "\u4e0d\u5fc5\u514b\u5236 \u5c3d\u60c5\u6c89\u6eba \u5e2d\u5377\u5168\u8eab\u7684\u751c\u871c\u89e6\u611f"}, {"text": "(Yes) \u304a\u8fd4\u4e8b\u306f\uff1f", "time": 51.405, "translation": "\u4f60\u7684\u7b54\u6848\u662f\uff1f"}, {"text": "(Yes) \u305d\u308c\u6b21\u7b2c", "time": 52.964, "translation": "\u4e00\u5207\u7531\u4f60\u51b3\u5b9a"}, {"text": "Sugar rush \u611f\u3058\u3066\u307f\u3088\u3046\u304b", "time": 54.682, "translation": "\u6765\u611f\u53d7\u8fd9\u7cd6\u5206\u51b2\u51fb\u5427"}, {"text": "(Rush) \u5727\u5012\u7684\u306a\u9b45\u60d1\u306b\u4e94\u611f\u304c\u8dea\u304f", "time": 64.227, "translation": "\u4e94\u611f\u81e3\u670d\u4e8e\u8fd9\u538b\u5012\u6027\u7684\u9b45\u529b"}, {"text": "(Rush) \u30c9\u30b0\u30de\u30c6\u30a3\u30c3\u30af\u306a\u821e\u53f0 Sugar, spice, fire, ice \u307e\u3060\u672a\u4f53\u9a13\u306e zone", "time": 67.384, "translation": "\u6559\u6761\u822c\u7684\u821e\u53f0 \u751c\u8fa3\u51b0\u706b\u4ea4\u7ec7 \u8e0f\u5165\u524d\u6240\u672a\u6709\u7684\u9886\u57df"}, {"text": "\u3064\u3044\u3066\u3066\u304a\u3044\u3067 here we go \u305d\u306e\u60f3\u5b9a\u3092\u4e00\u53e3\u305a\u3064\u88cf\u5207\u3063\u3066\u3042\u3052\u3088\u3046", "time": 72.241, "translation": "\u8ddf\u4e0a\u6211 \u6211\u4f1a\u4e00\u6b65\u6b65\u6253\u7834\u4f60\u7684\u6240\u6709\u9884\u60f3"}, {"text": "\u8e8a\u8e87\u3044\u306f\u98f2\u307f\u8fbc\u3093\u3067", "time": 77.241, "translation": "\u5c06\u6240\u6709\u72b9\u8c6b\u5c3d\u6570\u541e\u54bd"}, {"text": "(No don\u0027t you hold back, just let yourself be free tonight)", "time": 80.456, "translation": "\uff08\u522b\u518d\u514b\u5236 \u4eca\u591c\u5c31\u5c3d\u60c5\u91ca\u653e\u81ea\u6211\uff09"}, {"text": "\u7518\u304f\u6eb6\u3051\u308b\u306e\u3082\u82e6\u304f\u7126\u304c\u308c\u308b\u306e\u3082", "time": 83.628, "translation": "\u65e0\u8bba\u662f\u751c\u871c\u878d\u5316 \u8fd8\u662f\u82e6\u6da9\u6e34\u6c42"}, {"text": "\u81ea\u7531\u81ea\u5728\u306a\u3054\u8912\u7f8e \u4f55\u304c\u304a\u671b\u307f\u304b\u3044\uff1f", "time": 86.668, "translation": "\u8fd9\u4efd\u968f\u5fc3\u6240\u6b32\u7684\u5956\u8d4f \u4f60\u60f3\u8981\u4ec0\u4e48\uff1f"}, {"text": "\u30af\u30e9\u30af\u30e9 \u30af\u30e9\u30af\u30e9 \u8e0a\u308c go crazy now", "time": 89.788, "translation": "\u5934\u6655\u76ee\u7729 \u5c3d\u60c5\u821e\u52a8 \u5c3d\u60c5\u75af\u72c2"}, {"text": "\u6355\u308f\u308c\u3066\u304f your mind \u304a\u304b\u308f\u308a\u306f\u3069\u3046\u3060\u3044\uff1f", "time": 92.973, "translation": "\u6e10\u6e10\u4fd8\u83b7\u4f60\u7684\u5fc3 \u518d\u6765\u4e00\u4efd\u5982\u4f55\uff1f"}, {"text": "Good luck good luck good luck", "time": 96.122, "translation": "\u597d\u8fd0 \u597d\u8fd0 \u597d\u8fd0"}, {"text": "\u6b63\u6c17\u306a\u3093\u3066\u8131\u304e\u6368\u3066\u3066 dive", "time": 97.082, "translation": "\u629b\u5f00\u7406\u667a \u7eb5\u8eab\u6c89\u6eba"}, {"text": "\u6b32\u3057\u304f\u306a\u308b\u3067\u3057\u3087 this temptation", "time": 99.584, "translation": "\u4f60\u4f1a\u5fc3\u751f\u6e34\u671b \u8fd9\u822c\u81f4\u547d\u8bf1\u60d1"}, {"text": "(Yes) \u4ee5\u5916\u306e\u30c1\u30e7\u30a4\u30b9\u306f", "time": 102.586, "translation": "\u9664\u4e86\u5e94\u5141 \u4f60\u522b\u65e0\u9009\u62e9"}, {"text": "(Yes) \u3042\u3052\u306a\u3044\u3088", "time": 104.166, "translation": "\u6211\u4e0d\u4f1a\u7ed9\u4f60\u5176\u4ed6\u4f59\u5730"}, {"text": "Sugar rush \u8eab\u3092\u4efb\u305b\u3066 babe", "time": 105.721, "translation": "\u653e\u4efb\u8eab\u5fc3\u6c89\u6ca6\u8fd9\u573a\u751c\u871c\u98ce\u66b4   \u5b9d\u8d1d"}, {"text": "\u6ed1\u3089\u304b\u306a\u65cb\u5f8b\u3092", "time": 128.796, "translation": "\u4f34\u7740\u6d41\u7545\u7684\u65cb\u5f8b"}, {"text": "(Just feel it feel it, feel it in your bones)", "time": 131.855, "translation": "\u7528\u5fc3\u611f\u53d7 \u611f\u53d7\u8fd9\u4efd\u60b8\u52a8\u6df1\u5165\u9aa8\u9ad3"}, {"text": "\u6d41\u3057\u8fbc\u3093\u3060\u30cf\u30fc\u30c8\u306b\u8a00\u8449\u306f\u3044\u3089\u306a\u3044", "time": 134.747, "translation": "\u7231\u610f\u6d41\u6dcc\u5fc3\u5e95 \u65e0\u9700\u8a00\u8bed\u8868\u8fbe"}, {"text": "\u9ed9\u3063\u3066 follow me I\u0027m what you want", "time": 137.821, "translation": "\u9759\u9759\u8ddf\u968f\u6211 \u6211\u4fbf\u662f\u4f60\u5fc3\u4e4b\u6240\u5411"}, {"text": "\u30af\u30e9\u30af\u30e9 \u30af\u30e9\u30af\u30e9 \u56de\u308c go crazy now", "time": 142.57, "translation": "\u5934\u6655\u76ee\u7729 \u65cb\u8f6c\u4e0d\u505c \u5c3d\u60c5\u75af\u72c2"}, {"text": "\u5f8c\u306b\u5f15\u3051\u306c\u72b6\u614b \u3069\u3046\u306a\u3063\u3066\u3082\u3044\u3044\u3093\u3058\u3083\u306a\u3044\uff1f", "time": 145.927, "translation": "\u5df2\u7136\u65e0\u8def\u53ef\u9000 \u65e0\u8bba\u7ed3\u5c40\u600e\u6837\u53c8\u4f55\u59a8\uff1f"}, {"text": "Good luck good luck good luck", "time": 148.817, "translation": "\u597d\u8fd0 \u597d\u8fd0 \u597d\u8fd0"}, {"text": "\u6211\u6162\u305b\u305a\u306b\u6eba\u308c\u3066 dive \u5168\u8eab\u99c6\u3051\u5de1\u308b sweet sensation", "time": 150.058, "translation": "\u4e0d\u5fc5\u514b\u5236 \u5c3d\u60c5\u6c89\u6eba \u5e2d\u5377\u5168\u8eab\u7684\u751c\u871c\u89e6\u611f"}, {"text": "(Yes) \u304a\u8fd4\u4e8b\u306f\uff1f", "time": 155.318, "translation": "\u4f60\u7684\u7b54\u6848\u662f\uff1f"}, {"text": "(Yes) \u305d\u308c\u6b21\u7b2c", "time": 156.872, "translation": "\u4e00\u5207\u7531\u4f60\u51b3\u5b9a"}, {"text": "(Yes) \u30c7\u30ea\u30b7\u30e3\u30b9\u306a\u6700\u9ad8\u6f6e\u3078", "time": 158.483, "translation": "\u5954\u8d74\u8fd9\u573a\u6781\u81f4\u7f8e\u5473\u7684\u9ad8\u6f6e"}, {"text": "(Yes) \u6975\u4e0a\u306f", "time": 161.76, "translation": "\u6781\u81f4\u7684\u7f8e\u597d"}, {"text": "(Yes) \u3053\u3053\u306b\u3042\u308b", "time": 163.336, "translation": "\u5c31\u5728\u6b64\u5904"}, {"text": "Sugar rush \u611f\u3058\u3066\u307f\u3088\u3046\u304b", "time": 164.918, "translation": "\u6765\u611f\u53d7\u8fd9\u7cd6\u5206\u51b2\u51fb\u5427"}],
-                rawLyrics: '[00:00.000] 作曲 : 小野寺祐輔
-[00:11.516]3, 2, 1, check it
-[00:13.118]コースの開始 グランドデセールのお出まし
-[00:15.757]最上級の dessert 最後に出すって凡人の常識 (uh huh)
-[00:19.457]感情揺さぶる味覚 歓声支配する美学
-[00:22.657]誰の次でもないそれがガナッシュの pride
-[00:25.835]目眩を覚えるほど
-[00:29.278](So sinfully sweet, I'm gonna spin you like a dream)
-[00:32.354]贅沢な甘味 無敵な香りに
-[00:35.451]逆らうことなく溶けろ
-[00:38.585]クラクラ クラクラ 回れ go crazy now
-[00:41.732]さあ息を呑む show time お味はどうだい？
-[00:44.972]Good luck good luck good luck
-[00:46.036]我慢せずに溺れて dive 全身駆け巡る sweet sensation
-[00:51.405](Yes) お返事は？
-[00:52.964](Yes) それ次第
-[00:54.682]Sugar rush 感じてみようか
-[01:04.227](Rush) 圧倒的な魅惑に五感が跪く
-[01:07.384](Rush) ドグマティックな舞台 Sugar, spice, fire, ice まだ未体験の zone
-[01:12.241]ついてておいで here we go その想定を一口ずつ裏切ってあげよう
-[01:17.241]躊躇いは飲み込んで
-[01:20.456](No don't you hold back, just let yourself be free tonight)
-[01:23.628]甘く溶けるのも苦く焦がれるのも
-[01:26.668]自由自在なご褒美 何がお望みかい？
-[01:29.788]クラクラ クラクラ 踊れ go crazy now
-[01:32.973]捕われてく your mind おかわりはどうだい？
-[01:36.122]Good luck good luck good luck
-[01:37.082]正気なんて脱ぎ捨てて dive
-[01:39.584]欲しくなるでしょ this temptation
-[01:42.586](Yes) 以外のチョイスは
-[01:44.166](Yes) あげないよ
-[01:45.721]Sugar rush 身を任せて babe
-[02:08.796]滑らかな旋律を
-[02:11.855](Just feel it feel it, feel it in your bones)
-[02:14.747]流し込んだハートに言葉はいらない
-[02:17.821]黙って follow me I'm what you want
-[02:22.570]クラクラ クラクラ 回れ go crazy now
-[02:25.927]後に引けぬ状態 どうなってもいいんじゃない？
-[02:28.817]Good luck good luck good luck
-[02:30.058]我慢せずに溺れて dive 全身駆け巡る sweet sensation
-[02:35.318](Yes) お返事は？
-[02:36.872](Yes) それ次第
-[02:38.483](Yes) デリシャスな最高潮へ
-[02:41.760](Yes) 極上は
-[02:43.336](Yes) ここにある
-[02:44.918]Sugar rush 感じてみようか'
+                parsedLyrics: [{"text": "\u4f5c\u8bcd : Life right", "time": 0.0, "translation": null}, {"text": "\u4f5c\u66f2 : Life right", "time": 1.0, "translation": null}, {"text": "\u7f16\u66f2 : Life right", "time": 2.0, "translation": null}, {"text": "seasons change their borrowed face", "time": 16.056, "translation": "\u56db\u5b63\u66f4\u8fed\u7740\u501f\u6765\u7684\u5bb9\u989c"}, {"text": "\u56db\u5b63\u66f4\u8fed\uff0c\u892a\u53bb\u501f\u6765\u7684\u5bb9\u989c", "time": 17.028, "translation": null}, {"text": "autumn gold and spring\u2019s new grace", "time": 24.042, "translation": "\u79cb\u65e5\u938f\u91d1 \u6625\u8272\u521d\u7efd"}, {"text": "\u79cb\u67d3\u91d1\u8f89\uff0c\u6625\u6dfb\u65b0\u97f5", "time": 84.03, "translation": null}, {"text": "yet the root recalls the thirst", "time": 254.061, "translation": "\u4f46\u6839\u7cfb\u4ecd\u8bb0\u5f97\u90a3\u4efd\u7126\u6e34"}, {"text": "\u53ef\u6839\u7cfb\u4ecd\u8bb0\u5f97\u90a3\u4efd\u6e34\u671b", "time": 256.008, "translation": null}, {"text": "from which all blooms are nursed", "time": 257.031, "translation": "\u6240\u6709\u7efd\u653e\u7686\u7531\u6b64\u5b55\u80b2"}, {"text": "\u6240\u6709\u7e41\u82b1\uff0c\u7686\u7531\u6b64\u6ecb\u517b", "time": 258.006, "translation": null}, {"text": "we are words that love has spoken", "time": 259.065, "translation": "\u6211\u4eec\u662f\u7231\u8bc9\u8bf4\u7684\u5b57\u53e5"}, {"text": "\u6211\u4eec\u662f\u7231\u66fe\u8bf4\u51fa\u7684\u5b57\u53e5", "time": 260.037, "translation": null}, {"text": "bound in touch", "time": 260.094, "translation": "\u501f\u89e6\u78b0\u76f8\u8fde"}, {"text": "\u4ee5\u89e6\u78b0\u76f8\u7cfb", "time": 261.021, "translation": null}, {"text": "though flesh be broken", "time": 265.038, "translation": "\u7eb5\u4f7f\u8eaf\u58f3\u6b8b\u7834"}, {"text": "\u7eb5\u4f7f\u8089\u8eab\u7834\u788e", "time": 267.066, "translation": null}, {"text": "Every leaving is return", "time": 272.094, "translation": "\u6bcf\u6b21\u79bb\u53bb\u90fd\u662f\u5f52\u9014"}, {"text": "\u6bcf\u4e00\u6b21\u79bb\u522b\uff0c\u90fd\u662f\u5f52\u6765", "time": 275.079, "translation": null}, {"text": "To the tide from which we learn", "time": 277.092, "translation": "\u56de\u5f52\u6559\u6211\u4eec\u9886\u609f\u7684\u6f6e\u6c50"}, {"text": "\u56de\u5f52\u90a3\u7247\u6559\u4f1a\u6211\u4eec\u4e00\u5207\u7684\u6f6e\u6c50\u3002", "time": 278.061, "translation": null}],
+                rawLyrics: '[00:00.00] 作词 : Life right
+[00:01.00] 作曲 : Life right
+[00:02.00] 编曲 : Life right
+[00:16.56]seasons change their borrowed face
+[00:17.28]四季更迭，褪去借来的容颜
+[00:24.42]autumn gold and spring’s new grace
+[01:24.30]秋染金辉，春添新韵
+[04:14.61]yet the root recalls the thirst
+[04:16.08]可根系仍记得那份渴望
+[04:17.31]from which all blooms are nursed
+[04:18.06]所有繁花，皆由此滋养
+[04:19.65]we are words that love has spoken
+[04:20.37]我们是爱曾说出的字句
+[04:20.94]bound in touch
+[04:21.21]以触碰相系
+[04:25.38]though flesh be broken
+[04:27.66]纵使肉身破碎
+[04:32.94]Every leaving is return
+[04:35.79]每一次离别，都是归来
+[04:37.92]To the tide from which we learn
+[04:38.61]回归那片教会我们一切的潮汐。'
             },
             maxUsage: 73
         };
