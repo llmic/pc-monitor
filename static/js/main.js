@@ -8,6 +8,66 @@ let startTime;
 // 隐藏的 bilibili 数据（由后端生成）
 const bilibiliCoverCache = PCMONITOR_DATA.bilibiliCoverCache || {};
 
+// B站相关常量
+const BV_REGEX = /BV[0-9a-zA-Z]{10}/;
+const BILI_API_URL = 'https://api.bilibili.com/x/web-interface/view';
+const BILI_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Referer': 'https://www.bilibili.com/'
+};
+
+// 从URL或标题中提取BV号
+function extractBVId(text) {
+    if (!text) return null;
+    const match = text.match(BV_REGEX);
+    return match ? match[0] : null;
+}
+
+// 从B站API获取视频信息
+async function fetchBilibiliVideoInfo(bvId) {
+    if (!bvId) return null;
+    
+    try {
+        const url = `${BILI_API_URL}?bvid=${bvId}`;
+        const response = await fetch(url, { headers: BILI_HEADERS });
+        const data = await response.json();
+        
+        if (data && data.code === 0 && data.data) {
+            const info = data.data;
+            return {
+                bvId: bvId,
+                title: info.title,
+                author: info.owner?.name || '',
+                viewCount: info.stat?.view || 0,
+                url: `https://www.bilibili.com/video/${bvId}`,
+                cover: info.pic || ''
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Failed to fetch Bilibili video info:', error);
+        return null;
+    }
+}
+
+// 获取封面URL（优先从缓存，否则从API获取）
+async function getBilibiliCoverUrl(bvId) {
+    // 优先从缓存获取
+    if (bilibiliCoverCache && bilibiliCoverCache[bvId]) {
+        return bilibiliCoverCache[bvId];
+    }
+    
+    // 从API获取
+    const videoInfo = await fetchBilibiliVideoInfo(bvId);
+    if (videoInfo && videoInfo.cover) {
+        // 缓存结果
+        bilibiliCoverCache[bvId] = videoInfo.cover;
+        return videoInfo.cover;
+    }
+    
+    return null;
+}
+
 try {
     // 修复时间戳解析问题
     let ts = LAST_UPDATE_ISO;
@@ -562,13 +622,14 @@ function getBilibiliCoverFromCache(bvId) {
     return null;
 }
 
-// 延迟加载Bilibili封面图片（从缓存读取）
-function lazyLoadBilibiliCovers() {
+// 延迟加载Bilibili封面图片（优先从缓存，否则从API获取）
+async function lazyLoadBilibiliCovers() {
     const coverImages = document.querySelectorAll('.bilibili-cover-image');
-    coverImages.forEach(function(img) {
+    for (const img of coverImages) {
         const bvId = img.getAttribute('data-bv-id');
         if (bvId) {
-            const coverUrl = getBilibiliCoverFromCache(bvId);
+            // 优先从缓存获取，否则从API获取
+            const coverUrl = await getBilibiliCoverUrl(bvId);
             if (coverUrl) {
                 const tempImg = new Image();
                 tempImg.onload = function() {
@@ -581,7 +642,7 @@ function lazyLoadBilibiliCovers() {
                 tempImg.src = coverUrl;
             }
         }
-    });
+    }
 }
 
 // 延迟加载截图
@@ -707,11 +768,14 @@ document.addEventListener('DOMContentLoaded', function() {
 // ========== Running Time 超时检测 ==========
 const timeoutCheck = {
     TIMEOUT_SECONDS: 600, // 10分钟
+    SHUTDOWN_COUNTDOWN: 0, // 关机倒计时秒数
     overlayShown: false,
+    countdownStarted: false,
+    countdownSeconds: 0,
+    countdownTimer: null,
     init: function() {
         this.checkTimeout(); // 立即检查
         setInterval(() => this.checkTimeout(), 1000); // 每秒检查
-        this.bindButtons();
     },
     checkTimeout: function() {
         const now = new Date();
@@ -727,7 +791,7 @@ const timeoutCheck = {
             timeoutRunningTime.textContent = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
         }
 
-        // 检查是否超时
+        // 检查是否超时（超过10分钟）
         if (elapsedSeconds >= this.TIMEOUT_SECONDS && !this.overlayShown) {
             this.showOverlay();
         }
@@ -738,6 +802,11 @@ const timeoutCheck = {
             overlay.classList.add('show');
             this.overlayShown = true;
             console.log('Timeout overlay shown - running time exceeded 10 minutes');
+            
+            // 开始关机倒计时
+            if (!this.countdownStarted) {
+                this.startCountdown();
+            }
         }
     },
     hideOverlay: function() {
@@ -747,45 +816,45 @@ const timeoutCheck = {
             this.overlayShown = false;
         }
     },
-    bindButtons: function() {
-        const shutdownBtn = document.getElementById('shutdownBtn');
-        const restartBtn = document.getElementById('restartBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
+    startCountdown: function() {
+        this.countdownStarted = true;
+        this.countdownSeconds = this.SHUTDOWN_COUNTDOWN;
         
-        if (shutdownBtn) {
-            shutdownBtn.addEventListener('click', () => {
-                console.log('Shutdown button clicked');
-                // 发送关机命令到后端
-                this.sendCommand('shutdown');
-            });
+        const countdownEl = document.getElementById('countdownSeconds');
+        if (countdownEl) {
+            countdownEl.textContent = this.countdownSeconds;
         }
         
-        if (restartBtn) {
-            restartBtn.addEventListener('click', () => {
-                console.log('Restart button clicked');
-                // 发送重启命令到后端
-                this.sendCommand('restart');
-            });
-        }
-        
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                console.log('Cancel button clicked');
-                this.hideOverlay();
-                // 重置计时器（可选）
-                // startTime = new Date();
-            });
-        }
+        const self = this;
+        this.countdownTimer = setInterval(function() {
+            self.countdownSeconds--;
+            
+            const countdownEl = document.getElementById('countdownSeconds');
+            if (countdownEl) {
+                countdownEl.textContent = self.countdownSeconds;
+            }
+            
+            if (self.countdownSeconds <= 0) {
+                clearInterval(self.countdownTimer);
+                self.shutdown();
+            }
+        }, 1000);
+    },
+    shutdown: function() {
+        console.log('Executing shutdown command...');
+        // 发送关机命令到后端
+        this.sendCommand('shutdown');
     },
     sendCommand: function(command) {
-        // 发送命令到后端
-        // 这里可以通过API调用或者WebSocket发送命令
         console.log('Sending command:', command);
         
-        // 显示处理中的提示
-        alert(`正在执行${command === 'shutdown' ? '关机' : '重启'}命令...`);
+        // 显示关机提示
+        alert(`正在执行关机命令...`);
         
         // 隐藏遮罩层
         this.hideOverlay();
+        
+        // 这里可以添加实际的关机逻辑（通过API调用或WebSocket）
+        // 例如：window.location.href = '/api/shutdown';
     }
 };

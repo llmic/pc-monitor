@@ -392,13 +392,22 @@
     </style>
 </head>
 <body>
-    <div class="timeout-overlay" id="timeoutOverlay">
-        <div class="timeout-icon">
+    <div class="shutdown-overlay" id="shutdownOverlay">
+        <div class="shutdown-icon">
             <i class="bi bi-power"></i>
         </div>
-        <div class="timeout-title">Liuli 的电脑 已关机</div>
-        <div class="timeout-subtitle">PC Monitor 已停止更新</div>
-        <div class="timeout-time" id="timeoutTime"></div>
+        <div class="shutdown-title">Liuli 的电脑 已关机</div>
+        <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
+        <div class="shutdown-time" id="shutdownTime"></div>
+    </div>
+    <!-- Running Time 超时遮罩 -->
+    <div class="shutdown-overlay" id="timeoutOverlay">
+        <div class="shutdown-icon">
+            <i class="bi bi-clock-history"></i>
+        </div>
+        <div class="shutdown-title">运行时间已超时</div>
+        <div class="shutdown-subtitle">已运行 <span id="timeoutRunningTime">00:00</span>（超过10分钟）</div>
+        <div class="shutdown-time" id="shutdownCountdown">将在 <span id="countdownSeconds">30</span> 秒后自动关机...</div>
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -419,7 +428,7 @@
                             <span id="statusText" class="fs-5 status-text"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 22:21:14</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 22:33:13</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay" class="current-time-display"></span>
@@ -443,29 +452,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">31%</div>
+                                    <div class="stats-number">17%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" data-width="31%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="17%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">55%</div>
+                                    <div class="stats-number">64%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" data-width="55%"></div>
+                                        <div class="progress-fill progress-memory" data-width="64%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">17.40 / 31.47 GB</div>
+                                    <div class="stats-number">20.33 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 39.93 B<br>
-                                        Received: 202.1 B
+                                        Sent: 50.08 B<br>
+                                        Received: 262.6 B
                                     </div>
                                 </div>
                             </div>
@@ -490,7 +499,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details (10 cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (6 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -498,9 +507,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">68.8%</div>
+                                    <div class="text-primary font-size-lg">59.4%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="68.8%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="59.4%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -508,49 +517,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">75.0%</div>
+                                    <div class="text-primary font-size-lg">55.9%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="75.0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">46.9%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="46.9%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 4</div>
-                                    <div class="text-primary font-size-lg">46.9%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="46.9%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">50.0%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="50.0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 6</div>
-                                    <div class="text-primary font-size-lg">35.5%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="35.5%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="55.9%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -558,9 +527,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 9</div>
-                                    <div class="text-primary font-size-lg">38.2%</div>
+                                    <div class="text-primary font-size-lg">70.6%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="38.2%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="70.6%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -568,9 +537,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 10</div>
-                                    <div class="text-primary font-size-lg">71.9%</div>
+                                    <div class="text-primary font-size-lg">43.8%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="71.9%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="43.8%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -578,9 +547,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 12</div>
-                                    <div class="text-primary font-size-lg">84.8%</div>
+                                    <div class="text-primary font-size-lg">37.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="84.8%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="37.5%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -588,9 +557,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 15</div>
-                                    <div class="text-primary font-size-lg">53.1%</div>
+                                    <div class="text-primary font-size-lg">48.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="53.1%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="48.5%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -692,11 +661,13 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260520_222114.png</span>
                     </div>
                     <div class="card-body">
-                        <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_222114.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_222114.png?raw=true">
+                        <div class="text-center py-8">
+                            <i class="bi bi-eye-slash" style="font-size: 48px; color: #6c757d; margin-bottom: 16px;"></i>
+                            <p class="text-muted" style="font-size: 1.1em;">
+                                窗口已设置隐私保护，跳过截图
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -711,16 +682,48 @@
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> Currently Open Windows
                         
+                        <span class="badge bg-danger float-end">Active: QQ</span>
+                        
                     </div>
                     <div class="card-body scroll-container">
                         
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>main.py - pc-monitor - Visual Studio Code</strong>
+                                    <strong>System tray overflow window.</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Code.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1647x1043
+                                        <i class="bi bi-app"></i> explorer.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 351x171
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-active">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>QQ</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> QQ.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1482x1199
+                                    </div>
+                                    
+                                </div>
+                                
+                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>main.py - pc-monitor - Trae CN</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 2369x1488
                                     </div>
                                     
                                 </div>
@@ -801,9 +804,9 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>QQ</strong>
+                                    <strong>BV1t1o9B6EXT.jpg - pc-monitor - Visual Studio Code</strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> QQ.exe |
+                                        <i class="bi bi-app"></i> Code.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
                                     </div>
                                     
@@ -837,14 +840,34 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser (1)
-                        
-                        <span class="badge bg-danger float-end">Active: 字节高级交互作品集｜制作思路分享第 1 期_哔哩哔哩_bilibili and ...</span>
+                        <i class="bi bi-globe"></i> Currently Open Browser (2)
                         
                     </div>
                     <div class="card-body scroll-container">
                         
-                        <div class="window-item window-active browser-card">
+                        <div class="window-item window-normal browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1782x1527
+                                    </div>
+                                    
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain=llmic.github.io&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://llmic.github.io/pc-monitor/" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> llmic.github.io
+                                        </a>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
                                     <strong>字节高级交互作品集｜制作思路分享第 1 期_哔哩哔哩_bilibili and 2 more pages - Personal - Microsoft​ Edg...</strong>
@@ -862,8 +885,6 @@
                                     </div>
                                     
                                 </div>
-                                
-                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
                                 
                             </div>
                         </div>
@@ -890,6 +911,60 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Program Manager</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>BV1t1o9B6EXT.jpg - pc-monitor - Visual Studio Code</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Code.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Settings</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">SystemSettings.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>main.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>System tray overflow window.</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
                                     
                                     <tr>
                                         <td>
@@ -927,60 +1002,6 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>字节高级交互作品集｜制作思路分享第 1 期_哔哩哔哩_bilibili and 2 more pages - Personal - Microsoft​ Edg...</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Media Player</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>试题作答 - iΤΕSΤ智能测评云平台 and 2 more pages - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>main.py - pc-monitor - Visual Studio Code</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Code.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">explorer.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Settings</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">SystemSettings.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -990,7 +1011,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T22:21:14.892189</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T22:33:13.560743</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -1000,13 +1021,13 @@
     <script>
         // 全局数据变量（由后端生成）
         window.PCMONITOR_DATA = {
-            timestamp: '2026-05-20T22:21:14.892189',
-            startTime: '2026-05-20T22:21:00.464013',
+            timestamp: '2026-05-20T22:33:13.560743',
+            startTime: '2026-05-20T22:33:00.459932',
             bilibiliCoverCache: {"BV1t1o9B6EXT": "data/covers\\BV1t1o9B6EXT.jpg"},
             hasMusic: false,
-            metricsHistory: [{"cpu": 9.016666666666667, "memory": 50.4}, {"cpu": 11.227777777777778, "memory": 51.4}, {"cpu": 10.338888888888887, "memory": 54.0}, {"cpu": 5.827777777777778, "memory": 47.5}, {"cpu": 31.727777777777778, "memory": 55.3}],
-            cpuPercent: 31,
-            memoryPercent: 55,
+            metricsHistory: [{"cpu": 11.227777777777778, "memory": 51.4}, {"cpu": 10.338888888888887, "memory": 54.0}, {"cpu": 5.827777777777778, "memory": 47.5}, {"cpu": 31.727777777777778, "memory": 55.3}, {"cpu": 17.538888888888888, "memory": 64.6}],
+            cpuPercent: 17,
+            memoryPercent: 64,
             musicData: {
                 currentSeconds: 0,
                 totalSeconds: 0,
@@ -1016,7 +1037,7 @@
                 songName: "",
                 artistName: ""
             },
-            maxUsage: 65
+            maxUsage: 74
         };
     </script>
     <script>
@@ -1029,6 +1050,66 @@ let startTime;
 
 // 隐藏的 bilibili 数据（由后端生成）
 const bilibiliCoverCache = PCMONITOR_DATA.bilibiliCoverCache || {};
+
+// B站相关常量
+const BV_REGEX = /BV[0-9a-zA-Z]{10}/;
+const BILI_API_URL = 'https://api.bilibili.com/x/web-interface/view';
+const BILI_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Referer': 'https://www.bilibili.com/'
+};
+
+// 从URL或标题中提取BV号
+function extractBVId(text) {
+    if (!text) return null;
+    const match = text.match(BV_REGEX);
+    return match ? match[0] : null;
+}
+
+// 从B站API获取视频信息
+async function fetchBilibiliVideoInfo(bvId) {
+    if (!bvId) return null;
+    
+    try {
+        const url = `${BILI_API_URL}?bvid=${bvId}`;
+        const response = await fetch(url, { headers: BILI_HEADERS });
+        const data = await response.json();
+        
+        if (data && data.code === 0 && data.data) {
+            const info = data.data;
+            return {
+                bvId: bvId,
+                title: info.title,
+                author: info.owner?.name || '',
+                viewCount: info.stat?.view || 0,
+                url: `https://www.bilibili.com/video/${bvId}`,
+                cover: info.pic || ''
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Failed to fetch Bilibili video info:', error);
+        return null;
+    }
+}
+
+// 获取封面URL（优先从缓存，否则从API获取）
+async function getBilibiliCoverUrl(bvId) {
+    // 优先从缓存获取
+    if (bilibiliCoverCache && bilibiliCoverCache[bvId]) {
+        return bilibiliCoverCache[bvId];
+    }
+    
+    // 从API获取
+    const videoInfo = await fetchBilibiliVideoInfo(bvId);
+    if (videoInfo && videoInfo.cover) {
+        // 缓存结果
+        bilibiliCoverCache[bvId] = videoInfo.cover;
+        return videoInfo.cover;
+    }
+    
+    return null;
+}
 
 try {
     // 修复时间戳解析问题
@@ -1584,13 +1665,14 @@ function getBilibiliCoverFromCache(bvId) {
     return null;
 }
 
-// 延迟加载Bilibili封面图片（从缓存读取）
-function lazyLoadBilibiliCovers() {
+// 延迟加载Bilibili封面图片（优先从缓存，否则从API获取）
+async function lazyLoadBilibiliCovers() {
     const coverImages = document.querySelectorAll('.bilibili-cover-image');
-    coverImages.forEach(function(img) {
+    for (const img of coverImages) {
         const bvId = img.getAttribute('data-bv-id');
         if (bvId) {
-            const coverUrl = getBilibiliCoverFromCache(bvId);
+            // 优先从缓存获取，否则从API获取
+            const coverUrl = await getBilibiliCoverUrl(bvId);
             if (coverUrl) {
                 const tempImg = new Image();
                 tempImg.onload = function() {
@@ -1603,7 +1685,7 @@ function lazyLoadBilibiliCovers() {
                 tempImg.src = coverUrl;
             }
         }
-    });
+    }
 }
 
 // 延迟加载截图
@@ -1729,11 +1811,14 @@ document.addEventListener('DOMContentLoaded', function() {
 // ========== Running Time 超时检测 ==========
 const timeoutCheck = {
     TIMEOUT_SECONDS: 600, // 10分钟
+    SHUTDOWN_COUNTDOWN: 0, // 关机倒计时秒数
     overlayShown: false,
+    countdownStarted: false,
+    countdownSeconds: 0,
+    countdownTimer: null,
     init: function() {
         this.checkTimeout(); // 立即检查
         setInterval(() => this.checkTimeout(), 1000); // 每秒检查
-        this.bindButtons();
     },
     checkTimeout: function() {
         const now = new Date();
@@ -1749,7 +1834,7 @@ const timeoutCheck = {
             timeoutRunningTime.textContent = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
         }
 
-        // 检查是否超时
+        // 检查是否超时（超过10分钟）
         if (elapsedSeconds >= this.TIMEOUT_SECONDS && !this.overlayShown) {
             this.showOverlay();
         }
@@ -1760,6 +1845,11 @@ const timeoutCheck = {
             overlay.classList.add('show');
             this.overlayShown = true;
             console.log('Timeout overlay shown - running time exceeded 10 minutes');
+            
+            // 开始关机倒计时
+            if (!this.countdownStarted) {
+                this.startCountdown();
+            }
         }
     },
     hideOverlay: function() {
@@ -1769,46 +1859,46 @@ const timeoutCheck = {
             this.overlayShown = false;
         }
     },
-    bindButtons: function() {
-        const shutdownBtn = document.getElementById('shutdownBtn');
-        const restartBtn = document.getElementById('restartBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
+    startCountdown: function() {
+        this.countdownStarted = true;
+        this.countdownSeconds = this.SHUTDOWN_COUNTDOWN;
         
-        if (shutdownBtn) {
-            shutdownBtn.addEventListener('click', () => {
-                console.log('Shutdown button clicked');
-                // 发送关机命令到后端
-                this.sendCommand('shutdown');
-            });
+        const countdownEl = document.getElementById('countdownSeconds');
+        if (countdownEl) {
+            countdownEl.textContent = this.countdownSeconds;
         }
         
-        if (restartBtn) {
-            restartBtn.addEventListener('click', () => {
-                console.log('Restart button clicked');
-                // 发送重启命令到后端
-                this.sendCommand('restart');
-            });
-        }
-        
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                console.log('Cancel button clicked');
-                this.hideOverlay();
-                // 重置计时器（可选）
-                // startTime = new Date();
-            });
-        }
+        const self = this;
+        this.countdownTimer = setInterval(function() {
+            self.countdownSeconds--;
+            
+            const countdownEl = document.getElementById('countdownSeconds');
+            if (countdownEl) {
+                countdownEl.textContent = self.countdownSeconds;
+            }
+            
+            if (self.countdownSeconds <= 0) {
+                clearInterval(self.countdownTimer);
+                self.shutdown();
+            }
+        }, 1000);
+    },
+    shutdown: function() {
+        console.log('Executing shutdown command...');
+        // 发送关机命令到后端
+        this.sendCommand('shutdown');
     },
     sendCommand: function(command) {
-        // 发送命令到后端
-        // 这里可以通过API调用或者WebSocket发送命令
         console.log('Sending command:', command);
         
-        // 显示处理中的提示
-        alert(`正在执行${command === 'shutdown' ? '关机' : '重启'}命令...`);
+        // 显示关机提示
+        alert(`正在执行关机命令...`);
         
         // 隐藏遮罩层
         this.hideOverlay();
+        
+        // 这里可以添加实际的关机逻辑（通过API调用或WebSocket）
+        // 例如：window.location.href = '/api/shutdown';
     }
 };
     </script>
