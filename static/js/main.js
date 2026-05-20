@@ -449,13 +449,8 @@ const musicCard = {
     },
     updatePlaybackTime: function(playbackEl, progressEl) {
         if (playbackEl) {
-            // 计算运行时间 = 当前时间 - 上次上传时间（每次打开网页重新计算）
-            const now = new Date();
-            const runningSeconds = Math.floor((now - lastUpdateTime) / 1000);
-            const runningTimeStr = this.formatTime(runningSeconds);
-            
-            // 显示格式：运行时间 | 当前播放时间 / 总时间
-            playbackEl.textContent = `${runningTimeStr} | ${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
+            // 显示格式：当前播放时间 / 总时间
+            playbackEl.textContent = `${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
         }
         if (progressEl && this.musicData.totalSeconds > 0) {
             const progress = (this.musicData.currentSeconds / this.musicData.totalSeconds) * 100;
