@@ -584,7 +584,7 @@ def get_extended_window_rect(hwnd):
     except Exception:
         return None
 
-def get_window_rect_with_buffer(hwnd, buffer_pixels=15):
+def get_window_rect_with_buffer(hwnd, buffer_pixels=5):
     """获取窗口矩形并添加15像素边界缓冲，确保包含所有视觉元素"""
     rect = get_extended_window_rect(hwnd)
     if not rect:
