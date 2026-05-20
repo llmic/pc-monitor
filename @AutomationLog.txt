@@ -227,3 +227,7 @@
 2026-05-20 22:52:56.901 collector.py[50] get_browser_url -> Find Control Timeout(0.7s): {AccessKey: 'Address', ControlType: EditControl}
 2026-05-20 22:53:17.017 collector.py[50] get_browser_url -> Find Control Timeout(0.7s): {AccessKey: 'Address', ControlType: EditControl}
 2026-05-20 22:53:17.765 collector.py[50] get_browser_url -> Find Control Timeout(0.7s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 23:10:52.331 collector.py[50] get_browser_url -> Find Control Timeout(0.7s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 23:10:53.088 collector.py[50] get_browser_url -> Find Control Timeout(0.7s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 23:14:46.385 collector.py[50] get_browser_url -> Find Control Timeout(0.7s): {AccessKey: 'Address', ControlType: EditControl}
+2026-05-20 23:14:47.132 collector.py[50] get_browser_url -> Find Control Timeout(0.7s): {AccessKey: 'Address', ControlType: EditControl}
