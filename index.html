@@ -6,7 +6,367 @@
     <title>视奸 Liuli 的电脑</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        body {
+            background-color: #FFFFFF;
+            color: #333333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        }
+        .user-avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        .card-body {
+            padding: 15px 20px;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-normal { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; animation: blink 1s infinite; }
+        .status-danger { background-color: #dc3545; animation: blink 0.5s infinite; }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .window-active {
+            background-color: rgba(220, 53, 69, 0.08);
+            border-left: 4px solid #dc3545;
+        }
+        .window-normal {
+            background-color: #fafafa;
+            border-left: 4px solid transparent;
+        }
+        .bilibili-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bilibili-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(255, 107, 157, 0.25);
+        }
+        .bilibili-card .card-header {
+            position: relative;
+            overflow: hidden;
+        }
+        .bilibili-card .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-200%); }
+            100% { transform: translateX(200%); }
+        }
+        .browser-card {
+            border-left: 4px solid #007bff;
+            background: linear-gradient(90deg, rgba(0, 123, 255, 0.08), transparent);
+        }
+        .window-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .window-item:hover {
+            transform: translateX(4px);
+        }
+        .website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 123, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .website-link:hover {
+            background: rgba(0, 123, 255, 0.2);
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .window-title-link {
+            color: #007bff;
+            text-decoration: underline;
+            word-break: break-all;
+            transition: all 0.2s;
+        }
+        .window-title-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .btn-bilibili {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-bilibili:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 101, 149, 0.4);
+            color: white;
+        }
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #007bff;
+        }
+        .stats-label {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .progress-bar-custom {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .progress-cpu { background-color: #28a745; }
+        .progress-memory { background-color: #17a2b8; }
+        .progress-disk { background-color: #ffc107; }
+        .screenshot-container {
+            max-width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .screenshot-container img {
+            width: 100%;
+            height: auto;
+        }
+        .alert-danger-custom {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .alert-warning-custom {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .scroll-container {
+            max-height: none;
+            overflow-y: visible;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #333333;
+        }
+        .text-muted-custom {
+            color: #666666;
+        }
+        .timestamp {
+            color: #888888;
+            font-size: 0.85rem;
+        }
+        footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+        .h-100 {
+            height: 100% !important;
+        }
+        .row-eq-height {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .row-eq-height > [class*="col-"] {
+            display: flex;
+            flex-direction: column;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .hover-float {
+            transition: transform 0.3s ease-in-out;
+        }
+        .hover-float:hover {
+            animation: float 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+        }
+        .lyrics-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lyrics-box::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .lyrics-box::-webkit-scrollbar-thumb {
+            background: #ff4757;
+            border-radius: 4px;
+        }
+        .shutdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+        .shutdown-overlay.show {
+            display: flex;
+        }
+        .shutdown-icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .shutdown-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .shutdown-subtitle {
+            font-size: 18px;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+        }
+        .shutdown-time {
+            font-size: 16px;
+            color: #888888;
+        }
+        .music-cover {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .music-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .lyrics-display {
+            font-style: italic;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-gradient-music {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        /* 状态卡片层级优先，避免被覆盖 */
+        .status-card-root {
+            position: relative;
+            z-index: 10;
+        }
+        /* 音乐卡片隔离，增加间距 */
+        .music-card {
+            margin-top: 20px !important;
+            position: relative;
+            z-index: 5;
+        }
+        /* 音乐旋转动画隔离，不影响其他元素 */
+        .music-spin {
+            animation: spin 8s linear infinite !important;
+        }
+        /* 音乐进度条样式隔离 */
+        .music-playback-time-container .progress-bar-custom {
+            margin-top: 4px !important;
+            height: 4px !important;
+        }
+        /* 修复滚动容器，避免溢出覆盖 */
+        .scroll-container {
+            max-height: 500px !important;
+            overflow-y: auto !important;
+        }
+        .music-card-header {
+    background: linear-gradient(135deg, #e01010 0%, #ff4a4a 100%);
+    color: white;
+    padding: 10px 14px;
+    margin: 0;
+}
+    </style>
 </head>
 <body>
     <div class="shutdown-overlay" id="shutdownOverlay">
@@ -36,7 +396,7 @@
                             <span id="statusText" class="fs-5 status-text"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 15:50:06</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 15:59:16</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay" class="current-time-display"></span>
@@ -60,29 +420,29 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">33%</div>
+                                    <div class="stats-number">26%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" data-width="33%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="26%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">57%</div>
+                                    <div class="stats-number">54%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" data-width="57%"></div>
+                                        <div class="progress-fill progress-memory" data-width="54%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">18.11 / 31.47 GB</div>
+                                    <div class="stats-number">17.24 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 166.74 B<br>
-                                        Received: 1006.53 B
+                                        Sent: 180.77 B<br>
+                                        Received: 1.05 KB
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +467,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details (12 cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (9 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -115,19 +475,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">3.1%</div>
+                                    <div class="text-primary font-size-lg">45.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="3.1%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 1</div>
-                                    <div class="text-primary font-size-lg">62.9%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="62.9%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="45.5%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -135,9 +485,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">71.9%</div>
+                                    <div class="text-primary font-size-lg">85.3%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="71.9%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="85.3%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -145,9 +495,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">72.7%</div>
+                                    <div class="text-primary font-size-lg">85.7%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="72.7%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="85.7%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -155,9 +505,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 4</div>
-                                    <div class="text-primary font-size-lg">59.4%</div>
+                                    <div class="text-primary font-size-lg">75.8%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="59.4%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="75.8%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -165,9 +515,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">87.5%</div>
+                                    <div class="text-primary font-size-lg">80.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="87.5%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="80.0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -175,9 +525,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 6</div>
-                                    <div class="text-primary font-size-lg">45.2%</div>
+                                    <div class="text-primary font-size-lg">15.6%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="45.2%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="15.6%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -185,19 +535,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 7</div>
-                                    <div class="text-primary font-size-lg">53.1%</div>
+                                    <div class="text-primary font-size-lg">6.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="53.1%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 8</div>
-                                    <div class="text-primary font-size-lg">32.3%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="32.3%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="6.5%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -205,19 +545,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 9</div>
-                                    <div class="text-primary font-size-lg">22.6%</div>
+                                    <div class="text-primary font-size-lg">25.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="22.6%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 14</div>
-                                    <div class="text-primary font-size-lg">68.8%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="68.8%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="25.0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -225,9 +555,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 15</div>
-                                    <div class="text-primary font-size-lg">16.1%</div>
+                                    <div class="text-primary font-size-lg">60.6%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="16.1%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="60.6%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +578,7 @@
             <div class="d-flex gap-4" style="width: 100%;">
                 
                 <div style="flex: 1; min-width: 300px;">
-                    <a href="https://music.163.com/#/song?id=2731082184" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <a href="https://music.163.com/#/song?id=1457366924" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                         <div class="card music-card" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 71, 87, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 71, 87, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 71, 87, 0.15)';">
                             <!-- 头部 -->
                             <div class="card-header music-card-header" data-bg-color="#ffffff">
@@ -269,22 +599,22 @@
                                     <div class="col-auto">
                                         
                                         <div id="music-cover-1" class="music-cover music-spin" style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                                            <img src="https://p2.music.126.net/WhHBg-1emYBwhDMv_zyYtw==/109951171513089424.jpg" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
+                                            <img src="https://p2.music.126.net/z55g6hlYCpzm1afCU4pj2g==/109951165082015624.jpg" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
                                         </div>
                                         
                                     </div>
                                     <!-- 信息 -->
                                     <div class="col" style="padding-left: 12px;">
                                         <h5 class="font-weight-bold mb-1" style="line-height: 1.3; font-size: 0.9rem;">
-                                            昼寝
+                                            a···
                                         </h5>
                                         <p class="text-muted mb-0" style="font-size: 0.75rem;">
-                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> 立入禁止
+                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> Theiaの阿旋酱
                                         </p>
                                         
                                         <div id="music-playback-time-container-1" class="music-playback-time-container" style="margin-top: 4px;">
                                             <span id="music-playback-time-1" class="music-playback-time" style="font-size: 0.7rem; opacity: 0.6;">
-                                                00:00 / 03:36
+                                                00:00 / 03:16
                                             </span>
                                             <!-- 新增进度条（数学计算进度） -->
                                             <div class="progress-bar-custom mt-1" style="height: 4px;">
@@ -324,11 +654,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260520_155004.png</span>
+                        <span class="badge bg-primary float-end">screenshot_20260520_155914.png</span>
                     </div>
                     <div class="card-body">
                         <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_155004.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_155004.png?raw=true">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_155914.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_155914.png?raw=true">
                         </div>
                     </div>
                 </div>
@@ -343,6 +673,8 @@
                     <div class="card-header">
                         <i class="bi bi-window-stack"></i> Currently Open Windows
                         
+                        <span class="badge bg-danger float-end">Active: main.py - pc-monitor - Trae CN</span>
+                        
                     </div>
                     <div class="card-body scroll-container">
                         
@@ -353,6 +685,50 @@
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> cloudmusic.exe |
                                         <i class="bi bi-aspect-ratio"></i> 971x252
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-active">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>main.py - pc-monitor - Trae CN</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 2213x1520
+                                    </div>
+                                    
+                                </div>
+                                
+                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>未命名 - TeXstudio</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> texstudio.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3094x1870
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>豆包</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Doubao.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1549x1192
                                     </div>
                                     
                                 </div>
@@ -405,7 +781,21 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>昼寝 - 立入禁止</strong>
+                                    <strong>QQ</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> QQ.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>a··· - Theiaの阿旋酱</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> cloudmusic.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
@@ -413,50 +803,16 @@
                                     
                                     <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
                                         <div class="text-white font-bold">
-                                            <i class="bi bi-music-note"></i> 昼寝
+                                            <i class="bi bi-music-note"></i> a···
                                         </div>
-                                        <div class="text-white-80 text-sm">立入禁止</div>
+                                        <div class="text-white-80 text-sm">Theiaの阿旋酱</div>
                                         <div class="text-white-70 text-sm mt-2 font-italic lyrics-box" style="max-height: 100px; overflow-y: auto;">
                                             
-                                            [00:00]作词 : 立入禁止
+                                            [00:00]作词 : 无
                                             
-                                            [00:01]作曲 : 立入禁止
+                                            [00:01]作曲 : Theiaの阿旋酱
                                             
-                                            [00:02]编曲 : 立入禁止
-                                            
-                                            [00:23]何が消えた何かが消えた
-                                            
-                                            [00:26]目覚めたらもう夕暮れの中
-                                            
-                                            [00:28]頭が痛くて光が襲って来たのも
-                                            
-                                            [00:32]幻肢痛の所為のかな
-                                            
-                                            [00:44]何か消えた
-                                            
-                                            [00:45]心に響く何か消えた
-                                            
-                                            [00:49]何処が痛いんだっけ
-                                            
-                                            [00:51]分かるように分からないな
-                                            
-                                            [00:54]手足を失った様に
-                                            
-                                            [00:58]君は僕に落とされた
-                                            
-                                            [01:00]記憶もまるで無かった
-                                            
-                                            [01:04]黄昏你快点走吧
-                                            
-                                            [01:07]太阳想快点回家
-                                            
-                                            [01:09]我必须知道爱是什么吗
-                                            
-                                            [01:14]你明明很清楚 你明明很清楚
-                                            
-                                            [01:19]在夕阳里我和我自己跳的那只舞
-                                            
-                                            [01:26]你却看不出 有什么留不住
+                                            [00:05]纯音乐，请欣赏
                                             
                                         </div>
                                     </div>
@@ -491,64 +847,26 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser (5)
-                        
-                        <span class="badge bg-danger float-end">Active: QQ</span>
+                        <i class="bi bi-globe"></i> Currently Open Browser (2)
                         
                     </div>
                     <div class="card-body scroll-container">
                         
-                        <div class="window-item window-active browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>QQ</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> QQ.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1482x1197
-                                    </div>
-                                    
-                                </div>
-                                
-                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
-                                
-                            </div>
-                        </div>
-                        
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>main.js - pc-monitor - Trae CN</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Trae CN.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 2213x1520
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>面板数据分析_3.pdf and 3 more pages - Personal - Microsoft​ Edge</strong>
+                                    <strong>1 向量和矩阵 | 多元统计分析讲义 - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> msedge.exe |
                                         <i class="bi bi-aspect-ratio"></i> 1770x1136
                                     </div>
                                     
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>豆包</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Doubao.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain=math.pku.edu.cn&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://math.pku.edu.cn/teachers/lidf/course/mvr/mvrnotes/html/_mvrnotes/mvr-matrix.html#mvr-matrix-eigen" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> math.pku.edu.cn
+                                        </a>
                                     </div>
                                     
                                 </div>
@@ -559,10 +877,18 @@
                         <div class="window-item window-normal browser-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
+                                    <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
                                     <div class="text-muted-custom small">
                                         <i class="bi bi-app"></i> msedge.exe |
                                         <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                    <div class="mt-2">
+                                        <img src="https://www.google.com/s2/favicons?domain=llmic.github.io&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
+                                        <a href="https://llmic.github.io/pc-monitor/" target="_blank" rel="noopener noreferrer"
+                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
+                                            <i class="bi bi-box-arrow-up-right"></i> llmic.github.io
+                                        </a>
                                     </div>
                                     
                                 </div>
@@ -595,42 +921,6 @@
                                     
                                     <tr>
                                         <td>
-                                            <strong>昼寝 - 立入禁止</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Sticky Notes</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>main.js - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>QQ</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">QQ.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
                                             <strong>Program Manager</strong>
                                         </td>
                                         <td>
@@ -640,16 +930,16 @@
                                     
                                     <tr>
                                         <td>
-                                            <strong>豆包</strong>
+                                            <strong>视奸 Liuli 的电脑 and 1 more page - Personal - Microsoft​ Edge</strong>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">Doubao.exe</span>
+                                            <span class="badge bg-secondary">msedge.exe</span>
                                         </td>
                                     </tr>
                                     
                                     <tr>
                                         <td>
-                                            <strong>プロポーズ - ヰ世界情緒</strong>
+                                            <strong>a··· - Theiaの阿旋酱</strong>
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">cloudmusic.exe</span>
@@ -667,7 +957,7 @@
                                     
                                     <tr>
                                         <td>
-                                            <strong>面板数据分析_3.pdf and 3 more pages - Personal - Microsoft​ Edge</strong>
+                                            <strong>1 向量和矩阵 | 多元统计分析讲义 - Personal - Microsoft​ Edge</strong>
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">msedge.exe</span>
@@ -676,10 +966,46 @@
                                     
                                     <tr>
                                         <td>
-                                            <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
+                                            <strong>未命名 - TeXstudio</strong>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
+                                            <span class="badge bg-secondary">texstudio.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>main.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>桌面歌词</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>昼寝 - 立入禁止</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">cloudmusic.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Sticky Notes</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
                                         </td>
                                     </tr>
                                     
@@ -692,7 +1018,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T15:50:06.148196</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T15:59:16.912097</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -702,68 +1028,675 @@
     <script>
         // 全局数据变量（由后端生成）
         window.PCMONITOR_DATA = {
-            timestamp: '2026-05-20T15:50:06.148196',
-            startTime: '2026-05-20T15:37:18.822113',
+            timestamp: '2026-05-20T15:59:16.912097',
+            startTime: '2026-05-20T15:58:05.276236',
             bilibiliCoverCache: {},
             hasMusic: true,
-            metricsHistory: [{"cpu": 21.255555555555556, "memory": 55.3}, {"cpu": 26.227777777777774, "memory": 55.4}, {"cpu": 21.37777777777778, "memory": 56.6}, {"cpu": 38.0388888888889, "memory": 58.1}, {"cpu": 33.08888888888889, "memory": 57.6}],
-            cpuPercent: 33,
-            memoryPercent: 57,
+            metricsHistory: [{"cpu": 26.227777777777774, "memory": 55.4}, {"cpu": 21.37777777777778, "memory": 56.6}, {"cpu": 38.0388888888889, "memory": 58.1}, {"cpu": 33.08888888888889, "memory": 57.6}, {"cpu": 26.66666666666667, "memory": 54.8}],
+            cpuPercent: 26,
+            memoryPercent: 54,
             musicData: {
                 currentSeconds: 0,
-                totalSeconds: 216.648,
+                totalSeconds: 196.224,
                 songEnded: false,
-                parsedLyrics: [{"text": "\u4f5c\u8bcd : \u7acb\u5165\u7981\u6b62", "time": 0.0, "translation": null}, {"text": "\u4f5c\u66f2 : \u7acb\u5165\u7981\u6b62", "time": 1.0, "translation": null}, {"text": "\u7f16\u66f2 : \u7acb\u5165\u7981\u6b62", "time": 2.0, "translation": null}, {"text": "\u4f55\u304c\u6d88\u3048\u305f\u4f55\u304b\u304c\u6d88\u3048\u305f", "time": 23.321, "translation": "\u6709\u4ec0\u4e48\u6d88\u5931\u4e86 \u53c8\u662f\u4ec0\u4e48\u6d88\u5931\u4e86"}, {"text": "\u76ee\u899a\u3081\u305f\u3089\u3082\u3046\u5915\u66ae\u308c\u306e\u4e2d", "time": 26.022, "translation": "\u5728\u9192\u6765\u65f6\u5df2\u7ecf\u662f\u843d\u65e5\u65f6\u5206\u4e86"}, {"text": "\u982d\u304c\u75db\u304f\u3066\u5149\u304c\u8972\u3063\u3066\u6765\u305f\u306e\u3082", "time": 28.604, "translation": "\u4e0d\u7ba1\u662f\u504f\u5934\u75db \u8fd8\u662f\u523a\u773c\u7684\u5149"}, {"text": "\u5e7b\u80a2\u75db\u306e\u6240\u70ba\u306e\u304b\u306a", "time": 32.354, "translation": "\u4e5f\u90fd\u662f\u5e7b\u80a2\u75db\u7684\u6240\u4f5c\u6240\u4e3a\u5427"}, {"text": "\u4f55\u304b\u6d88\u3048\u305f", "time": 44.175, "translation": "\u5230\u5e95\u662f\u4ec0\u4e48\u6d88\u5931\u4e86"}, {"text": "\u5fc3\u306b\u97ff\u304f\u4f55\u304b\u6d88\u3048\u305f", "time": 45.724, "translation": "\u5728\u5fc3\u5e95\u56de\u54cd\u7684\u67d0\u4e2a\u4e1c\u897f \u6d88\u5931\u4e86"}, {"text": "\u4f55\u51e6\u304c\u75db\u3044\u3093\u3060\u3063\u3051", "time": 49.324, "translation": "\u8fd9\u53c8\u662f\u54ea\u91cc\u7684\u75bc\u75db"}, {"text": "\u5206\u304b\u308b\u3088\u3046\u306b\u5206\u304b\u3089\u306a\u3044\u306a", "time": 51.858, "translation": "\u597d\u50cf\u53c8\u4e00\u76ee\u4e86\u7136\u53c8\u4e00\u5934\u96fe\u6c34"}, {"text": "\u624b\u8db3\u3092\u5931\u3063\u305f\u69d8\u306b", "time": 54.524, "translation": "\u5c31\u597d\u50cf\u662f\u5931\u53bb\u4e86\u624b\u811a"}, {"text": "\u541b\u306f\u50d5\u306b\u843d\u3068\u3055\u308c\u305f", "time": 58.091, "translation": "\u6211\u628a\u4f60\u843d\u5728\u4e86\u67d0\u4e2a\u5730\u65b9"}, {"text": "\u8a18\u61b6\u3082\u307e\u308b\u3067\u7121\u304b\u3063\u305f", "time": 60.641, "translation": "\u8fde\u8bb0\u5fc6\u90fd\u4e0d\u66fe\u7559\u4e0b\u8fc7\u75d5\u8ff9"}, {"text": "\u9ec4\u660f\u4f60\u5feb\u70b9\u8d70\u5427", "time": 64.525, "translation": null}, {"text": "\u592a\u9633\u60f3\u5feb\u70b9\u56de\u5bb6", "time": 67.141, "translation": null}, {"text": "\u6211\u5fc5\u987b\u77e5\u9053\u7231\u662f\u4ec0\u4e48\u5417", "time": 69.857, "translation": null}, {"text": "\u4f60\u660e\u660e\u5f88\u6e05\u695a\u00a0\u4f60\u660e\u660e\u5f88\u6e05\u695a", "time": 74.24, "translation": null}, {"text": "\u5728\u5915\u9633\u91cc\u6211\u548c\u6211\u81ea\u5df1\u8df3\u7684\u90a3\u53ea\u821e", "time": 79.974, "translation": null}, {"text": "\u4f60\u5374\u770b\u4e0d\u51fa \u6709\u4ec0\u4e48\u7559\u4e0d\u4f4f", "time": 86.273, "translation": null}, {"text": "\u305d\u8a00\u3048\u3070\u50d5\u306f\u3068\u3053\u3078\u5411\u304b\u3046\u3060\u3051", "time": 111.781, "translation": "\u8bdd\u8bf4\u56de\u6765 \u6211\u662f\u8981\u53bb\u54ea\u513f\u6765\u7740"}, {"text": "\u6c17\u304c\u4ed8\u3044\u305f\u3089\u8ff7\u5b50\u306b\u306a\u3063\u3066", "time": 116.416, "translation": "\u56de\u5934\u6765\u770b \u5df2\u7ecf\u53d8\u6210\u4e86\u8ff7\u8def\u7684\u5b69\u5b50"}, {"text": "\u50d5\u3089\u305a\u3063\u3068\u5922\u306b\u60d1\u308f\u3055\u308c\u3066", "time": 118.916, "translation": "\u6211\u4eec\u4e5f\u4e00\u76f4\u5728\u68a6\u4e2d\u6005\u7136\u82e5\u5931"}, {"text": "\u597d\u4e0d\u5bb9\u6613\u9192\u6765", "time": 122.982, "translation": null}, {"text": "\u5374\u5728\u9ec4\u660f\u91cc\u627e\u4e0d\u5230\u6211\u7684\u5b58\u5728", "time": 126.499, "translation": null}, {"text": "\u4f55\u304b\u6d88\u3048\u305f", "time": 142.79, "translation": "\u662f\u4ec0\u4e48\u4e0d\u89c1\u4e86"}, {"text": "\u5fc3\u306b\u9a12\u3050\u4f55\u304b", "time": 144.223, "translation": "\u5728\u5fc3\u5e95\u91cc\u9a9a\u52a8\u7684\u67d0\u4e2a\u4e1c\u897f"}, {"text": "\u5c45\u306a\u304f\u306a\u3063\u305f", "time": 146.473, "translation": "\u5df2\u7ecf\u4e0d\u89c1\u4e86"}, {"text": "\u305d\u308c\u3067\u3082\u4f53\u304c", "time": 147.922, "translation": "\u5c31\u7b97\u8fd9\u6837 \u6211\u7684\u8eab\u4f53\u4e5f\u8fd8\u662f"}, {"text": "\u52d5\u3051\u306a\u3044\u52d5\u3051\u306a\u3044\u3088", "time": 150.341, "translation": "\u52a8\u5f39\u4e0d\u5f97 \u52a8\u5f39\u4e0d\u5f97\u554a"}, {"text": "\u8e0a\u308a\u51fa\u3057\u305f\u541b\u306e\u59ff", "time": 153.473, "translation": "\u5c31\u8fde\u4f60\u8df3\u8d77\u821e\u7684\u8eab\u59ff"}, {"text": "\u3082\u6d88\u3048\u305f", "time": 157.69, "translation": "\u4e5f\u5df2\u7ecf\u6d88\u5931\u4e86"}, {"text": "\u3082\u3046\u6d88\u3048\u3066\u3057\u307e\u3063\u305f", "time": 160.257, "translation": "\u4e0d\u4f1a\u518d\u56de\u6765\u4e86"}, {"text": "\u4f60\u603b\u662f\u95ee\u8d77\u7231\u662f\u4ec0\u4e48\u5427", "time": 164.422, "translation": null}, {"text": "\u4f60\u660e\u660e\u5f88\u6e05\u695a", "time": 168.923, "translation": null}, {"text": "\u662f\u5915\u9633\u91cc\u4f60\u4e3a\u6211\u9a7b\u8db3", "time": 174.789, "translation": null}, {"text": "\u8df3\u7684\u90a3\u53ea\u821e", "time": 179.074, "translation": null}, {"text": "\u6211\u5374\u770b\u4e0d\u51fa", "time": 181.172, "translation": null}, {"text": "\u6709\u4ec0\u4e48\u7559\u4e0d\u4f4f", "time": 183.607, "translation": null}, {"text": "\u6211\u5fc5\u987b\u77e5\u9053\u7231\u662f\u4ec0\u4e48\u554a", "time": 187.706, "translation": null}, {"text": "\u6211\u660e\u660e\u5f88\u6e05\u695a \u6211\u660e\u660e\u5f88\u6e05\u695a", "time": 192.307, "translation": null}, {"text": "\u5728\u5915\u9633\u91cc\u9192\u6765\u7684\u4e2d\u9014 \u6211\u4e0d\u6e05\u4e0d\u695a", "time": 198.089, "translation": null}, {"text": "\u6211\u5374\u770b\u4e0d\u51fa", "time": 204.357, "translation": null}, {"text": "\u4ec0\u4e48\u90fd\u7559\u4e0d\u4f4f", "time": 206.873, "translation": null}],
-                rawLyrics: '[00:00.000] 作词 : 立入禁止
-[00:01.000] 作曲 : 立入禁止
-[00:02.000] 编曲 : 立入禁止
-[00:23.321]何が消えた何かが消えた
-[00:26.022]目覚めたらもう夕暮れの中
-[00:28.604]頭が痛くて光が襲って来たのも
-[00:32.354]幻肢痛の所為のかな
-[00:33.804]
-[00:44.175]何か消えた
-[00:45.724]心に響く何か消えた
-[00:49.324]何処が痛いんだっけ
-[00:51.858]分かるように分からないな
-[00:54.524]手足を失った様に
-[00:58.091]君は僕に落とされた
-[01:00.641]記憶もまるで無かった
-[01:04.525]黄昏你快点走吧
-[01:07.141]太阳想快点回家
-[01:09.857]我必须知道爱是什么吗
-[01:14.240]你明明很清楚 你明明很清楚
-[01:19.974]在夕阳里我和我自己跳的那只舞
-[01:26.273]你却看不出 有什么留不住
-[01:30.758]
-[01:51.781]そ言えば僕はとこへ向かうだけ
-[01:56.416]気が付いたら迷子になって
-[01:58.916]僕らずっと夢に惑わされて
-[02:02.982]好不容易醒来
-[02:06.499]却在黄昏里找不到我的存在
-[02:22.790]何か消えた
-[02:24.223]心に騒ぐ何か
-[02:26.473]居なくなった
-[02:27.922]それでも体が
-[02:30.341]動けない動けないよ
-[02:33.473]踊り出した君の姿
-[02:37.690]も消えた
-[02:40.257]もう消えてしまった
-[02:44.422]你总是问起爱是什么吧
-[02:48.923]你明明很清楚
-[02:54.789]是夕阳里你为我驻足
-[02:59.074]跳的那只舞
-[03:01.172]我却看不出
-[03:03.607]有什么留不住
-[03:07.706]我必须知道爱是什么啊
-[03:12.307]我明明很清楚 我明明很清楚
-[03:18.089]在夕阳里醒来的中途 我不清不楚
-[03:24.357]我却看不出
-[03:26.873]什么都留不住'
+                parsedLyrics: [{"text": "\u4f5c\u8bcd : \u65e0", "time": 0.0, "translation": null}, {"text": "\u4f5c\u66f2 : Theia\u306e\u963f\u65cb\u9171", "time": 1.0, "translation": null}, {"text": "\u7eaf\u97f3\u4e50\uff0c\u8bf7\u6b23\u8d4f", "time": 5.0, "translation": null}],
+                rawLyrics: '[00:00.00] 作词 : 无
+[00:01.00] 作曲 : Theiaの阿旋酱
+[00:05.00]纯音乐，请欣赏',
+                songName: "a···",
+                artistName: "Theiaの阿旋酱"
             },
             maxUsage: 68
         };
     </script>
-    <script src="static/js/main.js"></script>
+    <script>
+        // 获取全局数据（由后端在 HTML 中定义）
+const PCMONITOR_DATA = window.PCMONITOR_DATA || {};
+const LAST_UPDATE_ISO = PCMONITOR_DATA.timestamp || '';
+const START_TIME_ISO = PCMONITOR_DATA.startTime || '';
+let lastUpdateTime;
+let startTime;
+
+// 隐藏的 bilibili 数据（由后端生成）
+const bilibiliCoverCache = PCMONITOR_DATA.bilibiliCoverCache || {};
+
+try {
+    lastUpdateTime = new Date(LAST_UPDATE_ISO);
+    if (isNaN(lastUpdateTime.getTime())) {
+        lastUpdateTime = new Date();
+        console.warn('Could not parse timestamp, using current time');
+    }
+    startTime = new Date(START_TIME_ISO);
+    if (isNaN(startTime.getTime())) {
+        startTime = new Date();
+        console.warn('Could not parse start time, using current time');
+    }
+} catch(e) {
+    lastUpdateTime = new Date();
+    startTime = new Date();
+    console.error('Error parsing timestamps:', e);
+}
+
+function getTimezoneOffset() {
+    const offset = -lastUpdateTime.getTimezoneOffset();
+    const sign = offset >= 0 ? '+' : '-';
+    const hours = Math.floor(Math.abs(offset) / 60);
+    const minutes = Math.abs(offset) % 60;
+    return sign + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+}
+
+// 格式化时间为 "YYYY-MM-DD HH:mm:ss" 格式
+function formatDateTime(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function formatDate(date) {
+    return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZoneName: 'short'
+    });
+}
+
+function formatDateUTC(date) {
+    return date.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+}
+
+function formatDuration(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    let result = '';
+    if (hours > 0) result += hours + '小时 ';
+    if (minutes > 0) result += minutes + '分钟 ';
+    if (secs > 0) result += secs + '秒';
+    return result || '0秒';
+}
+
+// ========== 状态卡片专用逻辑（完全隔离） ==========
+const statusCard = {
+    init: function() {
+        this.updateStatusLight(); // 更新状态指示灯
+        this.startCurrentTimeTimer(); // 独立时间定时器
+        this.checkShutdownStatus();
+    },
+    // 基于 CPU/内存阈值（数学判断）更新状态
+    updateStatusLight: function() {
+        const statusLight = document.getElementById('statusLight');
+        const statusText = document.getElementById('statusText');
+        const cpuPercent = parseFloat(PCMONITOR_DATA.cpuPercent || 0);
+        const memoryPercent = parseFloat(PCMONITOR_DATA.memoryPercent || 0);
+
+        // 数学阈值判断状态
+        let status = 'normal';
+        let statusMsg = 'System Normal';
+        if (cpuPercent > 80 || memoryPercent > 85) {
+            status = 'danger';
+            statusMsg = 'High Resource Usage';
+        } else if (cpuPercent > 60 || memoryPercent > 70) {
+            status = 'warning';
+            statusMsg = 'Moderate Resource Usage';
+        }
+
+        statusLight.className = `status-indicator status-${status}`;
+        statusText.textContent = statusMsg;
+        statusText.className = `fs-5 ${status === 'normal' ? 'text-success' : status === 'warning' ? 'text-warning' : 'text-danger'}`;
+    },
+    // 独立定时器更新当前时间（避免和音乐定时器冲突）
+    startCurrentTimeTimer: function() {
+        this.updateCurrentTime(); // 立即更新
+        setInterval(() => this.updateCurrentTime(), 1000); // 每秒更新
+    },
+    // 数学格式化时间（补零 + 日期计算）
+    updateCurrentTime: function() {
+        const now = new Date();
+        const pad = (num) => num.toString().padStart(2, '0'); // 补零公式
+        const formatted = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        
+        const currentTimeDisplay = document.getElementById('currentTimeDisplay');
+        if (currentTimeDisplay) {
+            currentTimeDisplay.textContent = formatted;
+        }
+        
+        // 同时更新运行时长显示
+        const elapsedSeconds = Math.floor((now - startTime) / 1000);
+        const elapsedEl = document.getElementById('elapsedTimeDisplay');
+        if (elapsedEl) {
+            const hours = Math.floor(elapsedSeconds / 3600);
+            const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+            const secs = elapsedSeconds % 60;
+            elapsedEl.textContent = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+        }
+    },
+    checkShutdownStatus: function() {
+        const isShutdown = false; // 替换为真实关机状态判断
+        if (isShutdown) {
+            document.getElementById('shutdownOverlay').classList.add('show');
+            document.getElementById('shutdownTime').textContent = new Date().toLocaleString();
+        }
+    }
+};
+
+// ============ 音乐卡片专用逻辑（隔离 + 数学计算） ============
+const musicCard = {
+    musicData: {
+        currentSeconds: (window.PCMONITOR_DATA && window.PCMONITOR_DATA.musicData && window.PCMONITOR_DATA.musicData.currentSeconds) || 0,
+        totalSeconds: (window.PCMONITOR_DATA && window.PCMONITOR_DATA.musicData && window.PCMONITOR_DATA.musicData.totalSeconds) || 0,
+        songEnded: (window.PCMONITOR_DATA && window.PCMONITOR_DATA.musicData && window.PCMONITOR_DATA.musicData.songEnded) || false,
+        songName: (window.PCMONITOR_DATA && window.PCMONITOR_DATA.musicData && window.PCMONITOR_DATA.musicData.songName) || '',
+        artistName: (window.PCMONITOR_DATA && window.PCMONITOR_DATA.musicData && window.PCMONITOR_DATA.musicData.artistName) || '',
+        musicId: 1
+    },
+    playbackTimer: null,
+    lyricData: (window.PCMONITOR_DATA && window.PCMONITOR_DATA.musicData && window.PCMONITOR_DATA.musicData.parsedLyrics) || [],
+    rawLyrics: (window.PCMONITOR_DATA && window.PCMONITOR_DATA.musicData && window.PCMONITOR_DATA.musicData.rawLyrics) || '',
+    init: function() {
+        console.log('musicCard.init() called');
+        console.log('musicData:', this.musicData);
+        console.log('lyricData:', this.lyricData);
+        console.log('rawLyrics:', this.rawLyrics);
+        
+        // 初始化进度条（优雅更新，设置初始宽度）
+        this.initProgressBar();
+        
+        // 显示歌词（即使没有播放进度，也应该显示歌词）
+        this.updateLyrics();
+        
+        // 如果后端没有提供歌词，尝试前端获取
+        if (!this.lyricData || this.lyricData.length === 0) {
+            if (this.musicData.songName) {
+                console.log('No lyrics from backend, trying frontend fetch...');
+                this.fetchLyrics(this.musicData.songName, this.musicData.artistName);
+            }
+        }
+        
+        if (this.musicData.totalSeconds === 0) {
+            console.log('totalSeconds is 0, skipping timer and cover spin');
+            return;
+        }
+        this.startPlaybackTimer();
+        this.initCoverSpin();
+    },
+    // 初始化进度条（优雅更新）
+    initProgressBar: function() {
+        const progressEl = document.getElementById(`music-progress-bar-${this.musicData.musicId}`);
+        const playbackEl = document.getElementById(`music-playback-time-${this.musicData.musicId}`);
+        
+        if (progressEl) {
+            // 从HTML的data-width属性获取初始宽度
+            const initialWidth = progressEl.getAttribute('data-width') || '0%';
+            // 设置初始宽度，使用CSS过渡实现优雅更新
+            progressEl.style.width = initialWidth;
+            
+            // 设置进度条颜色
+            const color = progressEl.getAttribute('data-color') || '#1db954';
+            progressEl.style.backgroundColor = color;
+        }
+        
+        if (playbackEl && this.musicData.totalSeconds > 0) {
+            playbackEl.textContent = `${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
+        }
+    },
+    // 数学公式：秒数转 MM:SS
+    formatTime: function(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    },
+    // 基于页面运行时间更新播放进度（与状态卡片使用同一时间基准）
+    startPlaybackTimer: function() {
+        const playbackEl = document.getElementById(`music-playback-time-${this.musicData.musicId}`);
+        const progressEl = document.getElementById(`music-progress-bar-${this.musicData.musicId}`);
+        const initialSeconds = this.musicData.currentSeconds; // 记录初始播放位置
+        
+        this.updatePlaybackTime(playbackEl, progressEl); // 立即更新
+        
+        if (!this.musicData.songEnded) {
+            const self = this;
+            this.playbackTimer = setInterval(function() {
+                // 数学计算：基于页面运行时间更新播放进度
+                const now = new Date();
+                const elapsedSeconds = Math.floor((now - startTime) / 1000);
+                self.musicData.currentSeconds = initialSeconds + elapsedSeconds;
+                
+                if (self.musicData.currentSeconds >= self.musicData.totalSeconds) {
+                    self.musicData.currentSeconds = self.musicData.totalSeconds;
+                    self.musicData.songEnded = true;
+                    self.stopCoverSpin();
+                    clearInterval(self.playbackTimer);
+                }
+                
+                self.updatePlaybackTime(playbackEl, progressEl);
+                self.updateLyrics(); // 同步更新歌词
+            }, 1000);
+        }
+    },
+    updatePlaybackTime: function(playbackEl, progressEl) {
+        if (playbackEl) {
+            playbackEl.textContent = `${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
+        }
+        if (progressEl && this.musicData.totalSeconds > 0) {
+            const progress = (this.musicData.currentSeconds / this.musicData.totalSeconds) * 100;
+            progressEl.style.width = `${Math.min(progress, 100)}%`;
+        }
+    },
+    // 更新歌词显示（与播放进度同步）
+    updateLyrics: function() {
+        const lyricLineEl = document.getElementById('current-lyric-line');
+        const lyricTranslationEl = document.getElementById('current-lyric-translation');
+        
+        if (!lyricLineEl) return;
+        
+        // 检查歌曲是否结束
+        if (this.musicData.songEnded) {
+            lyricLineEl.innerHTML = '<i class="bi bi-music"></i> <span>播放已结束</span>';
+            lyricLineEl.style.opacity = '0.6';
+            if (lyricTranslationEl) lyricTranslationEl.style.display = 'none';
+            return;
+        }
+        
+        // 如果没有解析的歌词数据，显示原始歌词
+        if (!this.lyricData || this.lyricData.length === 0) {
+            if (this.rawLyrics && this.rawLyrics !== '桌面歌词' && this.rawLyrics !== '') {
+                // 尝试从原始歌词中提取当前时间的歌词
+                const currentLyric = this.extractCurrentLyric(this.rawLyrics, this.musicData.currentSeconds);
+                if (currentLyric && currentLyric !== '暂无歌词') {
+                    lyricLineEl.textContent = currentLyric;
+                } else {
+                    // 如果无法提取，显示前几行原始歌词
+                    const firstLines = this.rawLyrics.split('\n').slice(0, 3).join('\n');
+                    lyricLineEl.textContent = firstLines || '暂无歌词';
+                }
+            } else {
+                lyricLineEl.innerHTML = '<i class="bi bi-music"></i> <span>暂无歌词</span>';
+            }
+            if (lyricTranslationEl) lyricTranslationEl.style.display = 'none';
+            return;
+        }
+        
+        // 根据当前时间查找对应的歌词（二分查找优化）
+        const currentTime = this.musicData.currentSeconds;
+        let left = 0;
+        let right = this.lyricData.length - 1;
+        let foundIndex = -1;
+        
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (this.lyricData[mid].time <= currentTime) {
+                foundIndex = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        if (foundIndex !== -1) {
+            lyricLineEl.textContent = this.lyricData[foundIndex].text;
+            lyricLineEl.style.opacity = '0.9';
+            if (lyricTranslationEl && this.lyricData[foundIndex].translation) {
+                lyricTranslationEl.textContent = this.lyricData[foundIndex].translation;
+                lyricTranslationEl.style.display = 'block';
+            } else if (lyricTranslationEl) {
+                lyricTranslationEl.style.display = 'none';
+            }
+        } else {
+            lyricLineEl.innerHTML = '<i class="bi bi-music"></i>';
+            if (lyricTranslationEl) lyricTranslationEl.style.display = 'none';
+        }
+    },
+    // 从原始歌词文本中提取当前时间的歌词
+    extractCurrentLyric: function(rawLyrics, currentSeconds) {
+        if (!rawLyrics) return null;
+        
+        const lines = rawLyrics.split('\n');
+        let currentLyric = '';
+        
+        for (let i = lines.length - 1; i >= 0; i--) {
+            const line = lines[i].trim();
+            const match = line.match(/^\[(\d{2}):(\d{2})(?:\.(\d{2,3}))?\]/);
+            if (match) {
+                const mins = parseInt(match[1]);
+                const secs = parseInt(match[2]);
+                const millis = match[3] ? parseInt(match[3]) / 1000 : 0;
+                const lineTime = mins * 60 + secs + millis;
+                
+                if (lineTime <= currentSeconds) {
+                    currentLyric = line.replace(/^\[\d{2}:\d{2}(?:\.\d{2,3})?\]/, '').trim();
+                    break;
+                }
+            }
+        }
+        
+        return currentLyric || null;
+    },
+    initCoverSpin: function() {
+        const cover = document.getElementById(`music-cover-${this.musicData.musicId}`);
+        if (cover && !this.musicData.songEnded) {
+            cover.classList.add('music-spin');
+        }
+    },
+    stopCoverSpin: function() {
+        const cover = document.getElementById(`music-cover-${this.musicData.musicId}`);
+        if (cover) {
+            cover.classList.remove('music-spin');
+        }
+    },
+    // 前端获取歌词（模仿music.py逻辑）
+    fetchLyrics: async function(songName, artistName) {
+        if (!songName) return null;
+        
+        console.log('Frontend fetching lyrics for:', songName, artistName);
+        
+        try {
+            // 搜索歌曲
+            const searchUrl = 'https://music.163.com/api/search/get';
+            const params = new URLSearchParams({
+                's': songName,
+                'type': 1,
+                'limit': 5
+            });
+            
+            const response = await fetch(searchUrl + '?' + params.toString(), {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Referer': 'https://music.163.com'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                const songs = data.result?.songs || [];
+                
+                for (const song of songs) {
+                    const songNameLower = songName.toLowerCase();
+                    const songNameMatch = song.name?.toLowerCase() || '';
+                    
+                    // 匹配歌曲名称
+                    if (songNameLower.includes(songNameMatch) || songNameMatch.includes(songNameLower)) {
+                        // 检查艺术家匹配
+                        if (artistName) {
+                            let artistMatch = false;
+                            const artistParts = artistName.split(/[/&,，、]/).map(a => a.trim().toLowerCase()).filter(a => a);
+                            const apiArtists = song.artists?.map(a => a.name?.toLowerCase()) || [];
+                            
+                            for (const part of artistParts) {
+                                for (const apiArtist of apiArtists) {
+                                    if (apiArtist && (part.includes(apiArtist) || apiArtist.includes(part))) {
+                                        artistMatch = true;
+                                        break;
+                                    }
+                                }
+                                if (artistMatch) break;
+                            }
+                            
+                            if (!artistMatch) continue;
+                        }
+                        
+                        // 获取歌词
+                        const songId = song.id;
+                        const lyricsData = await this.fetchLyricsById(songId);
+                        if (lyricsData) {
+                            console.log('Lyrics fetched successfully!');
+                            this.rawLyrics = lyricsData.lyrics;
+                            this.lyricData = this.parseLrcWithTimestamps(lyricsData.lyrics, lyricsData.translation);
+                            this.updateLyrics();
+                            return lyricsData;
+                        }
+                        
+                        break;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching lyrics:', error);
+        }
+        
+        return null;
+    },
+    // 根据歌曲ID获取歌词
+    fetchLyricsById: async function(songId) {
+        try {
+            const url = `https://music.163.com/api/song/lyric?id=${songId}&lv=-1&kv=-1&tv=-1`;
+            const response = await fetch(url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Referer': 'https://music.163.com'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                const lyrics = data.lrc?.lyric || '';
+                const translation = data.tlyric?.lyric || '';
+                
+                if (lyrics) {
+                    return {
+                        lyrics: lyrics.trim(),
+                        translation: translation.trim() || null
+                    };
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching lyrics by ID:', error);
+        }
+        
+        return null;
+    },
+    // 解析LRC格式歌词
+    parseLrcWithTimestamps: function(lrcText, translationText) {
+        if (!lrcText) return [];
+        
+        const lines = lrcText.trim().split('\n');
+        const parsed = [];
+        
+        // 解析翻译
+        const translations = {};
+        if (translationText) {
+            const transLines = translationText.trim().split('\n');
+            for (const line of transLines) {
+                const match = line.match(/\[(\d+):(\d+)\.(\d+)\](.*)/);
+                if (match) {
+                    const minutes = parseInt(match[1]);
+                    const seconds = parseInt(match[2]);
+                    const milliseconds = parseInt(match[3]);
+                    const content = match[4].trim();
+                    if (content) {
+                        const totalSeconds = minutes * 60 + seconds + milliseconds / 1000.0;
+                        translations[Math.round(totalSeconds * 1000) / 1000] = content;
+                    }
+                }
+            }
+        }
+        
+        for (const line of lines) {
+            const match = line.match(/\[(\d+):(\d+)\.(\d+)\](.*)/);
+            if (match) {
+                const minutes = parseInt(match[1]);
+                const seconds = parseInt(match[2]);
+                const milliseconds = parseInt(match[3]);
+                const content = match[4].trim();
+                
+                if (content) {
+                    const totalSeconds = minutes * 60 + seconds + milliseconds / 1000.0;
+                    const translation = translations[Math.round(totalSeconds * 1000) / 1000] || null;
+                    parsed.push({
+                        time: totalSeconds,
+                        text: content,
+                        translation: translation
+                    });
+                }
+            }
+        }
+        
+        return parsed;
+    }
+};
+
+setTimeout(function() {
+    location.reload();
+}, 90000);
+
+// 图片缓存对象
+const imageCache = {};
+
+// 加载图片并缓存
+function loadImageWithCache(imgElement, src) {
+    if (imageCache[src]) {
+        // 使用缓存
+        imgElement.src = imageCache[src];
+        return;
+    }
+    
+    const tempImg = new Image();
+    tempImg.onload = function() {
+        imageCache[src] = src;
+        imgElement.src = src;
+    };
+    tempImg.onerror = function() {
+        console.warn('Failed to load image:', src);
+    };
+    tempImg.src = src;
+}
+
+// 从缓存中获取封面URL
+function getBilibiliCoverFromCache(bvId) {
+    if (bilibiliCoverCache && bilibiliCoverCache[bvId]) {
+        return bilibiliCoverCache[bvId];
+    }
+    return null;
+}
+
+// 延迟加载Bilibili封面图片（从缓存读取）
+function lazyLoadBilibiliCovers() {
+    const coverImages = document.querySelectorAll('.bilibili-cover-image');
+    coverImages.forEach(function(img) {
+        const bvId = img.getAttribute('data-bv-id');
+        if (bvId) {
+            const coverUrl = getBilibiliCoverFromCache(bvId);
+            if (coverUrl) {
+                const tempImg = new Image();
+                tempImg.onload = function() {
+                    img.src = coverUrl;
+                    img.style.opacity = '1';
+                };
+                tempImg.onerror = function() {
+                    console.warn('Failed to load Bilibili cover image:', coverUrl);
+                };
+                tempImg.src = coverUrl;
+            }
+        }
+    });
+}
+
+// 延迟加载截图
+function lazyLoadScreenshots() {
+    const screenshots = document.querySelectorAll('.lazy-load-image');
+    screenshots.forEach(function(img) {
+        const src = img.getAttribute('data-src');
+        if (src) {
+            loadImageWithCache(img, src);
+        }
+    });
+}
+
+// 确保DOM完全加载后再执行初始化
+// ============ 初始化逻辑（保证执行顺序） ============
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded fired');
+    
+    // 设置进度条宽度
+    document.querySelectorAll('.progress-fill[data-width]').forEach(function(el) {
+        const width = el.getAttribute('data-width');
+        if (width) {
+            el.style.width = width;
+        }
+        // 设置进度条颜色
+        const color = el.getAttribute('data-color');
+        if (color) {
+            el.style.background = color;
+        }
+    });
+    
+    // 设置音乐卡片头部颜色
+    document.querySelectorAll('.music-card-header[data-bg-color]').forEach(function(el) {
+        const bgColor = el.getAttribute('data-bg-color');
+        if (bgColor) {
+            el.style.backgroundColor = bgColor;
+            // 计算对比色
+            const hex = bgColor.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            el.style.color = brightness > 128 ? '#333' : '#fff';
+        }
+    });
+    
+    console.log('lastUpdateTime:', lastUpdateTime);
+    console.log('currentTimeDisplay element:', document.getElementById('currentTimeDisplay'));
+    console.log('statusLight element:', document.getElementById('statusLight'));
+    console.log('statusText element:', document.getElementById('statusText'));
+    
+    // 优先初始化状态卡片
+    statusCard.init();
+    
+    // 有音乐时才初始化音乐卡片
+    if (PCMONITOR_DATA.hasMusic) {
+        console.log('Initializing music card...');
+        musicCard.init();
+    }
+    
+    // 保留原有图表逻辑
+    const metricsHistory = PCMONITOR_DATA.metricsHistory || [];
+    if (metricsHistory && metricsHistory.length > 0) {
+        const ctx = document.getElementById('metricsChart').getContext('2d');
+        const cpuData = metricsHistory.map(item => item.cpu);
+        const memoryData = metricsHistory.map(item => item.memory);
+        const labels = Array.from({length: cpuData.length}, (_, i) => `#${i+1}`);
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'CPU Usage (%)', data: cpuData, borderColor: '#28a745', backgroundColor: 'rgba(40, 167, 69, 0.1)' },
+                    { label: 'Memory Usage (%)', data: memoryData, borderColor: '#17a2b8', backgroundColor: 'rgba(23, 162, 184, 0.1)' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    // 延迟加载图片
+    lazyLoadScreenshots();
+    lazyLoadBilibiliCovers();
+});
+    </script>
 </body>
 </html>
