@@ -56,6 +56,20 @@ def get_browser_url(hwnd: int) -> str | None:
             # 其他浏览器尝试通用方式
             try:
                 address_bar = window.EditControl(AccessKey='Address')
+            except auto.uiautomation.UIAutomationException:
+                # 记录超时日志
+                with open("AutomationLog.txt", "a", encoding="utf-8") as log_file:
+                    log_file.write(f"{datetime.now()} - 查找 {window_class} 地址栏超时\n")
+                pass
+            except Exception as e:
+                # 记录其他异常日志
+                with open("AutomationLog.txt", "a", encoding="utf-8") as log_file:
+                    log_file.write(f"{datetime.now()} - 获取 {window_class} 地址栏异常: {str(e)}\n")
+                pass
+        else:
+            # 其他浏览器尝试通用方式
+            try:
+                address_bar = window.EditControl(AccessKey='Address')
                 return address_bar.GetValuePattern().Value.strip()
             except:
                 pass

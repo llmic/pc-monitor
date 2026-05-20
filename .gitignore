@@ -22,7 +22,7 @@ wheels/
 netease-cloudmusic-detector
 .venv/
 netease-cloudmusic-detector/
-@AutomationLog.txt
+./\@AutomationLog.txt
 download.htm
 index opy.html
 
@@ -38,6 +38,7 @@ env/
 *.swo
 *~
 
+
 # OS
 .DS_Store
 Thumbs.db
@@ -51,4 +52,22 @@ generator_backup.py
 
 # Data cache
 data/*.json
+data/covers/
 !data/.gitkeep
+
+# Screenshots
+
+# Microsoft Edge profile
+ms_profile/
+
+# Logs and temp files
+@AutomationLog.txt
+index copy.html
+
+# User avatars
+ms_account_avatar.png
+
+# Test files
+test_bilibili.html
+test_compile.py
+test_music_detection.py
