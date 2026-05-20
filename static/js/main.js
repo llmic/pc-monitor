@@ -9,15 +9,35 @@ let startTime;
 const bilibiliCoverCache = PCMONITOR_DATA.bilibiliCoverCache || {};
 
 try {
-    lastUpdateTime = new Date(LAST_UPDATE_ISO);
-    if (isNaN(lastUpdateTime.getTime())) {
+    // 修复时间戳解析问题
+    let ts = LAST_UPDATE_ISO;
+    let st = START_TIME_ISO;
+    
+    // 移除可能的引号或空白字符
+    ts = ts.replace(/^['"]|['"]$/g, '').trim();
+    st = st.replace(/^['"]|['"]$/g, '').trim();
+    
+    // 如果时间戳为空或无效，使用当前时间
+    if (!ts || ts === 'None' || ts === 'null') {
         lastUpdateTime = new Date();
-        console.warn('Could not parse timestamp, using current time');
+        console.warn('Timestamp is empty, using current time');
+    } else {
+        lastUpdateTime = new Date(ts);
+        if (isNaN(lastUpdateTime.getTime())) {
+            lastUpdateTime = new Date();
+            console.warn('Could not parse timestamp: ' + ts + ', using current time');
+        }
     }
-    startTime = new Date(START_TIME_ISO);
-    if (isNaN(startTime.getTime())) {
+    
+    if (!st || st === 'None' || st === 'null') {
         startTime = new Date();
-        console.warn('Could not parse start time, using current time');
+        console.warn('Start time is empty, using current time');
+    } else {
+        startTime = new Date(st);
+        if (isNaN(startTime.getTime())) {
+            startTime = new Date();
+            console.warn('Could not parse start time: ' + st + ', using current time');
+        }
     }
 } catch(e) {
     lastUpdateTime = new Date();
@@ -232,7 +252,13 @@ const musicCard = {
     },
     updatePlaybackTime: function(playbackEl, progressEl) {
         if (playbackEl) {
-            playbackEl.textContent = `${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
+            // 计算运行时间（从监控开始到现在）
+            const now = new Date();
+            const runningSeconds = Math.floor((now - startTime) / 1000);
+            const runningTimeStr = this.formatTime(runningSeconds);
+            
+            // 显示格式：运行时间 | 当前播放时间 / 总时间
+            playbackEl.textContent = `${runningTimeStr} | ${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
         }
         if (progressEl && this.musicData.totalSeconds > 0) {
             const progress = (this.musicData.currentSeconds / this.musicData.totalSeconds) * 100;
