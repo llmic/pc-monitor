@@ -29,8 +29,22 @@ async function fetchBilibiliVideoInfo(bvId) {
     
     try {
         const url = `${BILI_API_URL}?bvid=${bvId}`;
-        const response = await fetch(url, { headers: BILI_HEADERS });
+        console.log('Fetching Bilibili video info:', url);
+        
+        const response = await fetch(url, { 
+            headers: BILI_HEADERS,
+            mode: 'cors'
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            console.error('API request failed with status:', response.status);
+            return null;
+        }
+        
         const data = await response.json();
+        console.log('API response:', data);
         
         if (data && data.code === 0 && data.data) {
             const info = data.data;
@@ -42,8 +56,10 @@ async function fetchBilibiliVideoInfo(bvId) {
                 url: `https://www.bilibili.com/video/${bvId}`,
                 cover: info.pic || ''
             };
+        } else {
+            console.error('Invalid API response:', data);
+            return null;
         }
-        return null;
     } catch (error) {
         console.error('Failed to fetch Bilibili video info:', error);
         return null;
@@ -618,21 +634,36 @@ function getBilibiliCoverFromCache(bvId) {
 async function lazyLoadBilibiliCovers() {
     const coverImages = document.querySelectorAll('.bilibili-cover-image');
     for (const img of coverImages) {
-        const bvId = img.getAttribute('data-bv-id');
+        // 注意：HTML中使用的是data-bvid属性
+        const bvId = img.getAttribute('data-bvid');
         if (bvId) {
-            // 优先从缓存获取，否则从API获取
+            console.log('Loading Bilibili cover for BV:', bvId);
+            // 直接从API获取封面
             const coverUrl = await getBilibiliCoverUrl(bvId);
             if (coverUrl) {
+                console.log('Got cover URL:', coverUrl);
                 const tempImg = new Image();
                 tempImg.onload = function() {
                     img.src = coverUrl;
+                    img.style.display = 'block'; // 显示图片
                     img.style.opacity = '1';
+                    // 隐藏占位符
+                    const placeholder = img.parentElement.querySelector('.bilibili-cover-placeholder');
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
                 };
                 tempImg.onerror = function() {
                     console.warn('Failed to load Bilibili cover image:', coverUrl);
                 };
+                // 添加referer头绕过防盗链
+                tempImg.crossOrigin = 'anonymous';
                 tempImg.src = coverUrl;
+            } else {
+                console.log('No cover URL found for BV:', bvId);
             }
+        } else {
+            console.log('No BV ID found for cover image');
         }
     }
 }
