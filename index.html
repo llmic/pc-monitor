@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>视奸 PC Monitor</title>
+    <title>视奸 Liuli 的电脑</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
@@ -13,7 +13,7 @@
         <div class="shutdown-icon">
             <i class="bi bi-power"></i>
         </div>
-        <div class="shutdown-title">PC Monitor 已关机</div>
+        <div class="shutdown-title">Liuli 的电脑 已关机</div>
         <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
         <div class="shutdown-time" id="shutdownTime"></div>
     </div>
@@ -23,12 +23,10 @@
                 <div class="card status-card-root" id="statusCard">
                     <div class="card-header d-flex align-items-center gap-3">
                         
-                        <div class="user-avatar-placeholder">
-                            <i class="bi bi-person"></i>
-                        </div>
+                        <img src="screenshots/user_avatar.png" alt="User Avatar" class="user-avatar">
                         
                         <div>
-                            <strong>PC Monitor</strong>
+                            <strong>Liuli 的电脑</strong>
                             <small class="text-muted d-block">Real-time Computer Monitoring System</small>
                         </div>
                     </div>
@@ -38,7 +36,7 @@
                             <span id="statusText" class="fs-5 status-text"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 11:45:47</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 14:31:16</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay" class="current-time-display"></span>
@@ -62,34 +60,43 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">13%</div>
+                                    <div class="stats-number">15%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" data-width="13%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="15%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">60%</div>
+                                    <div class="stats-number">53%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" data-width="60%"></div>
+                                        <div class="progress-fill progress-memory" data-width="53%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">8.00 / 16.00 GB</div>
+                                    <div class="stats-number">16.79 / 31.47 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 0 B<br>
-                                        Received: 0 B
+                                        Sent: 55.48 B<br>
+                                        Received: 272.5 B
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last 5 updates)</h6>
+                                <div class="chart-container" style="max-height: 150px; overflow: hidden;">
+                                    <canvas id="metricsChart" height="120"></canvas>
+                                </div>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
@@ -100,7 +107,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details (5 cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (10 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -108,19 +115,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">15%</div>
+                                    <div class="text-primary font-size-lg">50.0%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="15%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 1</div>
-                                    <div class="text-primary font-size-lg">20%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="20%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="50.0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -128,9 +125,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">10%</div>
+                                    <div class="text-primary font-size-lg">48.5%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="10%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="48.5%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -138,9 +135,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">12%</div>
+                                    <div class="text-primary font-size-lg">21.9%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="12%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="21.9%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -148,9 +145,69 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 4</div>
-                                    <div class="text-primary font-size-lg">8%</div>
+                                    <div class="text-primary font-size-lg">6.2%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="8%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="6.2%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 5</div>
+                                    <div class="text-primary font-size-lg">46.9%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="46.9%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 6</div>
+                                    <div class="text-primary font-size-lg">12.5%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="12.5%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 7</div>
+                                    <div class="text-primary font-size-lg">3.2%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="3.2%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 8</div>
+                                    <div class="text-primary font-size-lg">6.1%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="6.1%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 9</div>
+                                    <div class="text-primary font-size-lg">12.1%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="12.1%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 15</div>
+                                    <div class="text-primary font-size-lg">66.7%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="66.7%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -169,16 +226,176 @@
         
 
         
-
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-camera"></i> Current Active Window Screenshot
+                        <span class="badge bg-primary float-end">screenshot_20260520_143114.png</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="screenshot-container">
+                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_143114.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_143114.png?raw=true">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
 
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-window-stack"></i> Currently Open Windows
+                        
+                    </div>
+                    <div class="card-body scroll-container">
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Weixin</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Weixin.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1401x1214
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Sticky Notes</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 570x1098
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Windows Input Experience</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> TextInputHost.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Sticky Notes</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Microsoft.Notes.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 548x1086
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>Program Manager</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> explorer.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-globe"></i> Currently Open Browser (3)
+                        
+                        <span class="badge bg-danger float-end">Active: zeroGP - Search and 4 more pages - Perso...</span>
+                        
+                    </div>
+                    <div class="card-body scroll-container">
+                        
+                        <div class="window-item window-active browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>zeroGP - Search and 4 more pages - Personal - Microsoft​ Edge</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> msedge.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 1770x1136
+                                    </div>
+                                    
+                                </div>
+                                
+                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>index.html - pc-monitor - Trae CN</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Trae CN.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 2160x1350
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="window-item window-normal browser-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>豆包</strong>
+                                    <div class="text-muted-custom small">
+                                        <i class="bi bi-app"></i> Doubao.exe |
+                                        <i class="bi bi-aspect-ratio"></i> 237x39
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
         
 
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-clock-history"></i> Historical Window Open Records (0/10)
+                        <i class="bi bi-clock-history"></i> Historical Window Open Records (10/10)
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -191,6 +408,96 @@
                                 </thead>
                                 <tbody>
                                     
+                                    <tr>
+                                        <td>
+                                            <strong>Windows Input Experience</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">TextInputHost.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Weixin</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Weixin.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>index.html - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>zeroGP - Search and 4 more pages - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>main.py - pc-monitor - Trae CN</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Trae CN.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>讨论详情 and 4 more pages - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>豆包</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">Doubao.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Sticky Notes</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>优学通 - Search and 2 more pages - Personal - Microsoft​ Edge</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">msedge.exe</span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>Program Manager</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">explorer.exe</span>
+                                        </td>
+                                    </tr>
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -200,7 +507,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T11:45:47.879597</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T14:31:16.423084</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -210,13 +517,13 @@
     <script>
         // 全局数据变量（由后端生成）
         window.PCMONITOR_DATA = {
-            timestamp: '2026-05-20T11:45:47.879597',
-            startTime: '2024-01-15 10:00:00',
+            timestamp: '2026-05-20T14:31:16.423084',
+            startTime: '2026-05-20T14:31:08.248561',
             bilibiliCoverCache: {},
             hasMusic: false,
-            metricsHistory: [],
-            cpuPercent: 13,
-            memoryPercent: 60,
+            metricsHistory: [{"cpu": 20.077777777777776, "memory": 42.1}, {"cpu": 5.844444444444444, "memory": 44.2}, {"cpu": 8.255555555555555, "memory": 48.4}, {"cpu": 5.477777777777778, "memory": 50.1}, {"cpu": 15.227777777777776, "memory": 53.4}],
+            cpuPercent: 15,
+            memoryPercent: 53,
             musicData: {
                 currentSeconds: 0,
                 totalSeconds: 0,
@@ -224,7 +531,7 @@
                 parsedLyrics: [],
                 rawLyrics: ''
             },
-            maxUsage: 100
+            maxUsage: 63
         };
     </script>
     <script src="static/js/main.js"></script>
