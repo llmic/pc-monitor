@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>视奸 Liuli 的电脑</title>
+    <title>视奸 PC Monitor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
@@ -13,7 +13,7 @@
         <div class="shutdown-icon">
             <i class="bi bi-power"></i>
         </div>
-        <div class="shutdown-title">Liuli 的电脑 已关机</div>
+        <div class="shutdown-title">PC Monitor 已关机</div>
         <div class="shutdown-subtitle">PC Monitor 已停止更新</div>
         <div class="shutdown-time" id="shutdownTime"></div>
     </div>
@@ -23,10 +23,12 @@
                 <div class="card status-card-root" id="statusCard">
                     <div class="card-header d-flex align-items-center gap-3">
                         
-                        <img src="screenshots/user_avatar.png" alt="User Avatar" class="user-avatar">
+                        <div class="user-avatar-placeholder">
+                            <i class="bi bi-person"></i>
+                        </div>
                         
                         <div>
-                            <strong>Liuli 的电脑</strong>
+                            <strong>PC Monitor</strong>
                             <small class="text-muted d-block">Real-time Computer Monitoring System</small>
                         </div>
                     </div>
@@ -36,7 +38,7 @@
                             <span id="statusText" class="fs-5 status-text"></span>
                         </div>
                         <div class="text-muted-custom mb-2">
-                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 14:45:14</span>
+                            <strong>Last Updated:</strong> <span id="lastUpdatedDisplay" class="last-updated-display">2026-05-20 14:48:08</span>
                         </div>
                         <div class="text-muted-custom">
                             <strong>Current Time:</strong> <span id="currentTimeDisplay" class="current-time-display"></span>
@@ -60,43 +62,34 @@
                         <div class="row g-3">
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">12%</div>
+                                    <div class="stats-number">13%</div>
                                     <div class="stats-label"><i class="bi bi-cpu"></i> CPU Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-cpu" data-width="12%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="13%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">53%</div>
+                                    <div class="stats-number">60%</div>
                                     <div class="stats-label"><i class="bi bi-memory-stick"></i> Memory Usage</div>
                                     <div class="progress-bar-custom mt-2">
-                                        <div class="progress-fill progress-memory" data-width="53%"></div>
+                                        <div class="progress-fill progress-memory" data-width="60%"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="stats-card h-100">
-                                    <div class="stats-number">16.71 / 31.47 GB</div>
+                                    <div class="stats-number">8.00 / 16.00 GB</div>
                                     <div class="stats-label"><i class="bi bi-database"></i> Memory</div>
                                     <div class="text-muted-custom small mt-2">
-                                        Sent: 63.76 B<br>
-                                        Received: 346.11 B
+                                        Sent: 0 B<br>
+                                        Received: 0 B
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h6><i class="bi bi-graph-up-arrow"></i> Performance Trend (Last 5 updates)</h6>
-                                <div class="chart-container" style="max-height: 500px; overflow: hidden;">
-                                    <canvas id="metricsChart" height="120"></canvas>
-                                </div>
-                            </div>
-                        </div>
                         
                     </div>
                 </div>
@@ -107,7 +100,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-cpu"></i> CPU Core Details (6 cores)
+                        <i class="bi bi-cpu"></i> CPU Core Details (5 cores)
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -115,9 +108,19 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 0</div>
-                                    <div class="text-primary font-size-lg">56.2%</div>
+                                    <div class="text-primary font-size-lg">15%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="56.2%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="15%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2 col-sm-3 mb-3">
+                                <div class="text-center">
+                                    <div class="font-weight-bold">Core 1</div>
+                                    <div class="text-primary font-size-lg">20%</div>
+                                    <div class="progress-bar-custom mt-1">
+                                        <div class="progress-fill progress-cpu" data-width="20%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -125,9 +128,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 2</div>
-                                    <div class="text-primary font-size-lg">18.2%</div>
+                                    <div class="text-primary font-size-lg">10%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="18.2%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="10%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -135,9 +138,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 3</div>
-                                    <div class="text-primary font-size-lg">18.8%</div>
+                                    <div class="text-primary font-size-lg">12%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="18.8%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="12%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -145,29 +148,9 @@
                             <div class="col-md-2 col-sm-3 mb-3">
                                 <div class="text-center">
                                     <div class="font-weight-bold">Core 4</div>
-                                    <div class="text-primary font-size-lg">21.2%</div>
+                                    <div class="text-primary font-size-lg">8%</div>
                                     <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="21.2%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 5</div>
-                                    <div class="text-primary font-size-lg">55.6%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="55.6%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2 col-sm-3 mb-3">
-                                <div class="text-center">
-                                    <div class="font-weight-bold">Core 15</div>
-                                    <div class="text-primary font-size-lg">50.0%</div>
-                                    <div class="progress-bar-custom mt-1">
-                                        <div class="progress-fill progress-cpu" data-width="50.0%"></div>
+                                        <div class="progress-fill progress-cpu" data-width="8%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -188,10 +171,10 @@
             <div class="d-flex gap-4" style="width: 100%;">
                 
                 <div style="flex: 1; min-width: 300px;">
-                    <a href="https://music.163.com/#/song?id=3376148054" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                    <a href="#" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                         <div class="card music-card" style="cursor: pointer; border-radius: 14px; overflow: hidden; border: none; box-shadow: 0 6px 20px rgba(255, 71, 87, 0.15); height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(255, 71, 87, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 71, 87, 0.15)';">
                             <!-- 头部 -->
-                            <div class="card-header music-card-header" data-bg-color="#f8f9fa">
+                            <div class="card-header music-card-header" data-bg-color="#1db954">
                                 <div class="d-flex align-items-center justify-between">
                                     <div class="d-flex align-items-center gap-2">
                                         <div style="width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
@@ -199,6 +182,8 @@
                                         </div>
                                         <span style="font-weight: 600; font-size: 0.85rem;">Now Playing</span>
                                     </div>
+                                    
+                                    <span style="font-size: 0.7rem; opacity: 0.8;">NetEase</span>
                                     
                                 </div>
                             </div>
@@ -209,28 +194,28 @@
                                     <div class="col-auto">
                                         
                                         <div id="music-cover-1" class="music-cover music-spin" style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                                            <img src="https://p1.music.126.net/hkqIDImta2Zd1U2pRhjHIA==/109951173141671873.jpg" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
+                                            <img src="https://p1.music.126.net/l2JWeBnoaANGNUMDkaKZsw==/109951170145077660.jpg" alt="Music Cover" class="w-100 h-100" style="object-fit: cover;">
                                         </div>
                                         
                                     </div>
                                     <!-- 信息 -->
                                     <div class="col" style="padding-left: 12px;">
                                         <h5 class="font-weight-bold mb-1" style="line-height: 1.3; font-size: 0.9rem;">
-                                            ラヴィ
+                                            Free Bird
                                         </h5>
                                         <p class="text-muted mb-0" style="font-size: 0.75rem;">
-                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> 25時、ナイトコードで。, 鏡音レン
+                                            <i class="bi bi-person-fill" style="font-size: 10px;"></i> Lynyrd Skynyrd
                                         </p>
                                         
                                         <div id="music-playback-time-container-1" class="music-playback-time-container" style="margin-top: 4px;">
                                             <span id="music-playback-time-1" class="music-playback-time" style="font-size: 0.7rem; opacity: 0.6;">
-                                                00:00 / 03:00
+                                                01:30 / 04:00
                                             </span>
                                             <!-- 新增进度条（数学计算进度） -->
                                             <div class="progress-bar-custom mt-1" style="height: 4px;">
                                                 <div id="music-progress-bar-1" class="progress-fill"
-                                                     data-width="0%"
-                                                     data-color="#f8f9fa">
+                                                     data-width="37.5%"
+                                                     data-color="#1db954">
                                                 </div>
                                             </div>
                                         </div>
@@ -259,22 +244,6 @@
         
 
         
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-camera"></i> Current Active Window Screenshot
-                        <span class="badge bg-primary float-end">screenshot_20260520_144513.png</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="screenshot-container">
-                            <img src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_144513.png?raw=true" alt="Active Window Screenshot" class="img-fluid lazy-load-image" data-src="https://hk.gh-proxy.org/https://github.com/llmic/pc-monitor/blob/master/screenshots/screenshot_20260520_144513.png?raw=true">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
 
         
         <div class="row">
@@ -289,80 +258,24 @@
                         <div class="window-item window-normal">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <strong>ラヴィ - 25時、ナイトコードで。/鏡音レン</strong>
+                                    <strong></strong>
                                     <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> cloudmusic.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1585x1128
+                                        <i class="bi bi-app"></i>  |
+                                        <i class="bi bi-aspect-ratio"></i> x
                                     </div>
                                     
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Weixin</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Weixin.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1401x1214
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Sticky Notes</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> ApplicationFrameHost.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 570x1098
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Windows Input Experience</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> TextInputHost.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Sticky Notes</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Microsoft.Notes.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 548x1086
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>Program Manager</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> explorer.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 3072x1920
+                                    <div class="mt-2 bg-gradient-to-r from-red-500 to-purple-500 p-3 rounded-lg">
+                                        <div class="text-white font-bold">
+                                            <i class="bi bi-music-note"></i> Free Bird
+                                        </div>
+                                        <div class="text-white-80 text-sm">Lynyrd Skynyrd</div>
+                                        <div class="text-white-70 text-sm mt-2 font-italic lyrics-box" style="max-height: 100px; overflow-y: auto;">
+                                            
+                                            [01:08]If I leave here tomorrow
+                                            
+                                            [01:16]would you still remember me
+                                            
+                                        </div>
                                     </div>
                                     
                                 </div>
@@ -376,95 +289,13 @@
         </div>
         
 
-        
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-globe"></i> Currently Open Browser (4)
-                        
-                        <span class="badge bg-danger float-end">Active: main.py - pc-monitor - Trae CN</span>
-                        
-                    </div>
-                    <div class="card-body scroll-container">
-                        
-                        <div class="window-item window-active browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>main.py - pc-monitor - Trae CN</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Trae CN.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 2160x1350
-                                    </div>
-                                    
-                                </div>
-                                
-                                <span class="badge bg-danger ms-2"><i class="bi bi-cursor-fill"></i> Active Window</span>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>豆包</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> Doubao.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 1549x1192
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>1 向量和矩阵 | 多元统计分析讲义 and 3 more pages - Personal - Microsoft​ Edge</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
-                                    </div>
-                                    
-                                    <div class="mt-2">
-                                        <img src="https://www.google.com/s2/favicons?domain=math.pku.edu.cn&sz=32" alt="favicon" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;" onerror="this.style.display='none'">
-                                        <a href="https://math.pku.edu.cn/teachers/lidf/course/mvr/mvrnotes/html/_mvrnotes/mvr-matrix.html#mvr-matrix-eigen" target="_blank" rel="noopener noreferrer"
-                                           style="color: var(--primary-color, #007bff); text-decoration: none; word-break: break-all;">
-                                            <i class="bi bi-box-arrow-up-right"></i> math.pku.edu.cn
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="window-item window-normal browser-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
-                                    <div class="text-muted-custom small">
-                                        <i class="bi bi-app"></i> msedge.exe |
-                                        <i class="bi bi-aspect-ratio"></i> 237x39
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
         
 
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-clock-history"></i> Historical Window Open Records (10/10)
+                        <i class="bi bi-clock-history"></i> Historical Window Open Records (0/10)
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -477,96 +308,6 @@
                                 </thead>
                                 <tbody>
                                     
-                                    <tr>
-                                        <td>
-                                            <strong>视奸 Liuli 的电脑 - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>豆包</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Doubao.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>ラヴィ - 25時、ナイトコードで。/鏡音レン</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">cloudmusic.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Sticky Notes</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">ApplicationFrameHost.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>1 向量和矩阵 | 多元统计分析讲义 and 3 more pages - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Program Manager</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">explorer.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>面板数据分析.pdf and 3 more pages - Personal - Microsoft​ Edge</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">msedge.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Windows Input Experience</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">TextInputHost.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>Weixin</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Weixin.exe</span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>
-                                            <strong>index.html - pc-monitor - Trae CN</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">Trae CN.exe</span>
-                                        </td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -576,7 +317,7 @@
         </div>
 
         <footer class="text-center text-muted py-4">
-            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T14:45:14.321980</p>
+            <p>PC Monitor - Real-time Computer Monitoring System | Data Generated: 2026-05-20T14:48:08.884354</p>
             <p class="small">Page auto-refreshes every 90 seconds | Powered by Python + Bootstrap5</p>
         </footer>
     </div>
@@ -586,21 +327,24 @@
     <script>
         // 全局数据变量（由后端生成）
         window.PCMONITOR_DATA = {
-            timestamp: '2026-05-20T14:45:14.321980',
-            startTime: '2026-05-20T14:44:30.652970',
+            timestamp: '2026-05-20T14:48:08.884354',
+            startTime: '2024-01-15 10:00:00',
             bilibiliCoverCache: {},
             hasMusic: true,
-            metricsHistory: [{"cpu": 15.227777777777776, "memory": 53.4}, {"cpu": 8.1, "memory": 52.7}, {"cpu": 12.244444444444444, "memory": 51.1}, {"cpu": 13.094444444444441, "memory": 51.6}, {"cpu": 12.222222222222221, "memory": 53.1}],
-            cpuPercent: 12,
-            memoryPercent: 53,
+            metricsHistory: [],
+            cpuPercent: 13,
+            memoryPercent: 60,
             musicData: {
-                currentSeconds: 0,
-                totalSeconds: 0,
+                currentSeconds: 90,
+                totalSeconds: 240,
                 songEnded: false,
-                parsedLyrics: [],
-                rawLyrics: ''
+                parsedLyrics: [{"text": "If I leave here tomorrow", "time": 68.76, "translation": "\u5047\u5982\u660e\u5929\u6211\u79bb\u5f00\u8fd9\u91cc"}, {"text": "would you still remember me", "time": 76.93, "translation": "\u4f60\u8fd8\u4f1a\u8bb0\u5f97\u6211\u5417"}],
+                rawLyrics: '[00:00.00] 作词 : Ronnie
+[00:01.00] 作曲 : Ronnie
+[01:08.76]If I leave here tomorrow
+[01:16.93]would you still remember me'
             },
-            maxUsage: 63
+            maxUsage: 100
         };
     </script>
     <script src="static/js/main.js"></script>
