@@ -21,7 +21,7 @@ try:
     import uiautomation as auto
     UIAUTOMATION_AVAILABLE = True
     # 设置uiautomation查找控件的超时时间为1秒
-    auto.SetGlobalSearchTimeout(1)
+    auto.SetGlobalSearchTimeout(0.7)
 except ImportError:
     UIAUTOMATION_AVAILABLE = False
 
@@ -585,7 +585,7 @@ def get_extended_window_rect(hwnd):
         return None
 
 def get_window_rect_with_buffer(hwnd, buffer_pixels=1):
-    """获取窗口矩形并添加15像素边界缓冲，确保包含所有视觉元素"""
+    
     rect = get_extended_window_rect(hwnd)
     if not rect:
         return None

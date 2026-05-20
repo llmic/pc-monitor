@@ -10,6 +10,189 @@ const bilibiliCoverCache = PCMONITOR_DATA.bilibiliCoverCache || {};
 
 // B站相关常量
 const BV_REGEX = /BV[0-9a-zA-Z]{10}/;
+const BILI_API_URL = 'https://api.bilibili.com/x/web-interface/view';
+
+// CORS代理服务列表 - 按优先级尝试（代理3优先）
+const CORS_PROXIES = [
+    'https://api.codetabs.com/v1/proxy?quest=',
+    'https://corsproxy.io/?',
+    'https://api.allorigins.win/raw?url=',
+    'https://api.allorigins.win/raw?url='
+];
+
+// 检测到的最佳代理
+let bestProxy = null;
+
+// B站视频信息缓存
+const bilibiliVideoCache = {};
+
+// 从URL或标题中提取BV号
+function extractBVId(text) {
+    if (!text) return null;
+    const match = text.match(BV_REGEX);
+    return match ? match[0] : null;
+}
+
+// 检测可用的CORS代理
+async function detectBestProxy() {
+    if (bestProxy) {
+        return bestProxy;
+    }
+    
+    console.log('开始检测最佳代理...');
+    
+    // 使用一个公开的测试视频来检测
+    const testBvId = 'BV1t1o9B6EXT';
+    const testApiUrl = `${BILI_API_URL}?bvid=${testBvId}`;
+    
+    for (let i = 0; i < CORS_PROXIES.length; i++) {
+        try {
+            const proxyUrl = CORS_PROXIES[i] + encodeURIComponent(testApiUrl);
+            console.log(`检测代理 ${i + 1}:`, proxyUrl);
+            
+            const response = await fetch(proxyUrl, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.code === 0) {
+                    bestProxy = CORS_PROXIES[i];
+                    console.log(`找到最佳代理: ${bestProxy}`);
+                    return bestProxy;
+                }
+            }
+        } catch (error) {
+            console.warn(`代理 ${i + 1} 检测失败:`, error);
+        }
+    }
+    
+    console.warn('所有代理检测失败，将使用 fallback 机制');
+    return null;
+}
+
+// 尝试多个CORS代理获取数据
+async function fetchWithMultipleProxies(apiUrl) {
+    // 如果已有最佳代理，优先使用
+    if (bestProxy) {
+        try {
+            const proxyUrl = bestProxy + encodeURIComponent(apiUrl);
+            console.log('使用最佳代理:', proxyUrl);
+            
+            const response = await fetch(proxyUrl, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.code === 0) {
+                    return data;
+                }
+            }
+            // 最佳代理失效，清除并继续尝试其他代理
+            console.warn('最佳代理失效，重新检测');
+            bestProxy = null;
+        } catch (error) {
+            console.warn('最佳代理失败:', error);
+            bestProxy = null;
+        }
+    }
+    
+    // fallback: 依次尝试所有代理
+    for (let i = 0; i < CORS_PROXIES.length; i++) {
+        try {
+            const proxyUrl = CORS_PROXIES[i] + encodeURIComponent(apiUrl);
+            console.log(`尝试代理 ${i + 1}:`, proxyUrl);
+            
+            const response = await fetch(proxyUrl, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.code === 0) {
+                    console.log(`代理 ${i + 1} 成功`);
+                    bestProxy = CORS_PROXIES[i]; // 缓存这个代理
+                    return data;
+                }
+            }
+        } catch (error) {
+            console.warn(`代理 ${i + 1} 失败:`, error);
+        }
+    }
+    throw new Error('All CORS proxies failed');
+}
+
+// 从B站API获取视频信息
+async function fetchBilibiliVideoInfo(bvId) {
+    if (!bvId) return null;
+    
+    // 先检查缓存
+    if (bilibiliVideoCache[bvId]) {
+        console.log('Using cached video info for:', bvId);
+        return bilibiliVideoCache[bvId];
+    }
+    
+    try {
+        const apiUrl = `${BILI_API_URL}?bvid=${bvId}`;
+        const data = await fetchWithMultipleProxies(apiUrl);
+        
+        if (data && data.code === 0 && data.data) {
+            const info = data.data;
+            let coverUrl = info.pic || '';
+            
+            // 修复相对URL
+            if (coverUrl && coverUrl.startsWith('//')) {
+                coverUrl = 'https:' + coverUrl;
+            }
+            
+            const videoInfo = {
+                bvId: bvId,
+                title: info.title,
+                author: info.owner?.name || '',
+                viewCount: info.stat?.view || 0,
+                url: `https://www.bilibili.com/video/${bvId}`,
+                cover: coverUrl
+            };
+            
+            // 缓存结果
+            bilibiliVideoCache[bvId] = videoInfo;
+            console.log('Fetched video info:', videoInfo);
+            
+            return videoInfo;
+        } else {
+            console.error('Invalid API response:', data);
+            return null;
+        }
+    } catch (error) {
+        console.error('Failed to fetch Bilibili video info:', error);
+        return null;
+    }
+}
+
+// 获取封面URL
+async function getBilibiliCoverUrl(bvId) {
+    // 先检查后端缓存
+    const cachedCover = getBilibiliCoverFromCache(bvId);
+    if (cachedCover) {
+        console.log('Using backend cached cover for:', bvId);
+        return cachedCover;
+    }
+    
+    // 后端没有缓存，尝试从API获取
+    const videoInfo = await fetchBilibiliVideoInfo(bvId);
+    if (videoInfo && videoInfo.cover) {
+        return videoInfo.cover;
+    }
+    
+    return null;
+}
 
 try {
     // 修复时间戳解析问题
@@ -565,18 +748,17 @@ function getBilibiliCoverFromCache(bvId) {
     return null;
 }
 
-// 延迟加载Bilibili封面图片（直接使用后端缓存的封面）
-function lazyLoadBilibiliCovers() {
+// 延迟加载Bilibili封面图片（优先后端缓存，否则API获取）
+async function lazyLoadBilibiliCovers() {
     const coverImages = document.querySelectorAll('.bilibili-cover-image');
     for (const img of coverImages) {
         // 注意：HTML中使用的是data-bvid属性
         const bvId = img.getAttribute('data-bvid');
         if (bvId) {
             console.log('Loading Bilibili cover for BV:', bvId);
-            // 直接从后端缓存获取封面
-            const coverUrl = getBilibiliCoverFromCache(bvId);
+            const coverUrl = await getBilibiliCoverUrl(bvId);
             if (coverUrl) {
-                console.log('Got cover URL from cache:', coverUrl);
+                console.log('Got cover URL:', coverUrl);
                 const tempImg = new Image();
                 tempImg.onload = function() {
                     img.src = coverUrl;
@@ -715,7 +897,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 延迟加载图片
     lazyLoadScreenshots();
-    lazyLoadBilibiliCovers();
+    
+    // 检测最佳代理，然后加载 B 站封面
+    (async () => {
+        try {
+            await detectBestProxy();
+        } catch (error) {
+            console.warn('代理检测失败，但仍将尝试加载封面:', error);
+        }
+        lazyLoadBilibiliCovers();
+    })();
     
     // 初始化超时检测
     timeoutCheck.init();

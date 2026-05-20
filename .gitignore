@@ -19,7 +19,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-netease-cloudmusic-detector/
+netease-cloudmusic-detector
 .venv/
 netease-cloudmusic-detector/
 @AutomationLog.txt
