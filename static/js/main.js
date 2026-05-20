@@ -212,8 +212,19 @@ const musicCard = {
             progressEl.style.backgroundColor = color;
         }
         
-        if (playbackEl && this.musicData.totalSeconds > 0) {
-            playbackEl.textContent = `${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
+        // 初始化播放时间显示（包含运行时间）
+        if (playbackEl) {
+            // 计算运行时间（从监控开始到现在）
+            const now = new Date();
+            const runningSeconds = Math.floor((now - startTime) / 1000);
+            const runningTimeStr = this.formatTime(runningSeconds);
+            
+            // 显示格式：运行时间 | 当前播放时间 / 总时间
+            if (this.musicData.totalSeconds > 0) {
+                playbackEl.textContent = `${runningTimeStr} | ${this.formatTime(this.musicData.currentSeconds)} / ${this.formatTime(this.musicData.totalSeconds)}`;
+            } else {
+                playbackEl.textContent = `${runningTimeStr} | --:-- / --:--`;
+            }
         }
     },
     // 数学公式：秒数转 MM:SS
@@ -633,11 +644,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 保留原有图表逻辑
     const metricsHistory = PCMONITOR_DATA.metricsHistory || [];
-    if (metricsHistory && metricsHistory.length > 0) {
-        const ctx = document.getElementById('metricsChart').getContext('2d');
+    console.log('metricsHistory:', metricsHistory);
+    
+    const chartContainer = document.getElementById('metricsChart');
+    console.log('Chart container element:', chartContainer);
+    
+    if (metricsHistory && metricsHistory.length > 0 && chartContainer) {
+        console.log('Initializing Performance Trend chart...');
+        const ctx = chartContainer.getContext('2d');
         const cpuData = metricsHistory.map(item => item.cpu);
         const memoryData = metricsHistory.map(item => item.memory);
         const labels = Array.from({length: cpuData.length}, (_, i) => `#${i+1}`);
+        
+        console.log('CPU Data:', cpuData);
+        console.log('Memory Data:', memoryData);
+        console.log('Labels:', labels);
         
         new Chart(ctx, {
             type: 'line',
@@ -665,6 +686,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    } else {
+        console.log('Skipping chart initialization - metricsHistory empty or chart container not found');
+        if (!metricsHistory || metricsHistory.length === 0) {
+            console.log('Reason: metricsHistory is empty');
+        }
+        if (!chartContainer) {
+            console.log('Reason: chart container element not found');
+        }
     }
     
     // 延迟加载图片
