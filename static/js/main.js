@@ -50,18 +50,10 @@ async function fetchBilibiliVideoInfo(bvId) {
     }
 }
 
-// 获取封面URL（优先从缓存，否则从API获取）
+// 获取封面URL（直接从API获取）
 async function getBilibiliCoverUrl(bvId) {
-    // 优先从缓存获取
-    if (bilibiliCoverCache && bilibiliCoverCache[bvId]) {
-        return bilibiliCoverCache[bvId];
-    }
-    
-    // 从API获取
     const videoInfo = await fetchBilibiliVideoInfo(bvId);
     if (videoInfo && videoInfo.cover) {
-        // 缓存结果
-        bilibiliCoverCache[bvId] = videoInfo.cover;
         return videoInfo.cover;
     }
     
