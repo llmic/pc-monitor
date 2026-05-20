@@ -10,73 +10,6 @@ const bilibiliCoverCache = PCMONITOR_DATA.bilibiliCoverCache || {};
 
 // B站相关常量
 const BV_REGEX = /BV[0-9a-zA-Z]{10}/;
-const BILI_API_URL = 'https://api.bilibili.com/x/web-interface/view';
-const BILI_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Referer': 'https://www.bilibili.com/'
-};
-// CORS代理服务 - 用于解决跨域问题
-const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-
-// 从URL或标题中提取BV号
-function extractBVId(text) {
-    if (!text) return null;
-    const match = text.match(BV_REGEX);
-    return match ? match[0] : null;
-}
-
-// 从B站API获取视频信息（使用CORS代理解决跨域问题）
-async function fetchBilibiliVideoInfo(bvId) {
-    if (!bvId) return null;
-    
-    try {
-        const apiUrl = `${BILI_API_URL}?bvid=${bvId}`;
-        // 使用CORS代理来解决跨域问题
-        const proxyUrl = CORS_PROXY + encodeURIComponent(apiUrl);
-        
-        console.log('Fetching Bilibili video info:', proxyUrl);
-        
-        const response = await fetch(proxyUrl);
-        
-        console.log('Response status:', response.status);
-        
-        if (!response.ok) {
-            console.error('API request failed with status:', response.status);
-            return null;
-        }
-        
-        const data = await response.json();
-        console.log('API response:', data);
-        
-        if (data && data.code === 0 && data.data) {
-            const info = data.data;
-            return {
-                bvId: bvId,
-                title: info.title,
-                author: info.owner?.name || '',
-                viewCount: info.stat?.view || 0,
-                url: `https://www.bilibili.com/video/${bvId}`,
-                cover: info.pic || ''
-            };
-        } else {
-            console.error('Invalid API response:', data);
-            return null;
-        }
-    } catch (error) {
-        console.error('Failed to fetch Bilibili video info:', error);
-        return null;
-    }
-}
-
-// 获取封面URL（直接从API获取）
-async function getBilibiliCoverUrl(bvId) {
-    const videoInfo = await fetchBilibiliVideoInfo(bvId);
-    if (videoInfo && videoInfo.cover) {
-        return videoInfo.cover;
-    }
-    
-    return null;
-}
 
 try {
     // 修复时间戳解析问题
@@ -632,18 +565,18 @@ function getBilibiliCoverFromCache(bvId) {
     return null;
 }
 
-// 延迟加载Bilibili封面图片（优先从缓存，否则从API获取）
-async function lazyLoadBilibiliCovers() {
+// 延迟加载Bilibili封面图片（直接使用后端缓存的封面）
+function lazyLoadBilibiliCovers() {
     const coverImages = document.querySelectorAll('.bilibili-cover-image');
     for (const img of coverImages) {
         // 注意：HTML中使用的是data-bvid属性
         const bvId = img.getAttribute('data-bvid');
         if (bvId) {
             console.log('Loading Bilibili cover for BV:', bvId);
-            // 直接从API获取封面
-            const coverUrl = await getBilibiliCoverUrl(bvId);
+            // 直接从后端缓存获取封面
+            const coverUrl = getBilibiliCoverFromCache(bvId);
             if (coverUrl) {
-                console.log('Got cover URL:', coverUrl);
+                console.log('Got cover URL from cache:', coverUrl);
                 const tempImg = new Image();
                 tempImg.onload = function() {
                     img.src = coverUrl;
@@ -658,8 +591,6 @@ async function lazyLoadBilibiliCovers() {
                 tempImg.onerror = function() {
                     console.warn('Failed to load Bilibili cover image:', coverUrl);
                 };
-                // 添加referer头绕过防盗链
-                tempImg.crossOrigin = 'anonymous';
                 tempImg.src = coverUrl;
             } else {
                 console.log('No cover URL found for BV:', bvId);
