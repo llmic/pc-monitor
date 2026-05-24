@@ -2,88 +2,130 @@
 
 Real-time computer monitoring system with music detection, browser tracking, and system performance metrics.
 
+## Features
+
+- **System Monitoring**: Real-time CPU, Memory, Disk, and Network metrics
+- **Music Detection**: Detects NetEase Cloud Music playback with lyrics display
+- **Browser Tracking**: Tracks active browser windows and URLs
+- **Bilibili Integration**: Monitors Bilibili video viewing with cover images
+- **Window History**: Tracks application usage history
+- **Auto Screenshots**: Captures screenshots of active windows (privacy-protected)
+- **Real-time Updates**: Automatic data refresh at configurable intervals
+- **Responsive Dashboard**: Beautiful Bootstrap-based UI
+
 ## Project Structure
 
 ```
 pc-monitor/
-├── generator.py          # Main Python generator (loads templates)
-├── templates/           # Jinja2 HTML templates
-│   └── index.html     # Main HTML template
-├── static/             # Static assets
+├── main.py               # Main entry point
+├── generator.py          # HTML generator with Jinja2 templates
+├── collector.py          # Data collection module
+├── history.py            # Window history management
+├── metrics.py            # System metrics tracking
+├── music.py              # NetEase Cloud Music integration
+├── bilibili.py           # Bilibili video integration
+├── templates/            # Jinja2 HTML templates
+│   └── index.html       # Main dashboard template
+├── static/               # Static assets
 │   ├── css/
-│   │   └── style.css  # Stylesheets
+│   │   └── style.css    # Custom stylesheets
 │   └── js/
-│       └── main.js     # JavaScript code
-├── data/              # Data cache
-│   └── music_cache.json
-├── music.py            # Music detection module
-└── index.html          # Generated HTML output
+│       └── main.js      # Client-side JavaScript
+├── data/                 # Data cache
+│   └── .gitkeep
+├── screenshots/          # Screenshot storage
+└── index.html            # Generated dashboard (not tracked)
 ```
+
+## Installation
+
+### Prerequisites
+
+- Python 3.8+
+- Windows OS (required for pywin32)
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Required Packages
+
+- `jinja2` - Template engine
+- `psutil` - System monitoring
+- `pywin32` - Windows API access
+- `requests` - HTTP requests
+- `uiautomation` - UI automation for browser URL capture
+- `Pillow` - Image processing
 
 ## Usage
 
-### Generate HTML
+### Run the Monitor
+
+```bash
+python main.py
+```
+
+### Configuration
+
+Modify `main.py` to adjust settings:
 
 ```python
-import generator
-
-gen = generator.HTMLGenerator()
-html = gen.generate({
-    'current_time': '2024-01-15 10:30:00',
-    'windows': [...],
-    'system_info': {...},
-    # ... other data
-})
-
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(html)
+COLLECTION_INTERVAL = 300       # Update interval in seconds
+SCREENSHOT_ENABLED = True       # Enable auto-screenshots
+DEPLOY_TO_GITHUB = False        # Auto-deploy to GitHub Pages
 ```
+
+### Dashboard Features
+
+1. **Status Card**: Shows system health and last update time
+2. **Performance Charts**: CPU and memory usage trends
+3. **Active Windows**: Currently active applications
+4. **Music Card**: Current playing song with lyrics
+5. **Bilibili Card**: Currently watching video
+6. **Window History**: Recent application usage
+
+## Development
 
 ### Modify Templates
 
-- **HTML**: Edit `templates/index.html`
-- **CSS**: Edit `static/css/style.css`
+- **HTML Structure**: Edit `templates/index.html`
+- **CSS Styles**: Edit `static/css/style.css`
 - **JavaScript**: Edit `static/js/main.js`
-- **Python**: Edit `generator.py`
+- **Python Logic**: Edit respective modules
 
-## File Separation
+### Testing
 
-The project now uses a modular structure:
+Run individual components:
 
-- `generator.py` contains only Python code and template rendering logic
-- `templates/index.html` contains the HTML structure with Jinja2 tags
-- `static/css/style.css` contains all CSS styles
-- `static/js/main.js` contains all JavaScript code
+```bash
+# Test music detection
+python music.py
 
-This separation makes it easier to:
-- Maintain code independently
-- Track changes with Git
-- Reuse assets across multiple templates
-- Collaborate with team members
+# Test Bilibili integration
+python bilibili.py
+```
 
 ## Git Tracking
 
 The `.gitignore` file excludes:
-- Generated files (`index.html`, `generator_backup.py`)
+- Generated files (`index.html`)
 - Python cache (`__pycache__/`, `*.pyc`)
 - Virtual environments (`venv/`, `env/`)
 - IDE files (`.vscode/`, `.idea/`)
-- Data cache files (`data/*.json`)
+- Data cache (`data/*.json`)
+- Screenshots (`screenshots/`)
+- Edge profile (`ms_profile/`)
 
-## Features
+## License
 
-- Real-time system monitoring (CPU, Memory, Disk, Network)
-- Music detection and lyrics display
-- Browser window tracking
-- Bilibili video monitoring
-- Responsive design
-- Status card with health indicators
-- Performance charts
+MIT License
 
-## Dependencies
+## Acknowledgments
 
-- Python 3.7+
-- Jinja2
-- pywin32 (for Windows API access)
-- Bootstrap 5.3.0
-- Chart.js 4.4.0
+- Bootstrap 5.3.0 for UI components
+- Chart.js 4.4.0 for performance charts
+- Font Awesome icons
+- Bilibili API for video information
+- NetEase Cloud Music API for lyrics

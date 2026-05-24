@@ -284,6 +284,7 @@ class HTMLGenerator:
             'max_usage': max_usage,
             'avatar': avatar_path,
             'bilibili_cover_cache': bilibili_cover_cache,
+            'refresh_interval': data.get('refresh_interval', 90),
             'static_css': STATIC_CSS,
             'static_js': STATIC_JS
         }

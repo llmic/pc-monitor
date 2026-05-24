@@ -1,3 +1,4 @@
+
 """
 PC Monitor - Real-time Computer Monitoring System
 ===================================================
@@ -224,6 +225,7 @@ def run_monitor_cycle(collector, history_manager, generator, metrics_history, st
         data['shutdown_timeout'] = SHUTDOWN_TIMEOUT_SECONDS
         data['max_history'] = MAX_HISTORY
         data['max_metrics_history'] = MAX_METRICS_HISTORY
+        data['refresh_interval'] = COLLECTION_INTERVAL
         data['browser_tabs'] = data.get('browser_tabs', [])
         data['timestamp'] = datetime.now().isoformat()
         

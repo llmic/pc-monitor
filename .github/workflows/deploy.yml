@@ -51,6 +51,8 @@ jobs:
             echo "⚠ screenshots directory empty or not found, skipping"
           fi
           
+
+          
           # 检查是否有文件可部署
           if [ -z "$(ls -A "$DEPLOY_DIR")" ]; then
             echo "❌ No files to deploy!"

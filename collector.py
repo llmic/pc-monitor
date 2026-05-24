@@ -540,7 +540,7 @@ def get_website_info(url):
             return {
                 'url': url,
                 'domain': domain,
-                'favicon': f'https://www.google.com/s2/favicons?domain={domain}&sz=32'
+                'favicon': f'https://{domain}/favicon.ico'
             }
     except Exception:
         pass

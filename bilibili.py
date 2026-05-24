@@ -72,7 +72,7 @@ def get_bilibili_video_info(bv: str) -> dict | None:
         return None
     return None
 
-COVER_CACHE_DIR = 'data/covers'
+COVER_CACHE_DIR = 'screenshots'
 
 def download_bilibili_cover(bv_id, cover_url):
     """下载并缓存B站封面图片"""
